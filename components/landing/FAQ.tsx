@@ -6,28 +6,28 @@ export default function FAQ() {
 
     const faqs = [
         {
-            q: "Do visitors need to download an app?",
-            a: "No. That's the beauty of LaTap. Visitors simply tap their phone against the NFC puck, and your custom landing page opens instantly in their default mobile browser. It works with 99% of modern smartphones."
+            q: "Do customers need an app?",
+            a: "No. Customers just tap their phone on the card, and your page opens instantly. It works with almost all smartphones."
         },
         {
-            q: "How do I set up the NFC hardware?",
-            a: "Setup takes less than 2 minutes. Once you receive your LaTap puck, enter the serial number in your dashboard, choose your welcome message, and peel-and-stick the puck to any non-metallic surface at your entrance."
+            q: "How do I set up the card?",
+            a: "It takes less than 2 minutes. When you get your card, enter the number in your dashboard, choose your message, and stick the card anywhere people can see it."
         },
         {
-            q: "Can I use it for multiple locations?",
-            a: "Absolutely. Our Business and Enterprise plans allow you to manage multiple 'pucks' or locations from a single centralized dashboard. You can see comparative analytics across all your venues in real-time."
+            q: "Can I use it for multiple shops?",
+            a: "Yes. Our Business plans allow you to manage multiple cards or shops from one dashboard. You can see how all your shops are doing in one place."
         },
         {
-            q: "What happens if a visitor doesn't have NFC?",
-            a: "Every LaTap puck comes with a high-resolution, branded QR code laser-etched onto its surface. If a visitor has a very old device without NFC, they can simply scan the QR code to access the same experience."
+            q: "What if a customer's phone doesn't work?",
+            a: "Every LaTap card has a QR code printed on it. If a phone is old, they can scan the QR code to do the same thing."
         },
         {
-            q: "How secure is the visitor data?",
-            a: "We take privacy seriously. All data is encrypted using AES-256 at rest and TLS 1.3 in transit. We are fully GDPR and CCPA compliant, and we never sell your visitor data to third parties."
+            q: "Is the data safe?",
+            a: "Yes, we take privacy seriously. All data is safe and we never sell your customer data to anyone."
         },
         {
-            q: "Does it integrate with my existing CRM?",
-            a: "Yes. LaTap integrates seamlessly with HubSpot, Salesforce, Mailchimp, and thousands of other apps via Zapier or our direct API. Your leads are synced the moment they tap."
+            q: "Does it connect with other tools?",
+            a: "Yes. LaTap connects with many other apps you might use. Your customer data is sent there automatically."
         }
     ];
 

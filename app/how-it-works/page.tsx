@@ -2,6 +2,12 @@ import React from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'How It Works',
+    description: 'Learn how EntryConnect uses NFC technology to bridge the gap between physical visitors and digital data capture.',
+};
 
 export default function HowItWorks() {
     const steps = [
@@ -109,7 +115,7 @@ export default function HowItWorks() {
                                     <img
                                         src="https://images.unsplash.com/photo-1556742111-a301076d9d18?auto=format&fit=crop&q=80&w=800"
                                         alt="Customer Tapping"
-                                        className="rounded-[2rem] shadow-2xl"
+                                        className="rounded-2rem shadow-2xl"
                                     />
                                     {/* Abstract UI Elements */}
                                     <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-2xl border border-gray-100 hidden md:block">

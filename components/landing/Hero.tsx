@@ -17,12 +17,12 @@ export default function Hero() {
 
             <div className="container mx-auto px-4 text-center z-10 relative">
                 <h1 className="font-display font-bold text-5xl md:text-7xl leading-[1.1] text-text-main max-w-4xl mx-auto mb-8 tracking-tight">
-                    Capture Visitor Data <br />
-                    <span className="text-gradient">Instantly & Seamlessly</span>
+                    Collect Customer Details <br />
+                    <span className="text-gradient">Fast & Simple</span>
                 </h1>
 
                 <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
-                    Replace paper forms with smart NFC technology. Instantly collect visitor details, deliver digital rewards, and sync with your CRM in real-time.
+                    Stop using paper forms. Instantly collect customer numbers and details with a simple tap, and see everything on your phone.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-24">
@@ -73,7 +73,7 @@ export default function Hero() {
                             <div className="col-span-12 md:col-span-9 p-6 md:p-12 text-left">
                                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4">
                                     <div>
-                                        <h3 className="text-xl font-display font-bold text-text-main">Visitor Analytics</h3>
+                                        <h3 className="text-xl font-display font-bold text-text-main">Customer List</h3>
                                     </div>
                                     <button className="bg-text-main text-white text-[10px] font-black uppercase tracking-widest px-4 py-2.5 rounded-xl whitespace-nowrap cursor-pointer">
                                         Export Reports

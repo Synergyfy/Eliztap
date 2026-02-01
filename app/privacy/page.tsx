@@ -1,6 +1,12 @@
 import React from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Privacy Policy',
+    description: 'Learn how EntryConnect collects, uses, and protects your information. We are committed to GDPR and CCPA compliance and data security.',
+};
 
 export default function PrivacyPolicy() {
     const lastUpdated = "January 31, 2026";
@@ -47,7 +53,7 @@ export default function PrivacyPolicy() {
 
                         <section>
                             <h2 className="text-2xl font-bold text-text-main mb-4 font-display">5. Your Rights</h2>
-                            <p className="text-text-secondary leading-relaxed font-medium font-bold">
+                            <p className="text-text-secondary leading-relaxed  font-bold">
                                 Under GDPR and CCPA, you have the right to access, delete, or port your data. You can manage your data preferences directly through your LaTap dashboard or by contacting our support team.
                             </p>
                         </section>

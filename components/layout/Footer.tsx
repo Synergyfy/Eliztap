@@ -12,7 +12,7 @@ export default function Footer() {
                             <span className="text-3xl font-display font-bold tracking-tight">LaTap</span>
                         </div>
                         <p className="text-text-secondary max-w-sm mb-10 font-bold leading-relaxed">
-                            Bridging the gap between physical interactions and digital data. The world's fastest offline-to-online visitor capture platform.
+                            The easiest way to collect customer data instantly from your shop or event to your phone.
                         </p>
 
                     </div>

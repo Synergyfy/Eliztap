@@ -8,7 +8,7 @@ export default function Process() {
                 <div className="text-center max-w-3xl mx-auto mb-16">
                     <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Process</span>
                     <h2 className="text-3xl md:text-5xl font-display font-bold text-text-main leading-tight mb-6">
-                        Transform your presence in 3 simple steps
+                        Start collecting data in 3 steps
                     </h2>
                 </div>
 
@@ -16,22 +16,22 @@ export default function Process() {
                     {[
                         {
                             step: '1. The Tap',
-                            heading: 'Experience instant 10X connection',
-                            desc: '"The speed of connection is our favorite thing. It helps us grow our physical visitor list 10x faster than traditional QR codes."',
+                            heading: 'Tap the card',
+                            desc: '"It is so fast. It helps us get customer numbers 10x faster than typing it out or using paper."',
                             img: 'https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&q=80&w=800',
                             color: 'bg-primary'
                         },
                         {
                             step: '2. The Connect',
-                            heading: 'Frictionless data capture flow',
-                            desc: 'Turning physical foot traffic into digital leads is a breeze. LaTap captures info in under 2 seconds without any app downloads.',
+                            heading: 'Capture customer info',
+                            desc: 'Getting customer details is easy. LaTap captures info in under 2 seconds without them needing to download any app.',
                             img: 'https://images.unsplash.com/photo-1556740758-90eb39f3203c?auto=format&fit=crop&q=80&w=800',
                             color: 'bg-primary-dark'
                         },
                         {
                             step: '3. The Growth',
-                            heading: 'Scale your repeat visits exponentially',
-                            desc: 'Track visits, reward loyalty, and optimize your marketing strategy with actionable data that flows directly into your CRM.',
+                            heading: 'Grow your business',
+                            desc: 'See who visits, reward loyal customers, and improve your marketing with data that is saved automatically.',
                             img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800',
                             color: 'bg-[#0a4a3e]'
                         }

@@ -9,9 +9,9 @@ const testimonials = [
     {
         id: 1,
         metric: '8X',
-        metricLabel: 'Conversion Boost',
-        quote: "LaTap's NFC integration for our physical events was a game changer. We collected 8 times more leads than our previous paper-based system.",
-        author: "David Callahan",
+        metricLabel: 'More Sales',
+        quote: "Using LaTap at our events changed everything. We collected 8 times more customer contacts than when we used paper.",
+        author: "David Okon",
         role: "Head of Marketing, Jara",
         avatar: "https://i.pravatar.cc/150?u=1",
         logo: "verified"
@@ -19,9 +19,9 @@ const testimonials = [
     {
         id: 2,
         metric: '45%',
-        metricLabel: 'ROI Increase',
-        quote: "The ease of use for customers is unparalleled. Just a tap and they're in. This level of friction-free engagement is exactly what our retail stores needed.",
-        author: "Sarah Mitchel",
+        metricLabel: 'More Profit',
+        quote: "It is so easy for customers. Just a tap and they are in. This is exactly what our shops needed.",
+        author: "Sarah Adebayo",
         role: "Customer Success",
         avatar: "https://i.pravatar.cc/150?u=2",
         logo: "insights"
@@ -30,8 +30,8 @@ const testimonials = [
         id: 3,
         metric: '3.2k',
         metricLabel: 'New Users',
-        quote: "Absolutely stunning design and flawless execution. The dashboard analytics give us insights into foot traffic we never had before.",
-        author: "Tom Becker",
+        quote: "The design is beautiful and it works perfectly. We now understand our customers better.",
+        author: "Tunde Bakare",
         role: "Founder, PulseCore",
         avatar: "https://i.pravatar.cc/150?u=3",
         logo: "analytics"
@@ -39,10 +39,10 @@ const testimonials = [
     {
         id: 4,
         metric: '100%',
-        metricLabel: 'Sync Rate',
-        quote: "Fastest implementation we've ever done. We had 50 locations live in just under a week. Support was top-notch throughout.",
-        author: "Jennifer Wu",
-        role: "COO, Flash Retail",
+        metricLabel: 'Success Rate',
+        quote: "Setup was very fast. We got 50 locations working in less than a week. The support team is great.",
+        author: "Jennifer Olu",
+        role: "COO, Flash Stores",
         avatar: "https://i.pravatar.cc/150?u=4",
         logo: "sync_alt"
     }
@@ -116,7 +116,7 @@ export default function Testimonials() {
                                         </div>
                                     </div>
 
-                                    <p className="text-base text-text-main font-medium leading-relaxed mb-10 flex-grow">
+                                    <p className="text-base text-text-main font-medium leading-relaxed mb-10 grow">
                                         "{t.quote}"
                                     </p>
 

@@ -7,18 +7,18 @@ export default function Features() {
                 <div className="text-center max-w-3xl mx-auto mb-20">
                     <span className="text-primary font-bold tracking-widest text-xs uppercase mb-4 block">Power Solutions</span>
                     <h2 className="text-4xl md:text-5xl font-display font-bold text-text-main leading-tight">
-                        Bridge the physical <br />and digital worlds
+                        Connect with your customers <br />digitally
                     </h2>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {[
-                        { icon: 'tap_and_play', title: 'Dynamic NFC', desc: 'Update destination URLs instantly without reprogramming chips. Rotate offers based on time or inventory.', color: 'blue' },
-                        { icon: 'speed', title: 'Ultra-Fast Loading', desc: 'Optimized for 400ms load times on slow networks. Ensure connections even in crowded venues.', color: 'indigo', highlight: true },
-                        { icon: 'auto_awesome', title: 'Smart Re-marketing', desc: 'Capture visitor interest and trigger automatic follow-ups via email or SMS instantly.', color: 'purple' },
-                        { icon: 'analytics', title: 'Dwell Analytics', desc: 'Track scan locations, device types, and time spent. Understand physical behavior at scale.', color: 'orange' },
-                        { icon: 'security', title: 'Bank-Grade Security', desc: 'Enterprise encryption for all data. GDPR and CCPA compliant storage by default.', color: 'teal' },
-                        { icon: 'hub', title: 'Full CRM Sync', desc: 'Seamlessly push captured leads to Salesforce, HubSpot, or custom APIs without manual entry.', color: 'pink' }
+                        { icon: 'tap_and_play', title: 'Update Links Anytime', desc: 'Change where your card links to anytime without buying a new one. Update offers instantly.', color: 'blue' },
+                        { icon: 'speed', title: 'Works Fast on All Phones', desc: 'Loads quickly even on slow mobile networks. Ensure your customers connect without waiting.', color: 'indigo', highlight: true },
+                        { icon: 'auto_awesome', title: 'Automatic Follow-ups', desc: 'Capture customer interest and send them email or SMS messages immediately.', color: 'purple' },
+                        { icon: 'analytics', title: 'Track Usage', desc: 'See how many people scan your card, which phones they use, and when they scan.', color: 'orange' },
+                        { icon: 'security', title: 'Secure Data', desc: 'Your data is safe and encrypted. We protect your customer information.', color: 'teal' },
+                        { icon: 'hub', title: 'Connect Other Apps', desc: 'Send your customer data to other tools you use automatically.', color: 'pink' }
                     ].map((f, i) => (
                         <div key={i} className={`p-10 rounded-xl transition-all duration-300 border ${f.highlight ? 'bg-primary text-white border-primary shadow-2xl shadow-primary/20 -translate-y-2' : 'bg-gray-50 border-gray-100 hover:shadow-xl'}`}>
                             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-8 ${f.highlight ? 'bg-white/20' : 'bg-white shadow-lg shadow-gray-200/50'}`}>
