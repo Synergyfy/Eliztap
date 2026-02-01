@@ -2,6 +2,12 @@ import React from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Features',
+    description: 'Explore the powerful features of EntryConnect: from digital lead capture and CRM integration to real-time analytics and NFC-driven automation.',
+};
 
 export default function FeaturesPage() {
     const features = [

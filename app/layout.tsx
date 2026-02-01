@@ -13,8 +13,46 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-    title: "EntryConnect - Offline-to-Online Data Capture",
+    title: {
+        default: "EntryConnect - Offline-to-Online Data Capture",
+        template: "%s | EntryConnect"
+    },
     description: "Seamless offline-to-online visitor data capture. Turn physical foot traffic into digital leads instantly with our NFC-powered platform.",
+    keywords: ["NFC data capture", "offline to online", "lead generation", "visitor management", "digital marketing"],
+    authors: [{ name: "EntryConnect Team" }],
+    creator: "EntryConnect",
+    publisher: "EntryConnect",
+    formatDetection: {
+        email: false,
+        address: false,
+        telephone: false,
+    },
+    openGraph: {
+        type: "website",
+        locale: "en_GB",
+        url: "https://entryconect.com",
+        siteName: "EntryConnect",
+        title: "EntryConnect - Offline-to-Online Data Capture",
+        description: "Seamless offline-to-online visitor data capture. Turn physical foot traffic into digital leads instantly with our NFC-powered platform.",
+        images: [
+            {
+                url: "/logo.png",
+                width: 800,
+                height: 600,
+                alt: "EntryConnect Logo",
+            },
+        ],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "EntryConnect - Offline-to-Online Data Capture",
+        description: "Seamless offline-to-online visitor data capture. Turn physical foot traffic into digital leads instantly with our NFC-powered platform.",
+        images: ["/logo.png"],
+    },
+    icons: {
+        icon: "/icon.png",
+        apple: "/icon.png",
+    },
 };
 
 import QueryProvider from "./providers/QueryProvider";

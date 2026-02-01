@@ -1,6 +1,12 @@
 import React from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Terms of Service',
+    description: 'Read the Terms of Service for EntryConnect. Understand your rights and responsibilities when using our NFC-based visitor capture and management software.',
+};
 
 export default function TermsOfService() {
     const lastUpdated = "January 31, 2026";

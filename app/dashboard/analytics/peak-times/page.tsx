@@ -5,6 +5,7 @@ import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import ChartCard from '@/components/dashboard/ChartCard';
 
+
 export default function PeakTimesPage() {
     const weeklyData = [
         { day: 'Monday', hours: [10, 15, 20, 25, 40, 50, 45, 30, 25, 20] },
@@ -32,15 +33,15 @@ export default function PeakTimesPage() {
                             <div className="min-w-[800px]">
                                 <div className="grid grid-cols-11 mb-4">
                                     <div className="col-span-1"></div>
-                                    {hours.map((h, i) => (
-                                        <div key={i} className="text-[10px] font-black uppercase tracking-widest text-text-secondary text-center px-1">
+                                    {hours.map((h, idx) => (
+                                        <div key={idx} className="text-[10px] font-black uppercase tracking-widest text-text-secondary text-center px-1">
                                             {h}
                                         </div>
                                     ))}
                                 </div>
                                 <div className="space-y-4">
-                                    {weeklyData.map((d, i) => (
-                                        <div key={i} className="grid grid-cols-11 items-center">
+                                    {weeklyData.map((d, idx) => (
+                                        <div key={idx} className="grid grid-cols-11 items-center">
                                             <div className="col-span-1 text-[10px] font-black uppercase tracking-widest text-text-main line-clamp-1">
                                                 {d.day}
                                             </div>
@@ -63,9 +64,9 @@ export default function PeakTimesPage() {
                         <div className="mt-8 flex items-center justify-end gap-4">
                             <span className="text-[10px] font-bold text-text-secondary uppercase">Less Crowded</span>
                             <div className="flex gap-1">
-                                [0.1, 0.3, 0.5, 0.7, 0.9].map((o, i) => (
-                                <div key={i} className="size-4 rounded" style={{ backgroundColor: `rgba(37, 99, 235, ${o})` }}></div>
-                                ))
+                                {[0.1, 0.3, 0.5, 0.7, 0.9].map((o, idx) => (
+                                    <div key={idx} className="size-4 rounded" style={{ backgroundColor: `rgba(37, 99, 235, ${o})` }}></div>
+                                ))}
                             </div>
                             <span className="text-[10px] font-bold text-text-secondary uppercase">Busiest</span>
                         </div>
@@ -74,10 +75,10 @@ export default function PeakTimesPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <ChartCard title="Busiest Day Analysis" subtitle="Weekly traffic distribution">
                             <div className="h-64 flex items-end justify-between px-4 pb-4">
-                                {weeklyData.map((d, i) => {
+                                {weeklyData.map((d, idx) => {
                                     const total = d.hours.reduce((a, b) => a + b, 0);
                                     return (
-                                        <div key={i} className="flex flex-col items-center gap-3 w-12 group relative">
+                                        <div key={idx} className="flex flex-col items-center gap-3 w-12 group relative">
                                             <div
                                                 className="w-full bg-primary/20 rounded-lg hover:bg-primary transition-all cursor-pointer"
                                                 style={{ height: `${(total / 1000) * 100}%` }}

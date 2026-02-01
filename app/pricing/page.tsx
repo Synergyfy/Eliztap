@@ -2,6 +2,12 @@ import React from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Pricing from '@/components/landing/Pricing';
 import Footer from '@/components/layout/Footer';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Pricing',
+    description: 'Simple, transparent pricing for growing businesses. Explore EntryConnect plans designed for every stage of your business growth.',
+};
 
 export default function PricingPage() {
     return (
