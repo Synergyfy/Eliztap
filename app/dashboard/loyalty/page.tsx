@@ -1,11 +1,10 @@
 'use client';
 
-import React from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
 import ChartCard from '@/components/dashboard/ChartCard';
-import DataTable from '@/components/dashboard/DataTable';
+import DataTable, { Column } from '@/components/dashboard/DataTable';
 
 export default function LoyaltyOverviewPage() {
     const loyaltyStats = [
@@ -30,7 +29,7 @@ export default function LoyaltyOverviewPage() {
         { id: '4', name: 'David Okafor', points: 410, visits: 8, level: 'Silver' },
     ];
 
-    const columns: import('@/components/dashboard/DataTable').Column<Member>[] = [
+    const columns: Column<Member>[] = [
         {
             header: 'Member',
             accessor: (item: Member) => (

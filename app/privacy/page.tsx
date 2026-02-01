@@ -47,7 +47,7 @@ export default function PrivacyPolicy() {
 
                         <section>
                             <h2 className="text-2xl font-bold text-text-main mb-4 font-display">5. Your Rights</h2>
-                            <p className="text-text-secondary leading-relaxed font-medium font-bold">
+                            <p className="text-text-secondary leading-relaxed  font-bold">
                                 Under GDPR and CCPA, you have the right to access, delete, or port your data. You can manage your data preferences directly through your LaTap dashboard or by contacting our support team.
                             </p>
                         </section>
