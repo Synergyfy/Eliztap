@@ -1,0 +1,83 @@
+Phase 1: The Core Experience (MVP)
+Focus: Getting the tap to work and capturing data.
+
+Dynamic NFC Routing Engine:
+
+Develop the "Short URL" redirector ($tap.platform.com/id$) that allows you to link physical hardware to specific business profiles remotely.
+
+The "No-App" Visitor Journey:
+
+Welcome Screen: Business-branded landing page.
+
+Smart Form: High-speed data entry for Name, Phone, and Email (with auto-fill support).
+
+Consent Management: A simple "I Agree" toggle for privacy compliance.
+
+Unique Identity Logic:
+
+System to recognize returning visitors by phone number and increment visit counts instead of creating duplicate profiles.
+
+Basic Business Dashboard:
+
+Secure login/registration.
+
+Visitor list view with search and CSV export.
+
+Essential analytics (Total vs. New vs. Repeat visitors).
+
+Phase 2: Communication & Retention
+Focus: Helping businesses use the data they’ve collected.
+
+Multi-Channel Messaging:
+
+Integration with SMS, WhatsApp, and Email gateways.
+
+Campaign builder to send promotions to specific groups (e.g., "Only new visitors").
+
+Loyalty Engine:
+
+Points-per-visit tracking.
+
+Digital coupon generation (Success Screen rewards).
+
+Staff verification portal to "mark as used" when a customer redeems a reward.
+
+Advanced Analytics:
+
+Footfall heatmaps (Peak hours/Slow days).
+
+Message conversion tracking (Did they come back after the SMS?).
+
+Phase 3: Hardware & Account Management
+Focus: Scaling the business operations.
+
+Device Management System (DMS):
+
+Centralized portal to track which NFC plate is at which shop.
+
+Remote "Kill Switch" to disable tags if a business stops paying.
+
+Automated Billing & Plans:
+
+Tiered subscription levels (Free/Basic/Premium).
+
+Payment gateway integration for automated renewals and invoicing.
+
+Staff & Role Management:
+
+Allow business owners to invite "Staff" accounts with restricted view-only access.
+
+Phase 4: Optimization & Integration
+Focus: Efficiency and ecosystem growth.
+
+Integration Layer:
+
+Public API to connect with external POS (Point of Sale) or CRM systems.
+
+Performance Tuning:
+
+Aggressive caching and data minimization to ensure the <3 second load time in low-network areas.
+
+Company Super-Admin Panel:
+
+Global dashboard for your team to monitor total platform revenue, active businesses, and support tickets.

@@ -86,7 +86,7 @@ export default function UserStepPage() {
     return (
         <div className="min-h-screen bg-[#fafbfc] font-body flex flex-col items-center py-20 px-6 antialiased">
             {/* Header / Logo / Navigation */}
-            <nav className="fixed top-0 left-0 right-0 z-[60] px-10 py-8 flex items-center justify-between">
+            <nav className="fixed top-0 left-0 right-0 z-60 px-10 py-8 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2 group pointer-events-auto">
                     <div className="size-8 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20 group-hover:rotate-12 transition-transform">
                         <span className="material-symbols-outlined text-[18px]">nfc</span>
@@ -112,7 +112,7 @@ export default function UserStepPage() {
                         initial={{ opacity: 0, y: -20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                        className="fixed top-24 left-1/2 -translate-x-1/2 z-[70] w-full max-w-sm px-4"
+                        className="fixed top-24 left-1/2 -translate-x-1/2 z-70 w-full max-w-sm px-4"
                     >
                         <div className="bg-white rounded-2xl p-8 shadow-2xl border-2 border-primary/20 flex flex-col gap-6 ring-4 ring-primary/5">
                             <div className="flex justify-between items-center">
@@ -138,7 +138,7 @@ export default function UserStepPage() {
                 )}
             </AnimatePresence>
 
-            <main className="flex-grow flex items-center justify-center w-full max-w-lg relative">
+            <main className="grow flex items-center justify-center w-full max-w-lg relative">
                 <AnimatePresence mode="wait">
                     {/* STEP: SELECT_TYPE */}
                     {currentStep === 'SELECT_TYPE' && (
@@ -173,7 +173,7 @@ export default function UserStepPage() {
                                 <label className="flex items-center justify-between p-5 rounded-2xl bg-primary/5 hover:bg-primary/10 cursor-pointer group transition-all">
                                     <div className="flex gap-3 items-center">
                                         <span className="material-symbols-outlined text-primary text-xl">loyalty</span>
-                                        <span className="text-[10px] font-black uppercase tracking-[0.1em] text-primary">Enable Reward PDF</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-primary">Enable Reward PDF</span>
                                     </div>
                                     <input
                                         type="checkbox"
@@ -205,7 +205,7 @@ export default function UserStepPage() {
                                     <motion.span animate={{ rotate: [0, 10, 0, -10, 0] }} transition={{ duration: 2, repeat: Infinity }} className="material-symbols-outlined text-primary text-4xl">contactless</motion.span>
                                 </div>
                             </div>
-                            <p className="text-center text-[10px] font-black text-gray-300 uppercase tracking-widest mt-10 tracking-[0.4em] animate-pulse">Handshake in progress</p>
+                            <p className="text-center text-[10px] font-black text-gray-300 uppercase tracking-widest mt-10 animate-pulse">Handshake in progress</p>
                         </motion.div>
                     )}
 
@@ -301,7 +301,7 @@ export default function UserStepPage() {
                                     <motion.div
                                         initial={{ y: 20, opacity: 0 }}
                                         whileInView={{ y: 0, opacity: 1 }}
-                                        className="w-full bg-gradient-to-br from-primary to-[#1e40af] rounded-2xl p-8 text-white relative overflow-hidden mb-10 text-left shadow-2xl shadow-primary/20"
+                                        className="w-full bg-linear-to-br from-primary to-primary-dark rounded-2xl p-8 text-white relative overflow-hidden mb-10 text-left shadow-2xl shadow-primary/20"
                                     >
                                         <div className="absolute top-[-20px] right-[-20px] size-32 bg-white/10 rounded-full blur-2xl"></div>
                                         <div className="relative z-10">

@@ -133,7 +133,7 @@ export default function SupportPage() {
                         {contactMethods.map((method, i) => (
                             <div
                                 key={i}
-                                className={`flex-grow p-12 text-center relative group overflow-hidden ${i !== contactMethods.length - 1 ? 'lg:border-r border-white/5' : ''}`}
+                                className={`grow p-12 text-center relative group overflow-hidden ${i !== contactMethods.length - 1 ? 'lg:border-r border-white/5' : ''}`}
                             >
                                 <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors"></div>
                                 <div className="relative z-10 flex flex-col items-center">

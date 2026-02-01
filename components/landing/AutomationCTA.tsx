@@ -16,15 +16,15 @@ export default function AutomationCTA() {
                             </div>
                             <div className="text-[10px] w-full">
                                 <div className="bg-primary text-white p-3 grid grid-cols-6 gap-2 font-black uppercase tracking-widest">
-                                    <div className="col-span-2">Visitor</div>
-                                    <div className="col-span-2">Category</div>
+                                    <div className="col-span-2">Customer</div>
+                                    <div className="col-span-2">Type</div>
                                     <div className="col-span-2">Status</div>
                                 </div>
                                 {[
-                                    { name: 'Alex Rivera', cat: 'VIP Event', status: 'Followed Up', active: true },
-                                    { name: 'Sarah Chen', cat: 'Store Walk-in', status: 'Pending', active: false },
-                                    { name: 'Marcus Bell', cat: 'Trade Show', status: 'Followed Up', active: true },
-                                    { name: 'Elena Diaz', cat: 'VIP Event', status: 'Pending', active: false },
+                                    { name: 'Alex Rivera', cat: 'Special Event', status: 'Followed Up', active: true },
+                                    { name: 'Sarah Chen', cat: 'Shop Visit', status: 'Pending', active: false },
+                                    { name: 'Marcus Bell', cat: 'Market', status: 'Followed Up', active: true },
+                                    { name: 'Elena Diaz', cat: 'Special Event', status: 'Pending', active: false },
                                 ].map((row, i) => (
                                     <div key={i} className={`p-4 grid grid-cols-6 gap-2 border-b border-gray-50 items-center ${row.active ? 'bg-green-50/50' : 'text-gray-400'}`}>
                                         <div className="col-span-2 flex items-center gap-2 font-bold text-text-main">
@@ -65,12 +65,12 @@ export default function AutomationCTA() {
                     </div>
 
                     <div className="w-full lg:w-1/2 text-center lg:text-left">
-                        <span className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-6 block">Maximize ROI</span>
+                        <span className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-6 block">Earn More</span>
                         <h2 className="text-4xl md:text-5xl font-display font-bold text-text-main leading-tight mb-8">
-                            Reduce manual follow-ups and grow 10x more repeat visits
+                            Save time and get more customers back
                         </h2>
                         <p className="text-lg text-text-secondary leading-relaxed mb-10 font-medium max-w-xl mx-auto lg:mx-0">
-                            Stop wasting time on repetitive tasks. Automate your visitor journey with custom rules and focus on scaling your physical presence.
+                            Don't waste time doing the same thing. Let the system do it for you, so you can focus on your business.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                             <Link href="/get-started" className="px-10 py-5 rounded-full bg-primary text-white font-bold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 cursor-pointer">Start Free Trial</Link>

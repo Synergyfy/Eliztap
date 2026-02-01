@@ -40,24 +40,24 @@ export default function MobileExperience() {
                     </div>
 
                     <div className="lg:w-1/2 order-1 lg:order-2">
-                        <span className="text-xs font-black uppercase tracking-[0.2em] text-primary mb-6 block">Frictionless Experience</span>
-                        <h2 className="text-4xl md:text-5xl font-display font-bold text-text-main leading-tight mb-8">Tap & Go flow for maximum conversion</h2>
-                        <p className="text-lg text-text-secondary leading-relaxed mb-10 font-medium">Your visitors simply tap their phone. No app download required. They are instantly directed to a beautifully branded mobile form that converts physical traffic into digital leads in seconds.</p>
+                        <span className="text-xs font-black uppercase tracking-[0.2em] text-primary mb-6 block">Easy Experience</span>
+                        <h2 className="text-4xl md:text-5xl font-display font-bold text-text-main leading-tight mb-8">Make it easy for customers</h2>
+                        <p className="text-lg text-text-secondary leading-relaxed mb-10 font-medium">Your customers just tap their phone. No app needed. It works fast and helps you get their details instantly.</p>
 
                         <div className="grid sm:grid-cols-2 gap-8 mb-12">
                             <div className="flex flex-col gap-4">
                                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                                     <span className="material-icons-round">flash_on</span>
                                 </div>
-                                <h4 className="font-bold text-text-main">Instant Connection</h4>
-                                <p className="text-sm text-text-secondary leading-relaxed">Loads in under 400ms on cellular networks. Zero friction, zero wait.</p>
+                                <h4 className="font-bold text-text-main">Connects Instantly</h4>
+                                <p className="text-sm text-text-secondary leading-relaxed">Works fast on any network. No waiting.</p>
                             </div>
                             <div className="flex flex-col gap-4">
                                 <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center text-green-600">
                                     <span className="material-icons-round">security</span>
                                 </div>
-                                <h4 className="font-bold text-text-main">Secure Pipeline</h4>
-                                <p className="text-sm text-text-secondary leading-relaxed">GDPR-first approach with end-to-end data encryption.</p>
+                                <h4 className="font-bold text-text-main">Safe & Secure</h4>
+                                <p className="text-sm text-text-secondary leading-relaxed">We keep your data safe and private.</p>
                             </div>
                         </div>
 
