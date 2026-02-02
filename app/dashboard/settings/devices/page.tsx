@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
@@ -18,11 +18,22 @@ export default function DeviceSettingsPage() {
     } = useCustomerFlowStore();
     const { user } = useAuthStore();
 
+    // Fix for ReferenceError: window is not defined
+    const [origin, setOrigin] = useState('');
+    const [mounted, setMounted] = useState(false);
+
     const [welcome, setWelcome] = useState(customWelcomeMessage || "Welcome to Green Terrace!");
     const [success, setSuccess] = useState(customSuccessMessage || "Check-in Complete!");
     const [privacy, setPrivacy] = useState(customPrivacyMessage || "Your data is only used for session verification and loyalty tracking.");
     const [reward, setReward] = useState(customRewardMessage || "Get 10% OFF your next visit!");
     const [rewardEnabled, setRewardEnabled] = useState(hasRewardSetup);
+
+    useEffect(() => {
+        setMounted(true);
+        if (typeof window !== 'undefined') {
+            setOrigin(window.location.origin);
+        }
+    }, []);
 
     const handleSave = () => {
         updateCustomSettings({
@@ -34,6 +45,9 @@ export default function DeviceSettingsPage() {
         });
         toast.success('Configuration saved locally');
     };
+
+    // Prevent rendering until mounted to avoid hydration mismatch
+    if (!mounted) return null;
 
     return (
         <DashboardSidebar>
@@ -125,11 +139,11 @@ export default function DeviceSettingsPage() {
                                 <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1 mb-2 block">Physical Device Link</label>
                                 <div className="flex items-center gap-2 p-4 bg-gray-900 rounded-xl overflow-hidden">
                                     <code className="text-xs text-green-400 font-mono flex-1 truncate">
-                                        {window.location.origin}/tap/{user?.businessName?.replace(/\s+/g, '-').toUpperCase() || 'MY-STORE'}/PLATE-01
+                                        {origin}/tap/{user?.businessName?.replace(/\s+/g, '-').toUpperCase() || 'MY-STORE'}/PLATE-01
                                     </code>
                                     <button onClick={() => {
                                         const businessSlug = user?.businessName?.replace(/\s+/g, '-').toUpperCase() || 'MY-STORE';
-                                        const url = `${window.location.origin}/tap/${businessSlug}/PLATE-01`;
+                                        const url = `${origin}/tap/${businessSlug}/PLATE-01`;
                                         navigator.clipboard.writeText(url);
                                         toast.success('Hierarchical device link copied');
                                     }} className="text-white/40 hover:text-white transition-colors">
