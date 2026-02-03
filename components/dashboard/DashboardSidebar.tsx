@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
-import defaultLogo from '@/assets/logo.png';
+import defaultLogo from '@/assets/logos/logo.png';
 
 interface SidebarProps {
     children: React.ReactNode;
