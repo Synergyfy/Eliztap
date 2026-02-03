@@ -63,24 +63,24 @@ export default function UserStepPage() {
     } = useForm<VisitorFormData>({
         resolver: zodResolver(visitorSchema),
         defaultValues: {
-            name: storedIdentity?.name || user?.name || '',
-            email: storedIdentity?.email || user?.email || '',
-            phone: storedIdentity?.phone || ''
+            name: userData?.name || storedIdentity?.name || user?.name || '',
+            email: userData?.email || storedIdentity?.email || user?.email || '',
+            phone: userData?.phone || storedIdentity?.phone || ''
         },
         mode: 'onChange'
     });
 
     // Reactive form reset for late-loading data (e.g. from state store)
     useEffect(() => {
-        if (storedIdentity || user) {
-            setIsDeviceSynced(!!storedIdentity);
+        if (storedIdentity || user || userData) {
+            setIsDeviceSynced(!!storedIdentity || !!userData);
             reset({
-                name: storedIdentity?.name || user?.name || '',
-                email: storedIdentity?.email || user?.email || '',
-                phone: storedIdentity?.phone || ''
+                name: userData?.name || storedIdentity?.name || user?.name || '',
+                email: userData?.email || storedIdentity?.email || user?.email || '',
+                phone: userData?.phone || storedIdentity?.phone || ''
             });
         }
-    }, [storedIdentity, user, reset]);
+    }, [storedIdentity, user, userData, reset]);
 
     // Google Identity SDK Integration
     const handleCredentialResponse = (response: any) => {
@@ -100,6 +100,7 @@ export default function UserStepPage() {
             };
             localStorage.setItem('google_identity', JSON.stringify(identity));
             setIsDeviceSynced(true);
+            setUserData(identity);
 
             setTimeout(() => {
                 setIsSyncingReal(false);
@@ -120,18 +121,18 @@ export default function UserStepPage() {
 
         if (currentStep === 'IDENTIFYING') {
             // Background Google prompt
-            if ((window as any).google) {
+            if ((window as any).google && (window as any).google.accounts.id) {
                 (window as any).google.accounts.id.prompt();
             }
 
-            // Swift Exit: Move to form or welcome back regardless of sync status after 1.5s
+            // Swift Exit: Move to form or welcome back regardless of sync status after 2s (give google a bit more time)
             const syncTimeout = setTimeout(() => {
-                if (storedIdentity) {
+                if (storedIdentity || userData) {
                     setStep('WELCOME_BACK');
                 } else {
                     setStep('FORM');
                 }
-            }, 1500);
+            }, 2000);
 
             return () => clearTimeout(syncTimeout);
         }
@@ -419,8 +420,15 @@ export default function UserStepPage() {
 
                     {currentStep === 'WELCOME_BACK' && (
                         <motion.div key="welcome-back" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className={presets.card + " text-center"}>
-                            <div className="size-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-primary/20">
-                                <span className="material-symbols-outlined text-primary text-5xl">waving_hand</span>
+                            <div className="flex justify-center mb-8 gap-4 items-center">
+                                {logoUrl && (
+                                    <div className="size-16 rounded-2xl bg-white shadow-sm border border-gray-100 p-2 flex items-center justify-center">
+                                        <img src={logoUrl} alt={storeName} className="w-full h-full object-contain" />
+                                    </div>
+                                )}
+                                <div className="size-16 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20">
+                                    <span className="material-symbols-outlined text-primary text-3xl">waving_hand</span>
+                                </div>
                             </div>
                             <span className={presets.subtitle}>Welcome Back</span>
                             <h1 className={presets.title}>Great to see you again!</h1>

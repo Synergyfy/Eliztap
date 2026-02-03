@@ -40,7 +40,7 @@ export const businessConfigs: Record<BusinessType, BusinessConfig> = {
         outcomeTitle: 'Table 14 Linked',
         outcomeDesc: 'Our servers have been notified. You can now browse our full menu below.',
         specificIcon: 'menu_book',
-        logoUrl: 'https://cdn-icons-png.flaticon.com/512/3448/3448609.png'
+        logoUrl: '/azure-bistro-logo.png'
     },
     RETAIL: {
         type: 'RETAIL',
