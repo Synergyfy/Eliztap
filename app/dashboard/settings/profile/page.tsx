@@ -61,7 +61,7 @@ export default function BusinessProfilePage() {
                         <div className="p-8 space-y-6">
                             <div className="flex items-center gap-8">
                                 <div className="relative group cursor-pointer" onClick={handleLogoClick}>
-                                    <div className="size-24 rounded-2xl bg-primary/5 flex items-center justify-center border-2 border-dashed border-primary/20 group-hover:border-primary/40 transition-all overflow-hidden">
+                                    <div className="size-24 rounded-full bg-primary/5 flex items-center justify-center border-2 border-dashed border-primary/20 group-hover:border-primary/40 transition-all overflow-hidden">
                                         {logo ? (
                                             <img src={logo} alt="Logo" className="w-full h-full object-contain p-2" />
                                         ) : (

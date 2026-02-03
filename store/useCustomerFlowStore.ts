@@ -86,6 +86,7 @@ interface CustomerFlowState {
     storeName: string;
     businessType: BusinessType;
     visitCount: number;
+    rewardVisitThreshold: number;
     hasRewardSetup: boolean;
     showFeedback: boolean;
     userData: {
@@ -121,6 +122,7 @@ interface CustomerFlowState {
         rewardMessage?: string;
         rewardEnabled?: boolean;
         logoUrl?: string;
+        rewardVisitThreshold?: number;
     }) => void;
 }
 
@@ -132,6 +134,7 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
     storeName: 'LaTap Venue',
     businessType: 'RESTAURANT',
     visitCount: 1,
+    rewardVisitThreshold: 5,
     hasRewardSetup: true,
     showFeedback: false,
     userData: null,
@@ -164,17 +167,19 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
     }),
     toggleFeedback: (show) => set({ showFeedback: show }),
     setRewardSetup: (has) => set({ hasRewardSetup: has }),
-    simulateReturningUser: (visits = 5) => {
+    simulateReturningUser: (visits = 3) => {
         const type = get().businessType;
+        const config = businessConfigs[type];
         set({ 
             isReturningUser: true, 
             currentStep: 'IDENTIFYING',
             visitCount: visits,
-            storeName: businessConfigs[type].storeName,
+            storeName: config.storeName,
+            logoUrl: config.logoUrl || null,
             userData: { 
                 name: 'Sarah Jordan', 
                 email: 'sarah@example.com', 
-                phone: '+44 7700 900000',
+                phone: '+234 801 234 5678',
                 uniqueId: 'LT-SARAH-99'
             }
         });
@@ -203,6 +208,7 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         customPrivacyMessage: settings.privacyMessage ?? state.customPrivacyMessage,
         customRewardMessage: settings.rewardMessage ?? state.customRewardMessage,
         hasRewardSetup: settings.rewardEnabled ?? state.hasRewardSetup,
-        logoUrl: settings.logoUrl ?? state.logoUrl
+        logoUrl: settings.logoUrl ?? state.logoUrl,
+        rewardVisitThreshold: settings.rewardVisitThreshold ?? state.rewardVisitThreshold
     })),
 }), { name: 'customer-flow-storage' }));
