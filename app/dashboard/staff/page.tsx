@@ -7,19 +7,29 @@ import DataTable, { Column } from '@/components/dashboard/DataTable';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { Staff } from '@/lib/store/mockDashboardStore';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
 import { UserPlus, Shield, Edit3, Trash2, X, Check } from 'lucide-react';
 
 export default function StaffManagementPage() {
+    const router = useRouter();
+    const { user } = useAuthStore();
     const queryClient = useQueryClient();
     const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
     const [editingStaff, setEditingStaff] = useState<Staff | null>(null);
 
-    // Fetch Staff from store
     const { data: storeData, isLoading } = useQuery({
         queryKey: ['dashboard'],
         queryFn: dashboardApi.fetchDashboardData,
     });
+
+    // Protection: Only Owners can manage staff
+    React.useEffect(() => {
+        if (!isLoading && user && user.role !== 'owner') {
+            router.push('/dashboard');
+        }
+    }, [user, isLoading, router]);
 
     const staffMembers = storeData?.staffMembers || [];
 
@@ -91,8 +101,8 @@ export default function StaffManagementPage() {
                 <div className="flex items-center gap-2">
                     <Shield size={14} className={item.role === 'Owner' ? 'text-primary' : 'text-gray-400'} />
                     <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${item.role === 'Owner' ? 'bg-primary/10 text-primary' :
-                            item.role === 'Manager' ? 'bg-blue-50 text-blue-600' :
-                                'bg-gray-100 text-gray-700'
+                        item.role === 'Manager' ? 'bg-blue-50 text-blue-600' :
+                            'bg-gray-100 text-gray-700'
                         }`}>
                         {item.role}
                     </span>

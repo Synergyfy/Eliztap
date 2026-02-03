@@ -62,6 +62,15 @@ export interface Device {
   battery: string;
 }
 
+export interface RedemptionRequest {
+  id: string;
+  visitorId: string;
+  visitorName: string;
+  rewardTitle: string;
+  timestamp: number;
+  status: 'pending' | 'approved' | 'declined';
+}
+
 export interface DashboardState {
   visitors: Visitor[];
   activityData: ActivityPoint[];
@@ -70,6 +79,7 @@ export interface DashboardState {
   campaigns: Campaign[];
   staffMembers: Staff[];
   devices: Device[];
+  redemptionRequests: RedemptionRequest[];
   stats: {
     totalVisitors: number;
     newVisitors: number;
@@ -96,6 +106,10 @@ export interface DashboardState {
   addDevice: (device: Device) => void;
   updateDevice: (id: string, updates: Partial<Device>) => void;
   deleteDevice: (id: string) => void;
+  addRedemptionRequest: (request: Omit<RedemptionRequest, 'id' | 'status' | 'timestamp'>) => void;
+  approveRedemption: (id: string) => void;
+  declineRedemption: (id: string) => void;
+  recordExternalTap: (visitorData: { name: string; email?: string; phone: string; uniqueId?: string }) => void;
   reset: () => void;
 }
 
@@ -164,6 +178,7 @@ export const useMockDashboardStore = create<DashboardState>()(
       campaigns: initialCampaigns,
       staffMembers: initialStaff,
       devices: initialDevices,
+      redemptionRequests: [],
       stats: initialStats,
 
       addVisitor: (visitor) =>
@@ -220,17 +235,134 @@ export const useMockDashboardStore = create<DashboardState>()(
         campaigns: state.campaigns.map(c => c.id === id ? { ...c, status } : c)
       })),
 
-      addStaff: (staff) => set((state) => ({ staffMembers: [...state.staffMembers, staff] })),
-      updateStaffMember: (id, updates) => set((state) => ({
+      addStaff: (staff: Staff) => set((state) => ({ staffMembers: [...state.staffMembers, staff] })),
+      updateStaffMember: (id: string, updates: Partial<Staff>) => set((state) => ({
         staffMembers: state.staffMembers.map(s => s.id === id ? { ...s, ...updates } : s)
       })),
-      deleteStaff: (id) => set((state) => ({ staffMembers: state.staffMembers.filter(s => s.id !== id) })),
+      deleteStaff: (id: string) => set((state) => ({ staffMembers: state.staffMembers.filter(s => s.id !== id) })),
 
       addDevice: (device) => set((state) => ({ devices: [...state.devices, device] })),
       updateDevice: (id, updates) => set((state) => ({
         devices: state.devices.map(d => d.id === id ? { ...d, ...updates } : d)
       })),
       deleteDevice: (id) => set((state) => ({ devices: state.devices.filter(d => d.id !== id) })),
+      recordExternalTap: (visitorData) => set((state) => {
+        const existingIndex = state.visitors.findIndex(v => 
+          (visitorData.phone && v.phone === visitorData.phone) || 
+          (visitorData.uniqueId && v.id === visitorData.uniqueId)
+        );
+
+        let newVisitors = [...state.visitors];
+        let isReturning = false;
+
+        if (existingIndex > -1) {
+          isReturning = true;
+          const updatedVisitor = {
+            ...newVisitors[existingIndex],
+            time: 'Just now',
+            timestamp: Date.now(),
+            status: 'returning' as const
+          };
+          newVisitors.splice(existingIndex, 1);
+          newVisitors.unshift(updatedVisitor);
+        } else {
+          const newVisitor = {
+            id: visitorData.uniqueId || `V-${Math.random().toString(36).substring(2, 9).toUpperCase()}`,
+            name: visitorData.name,
+            phone: visitorData.phone,
+            time: 'Just now',
+            timestamp: Date.now(),
+            status: 'new' as const
+          };
+          newVisitors.unshift(newVisitor);
+        }
+
+        const newStats = { ...state.stats };
+        newStats.todaysVisits += 1;
+        if (isReturning) {
+          newStats.repeatVisitors += 1;
+        } else {
+          newStats.totalVisitors += 1;
+          newStats.newVisitors += 1;
+        }
+
+        // Add a notification for the business
+        const notification: Notification = {
+          id: `N-${Date.now()}`,
+          title: isReturning ? 'Returning Visitor' : 'New Visitor',
+          message: `${visitorData.name} just tapped at your NFC point.`,
+          timestamp: Date.now(),
+          read: false,
+          type: 'success'
+        };
+
+        return {
+          visitors: newVisitors,
+          stats: newStats,
+          notifications: [notification, ...state.notifications]
+        };
+      }),
+
+      addRedemptionRequest: (request) => set((state) => {
+        const newRequest: RedemptionRequest = {
+          ...request,
+          id: `RR-${Date.now()}`,
+          status: 'pending',
+          timestamp: Date.now()
+        };
+        
+        const notification: Notification = {
+          id: `N-RED-${Date.now()}`,
+          title: 'Reward Requested',
+          message: `${request.visitorName} wants to redeem ${request.rewardTitle}.`,
+          timestamp: Date.now(),
+          read: false,
+          type: 'warning'
+        };
+        
+        return {
+          redemptionRequests: [newRequest, ...state.redemptionRequests],
+          notifications: [notification, ...state.notifications]
+        };
+      }),
+
+      approveRedemption: (id) => set((state) => {
+        const request = state.redemptionRequests.find(r => r.id === id);
+        if (!request) return state;
+
+        const notification: Notification = {
+          id: `N-APP-${Date.now()}`,
+          title: 'Redemption Approved',
+          message: `Approved ${request.rewardTitle} for ${request.visitorName}.`,
+          timestamp: Date.now(),
+          read: false,
+          type: 'success'
+        };
+
+        return {
+          redemptionRequests: state.redemptionRequests.map(r => r.id === id ? { ...r, status: 'approved' } : r),
+          notifications: [notification, ...state.notifications]
+        };
+      }),
+
+      declineRedemption: (id) => set((state) => {
+        const request = state.redemptionRequests.find(r => r.id === id);
+        if (!request) return state;
+
+        const notification: Notification = {
+          id: `N-DEC-${Date.now()}`,
+          title: 'Redemption Declined',
+          message: `Declined ${request.rewardTitle} for ${request.visitorName}.`,
+          timestamp: Date.now(),
+          read: false,
+          type: 'info'
+        };
+
+        return {
+          redemptionRequests: state.redemptionRequests.map(r => r.id === id ? { ...r, status: 'declined' } : r),
+          notifications: [notification, ...state.notifications]
+        };
+      }),
 
       reset: () =>
         set({
@@ -241,6 +373,7 @@ export const useMockDashboardStore = create<DashboardState>()(
           campaigns: initialCampaigns,
           staffMembers: initialStaff,
           devices: initialDevices,
+          redemptionRequests: [],
           stats: initialStats,
         }),
     }),

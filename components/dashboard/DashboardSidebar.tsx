@@ -35,7 +35,9 @@ export default function DashboardSidebar({ children }: SidebarProps) {
     });
 
     const notifications = data?.notifications || [];
+    const redemptionRequests = data?.redemptionRequests || [];
     const unreadCount = notifications.filter((n: Notification) => !n.read).length;
+    const pendingRedemptions = redemptionRequests.filter((r: any) => r.status === 'pending').length;
 
     const readNotificationMutation = useMutation({
         mutationFn: dashboardApi.markNotificationRead,
@@ -68,11 +70,13 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             label: 'Dashboard',
             icon: Home,
             href: '/dashboard',
+            roles: ['owner', 'manager', 'staff']
         },
         {
             id: 'visitors',
             label: 'Visitors',
             icon: Users,
+            roles: ['owner', 'manager', 'staff'],
             submenu: [
                 { label: 'Overview', href: '/dashboard/visitors' },
                 { label: 'All Visitors', href: '/dashboard/visitors/all' },
@@ -84,6 +88,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             id: 'devices',
             label: 'Devices',
             icon: Nfc,
+            roles: ['owner', 'manager', 'staff'],
             submenu: [
                 { label: 'Overview', href: '/dashboard/devices' },
                 { label: 'Device Settings', href: '/dashboard/settings/devices' },
@@ -93,6 +98,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             id: 'campaigns',
             label: 'Campaigns',
             icon: Send,
+            roles: ['owner', 'manager'],
             submenu: [
                 { label: 'All Campaigns', href: '/dashboard/campaigns' },
                 { label: 'Create New', href: '/dashboard/campaigns/new' },
@@ -105,11 +111,13 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             label: 'Loyalty',
             icon: Gift,
             href: '/dashboard/loyalty',
+            roles: ['owner', 'manager', 'staff']
         },
         {
             id: 'analytics',
             label: 'Analytics',
             icon: BarChart,
+            roles: ['owner', 'manager'],
             submenu: [
                 { label: 'Overview', href: '/dashboard/analytics' },
                 { label: 'Footfall', href: '/dashboard/analytics/footfall' },
@@ -121,11 +129,13 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             label: 'Team',
             icon: Users2,
             href: '/dashboard/staff',
+            roles: ['owner']
         },
         {
             id: 'settings',
             label: 'Settings',
             icon: Settings,
+            roles: ['owner', 'manager'],
             submenu: [
                 { label: 'Profile', href: '/dashboard/settings/profile' },
                 { label: 'Notifications', href: '/dashboard/settings/notifications' },
@@ -134,6 +144,10 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             ]
         },
     ];
+
+    const filteredMenuItems = menuItems.filter(item =>
+        !item.roles || item.roles.includes(user?.role as string)
+    );
 
     const isActive = (href: string) => pathname === href;
     const isParentActive = (submenu?: { href: string }[]) =>
@@ -152,7 +166,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
 
                 {/* Navigation */}
                 <nav className="flex-1 overflow-y-auto py-6 px-3">
-                    {menuItems.map((item) => {
+                    {filteredMenuItems.map((item) => {
                         const IconComponent = item.icon;
                         return (
                             <div key={item.id} className="mb-1">
@@ -194,13 +208,20 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                                 ) : (
                                     <Link
                                         href={item.href!}
-                                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive(item.href!)
+                                        className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive(item.href!)
                                             ? 'bg-primary/5 text-primary'
                                             : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
                                             }`}
                                     >
-                                        <IconComponent size={18} />
-                                        <span>{item.label}</span>
+                                        <div className="flex items-center gap-3">
+                                            <IconComponent size={18} />
+                                            <span>{item.label}</span>
+                                        </div>
+                                        {item.id === 'loyalty' && pendingRedemptions > 0 && (
+                                            <span className="w-5 h-5 bg-emerald-500 text-white text-[10px] font-black flex items-center justify-center rounded-full shadow-sm shadow-emerald-500/20">
+                                                {pendingRedemptions}
+                                            </span>
+                                        )}
                                     </Link>
                                 )}
                             </div>

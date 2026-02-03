@@ -5,14 +5,26 @@ import { useRouter, useParams } from 'next/navigation';
 import { getBusinessBySlug, getBusinessByNfcId } from '@/lib/businessService';
 import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useMockDashboardStore } from '@/lib/store/mockDashboardStore';
 import { motion } from 'framer-motion';
+import { useMemo } from 'react';
 
 export default function MultiDeviceTapPage() {
     const { businessId, deviceId } = useParams();
     const router = useRouter();
     const initializeFromBusiness = useCustomerFlowStore(state => state.initializeFromBusiness);
+    const recordVisit = useCustomerFlowStore(state => state.recordVisit);
+    const userDataStore = useCustomerFlowStore(state => state.userData);
+    const recordExternalTap = useMockDashboardStore(state => state.recordExternalTap);
     const { user } = useAuthStore();
     const [error, setError] = useState(false);
+
+    // Form Initialization (Device-First Check)
+    const storedIdentity = useMemo(() => {
+        if (typeof window === 'undefined') return null;
+        const saved = localStorage.getItem('google_identity');
+        return saved ? JSON.parse(saved) : null;
+    }, []);
 
     useEffect(() => {
         const fetchBusiness = async () => {
@@ -46,14 +58,26 @@ export default function MultiDeviceTapPage() {
                     ...business,
                     currentDeviceId: deviceId as string
                 });
-                router.push('/user-step');
+
+                // Check-in logic: If user is known, record visit and go to welcome back
+                const identity = userDataStore || storedIdentity;
+                if (identity) {
+                    recordVisit();
+                    recordExternalTap({
+                        ...identity,
+                        phone: identity.phone || ''
+                    });
+                    router.push('/user-step'); // user-step logic will catch currentStep=WELCOME_BACK
+                } else {
+                    router.push('/user-step');
+                }
             } else {
                 setError(true);
             }
         };
 
         fetchBusiness();
-    }, [businessId, deviceId, initializeFromBusiness, router, user]);
+    }, [businessId, deviceId, initializeFromBusiness, router, user, userDataStore, storedIdentity, recordVisit, recordExternalTap]);
 
     if (error) {
         return (

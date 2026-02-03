@@ -16,6 +16,7 @@ export const dashboardApi = {
       campaigns: state.campaigns,
       staffMembers: state.staffMembers,
       devices: state.devices,
+      redemptionRequests: state.redemptionRequests,
     };
   },
 
@@ -181,5 +182,17 @@ export const dashboardApi = {
     await delay(500);
     useMockDashboardStore.getState().updateReward(id, updates);
     return { id, updates };
+  },
+
+  approveRedemption: async (id: string) => {
+    await delay(700);
+    useMockDashboardStore.getState().approveRedemption(id);
+    return id;
+  },
+
+  declineRedemption: async (id: string) => {
+    await delay(600);
+    useMockDashboardStore.getState().declineRedemption(id);
+    return id;
   }
 };

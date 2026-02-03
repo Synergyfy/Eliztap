@@ -74,11 +74,13 @@ export default function LoginPage() {
                                     Instant Quick Access Demo
                                 </p>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 relative z-10">
+                                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 relative z-10">
                                     {[
-                                        { id: 'business', label: 'Business Owner', icon: 'storefront', email: 'business@latap.com', pass: 'business123', route: '/dashboard' },
-                                        { id: 'customer', label: 'Loyal Customer', icon: 'person', email: 'customer@latap.com', pass: 'customer123', route: '/customer/dashboard' },
-                                        { id: 'admin', label: 'Main Admin', icon: 'admin_panel_settings', email: 'admin@latap.com', pass: 'admin123', route: '/admin/dashboard' }
+                                        { id: 'owner', label: 'Owner', icon: 'storefront', email: 'business@latap.com', pass: 'business123', route: '/dashboard' },
+                                        { id: 'manager', label: 'Manager', icon: 'supervisor_account', email: 'manager@latap.com', pass: 'manager123', route: '/dashboard' },
+                                        { id: 'staff', label: 'Staff', icon: 'badge', email: 'staff@latap.com', pass: 'staff123', route: '/dashboard' },
+                                        { id: 'customer', label: 'User', icon: 'person', email: 'customer@latap.com', pass: 'customer123', route: '/customer/dashboard' },
+                                        { id: 'admin', label: 'Admin', icon: 'admin_panel_settings', email: 'admin@latap.com', pass: 'admin123', route: '/admin/dashboard' }
                                     ].map((demo) => (
                                         <button
                                             key={demo.id}
@@ -97,12 +99,12 @@ export default function LoginPage() {
                                                 setIsLoading(false);
                                             }}
                                             disabled={isLoading}
-                                            className="group/btn flex flex-col items-center justify-center gap-2 p-4 bg-white border border-gray-100 rounded-xl hover:border-primary/30 hover:shadow-md transition-all disabled:opacity-50"
+                                            className="group/btn flex flex-col items-center justify-center gap-1.5 p-3 bg-white border border-gray-100 rounded-xl hover:border-primary/30 hover:shadow-md transition-all disabled:opacity-50"
                                         >
-                                            <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover/btn:bg-primary/10 transition-colors">
-                                                <span className="material-icons-round text-xl text-gray-500 group-hover/btn:text-primary">{demo.icon}</span>
+                                            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover/btn:bg-primary/10 transition-colors">
+                                                <span className="material-icons-round text-lg text-gray-400 group-hover/btn:text-primary">{demo.icon}</span>
                                             </div>
-                                            <span className="text-[11px] font-bold text-text-main group-hover/btn:text-primary">{demo.label}</span>
+                                            <span className="text-[10px] font-bold text-text-main group-hover/btn:text-primary text-center leading-tight">{demo.label}</span>
                                         </button>
                                     ))}
                                 </div>

@@ -10,10 +10,14 @@ import CreateCampaignModal from '@/components/dashboard/CreateCampaignModal';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { Campaign } from '@/lib/store/mockDashboardStore';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
 import { BarChart, Send, Eye, Edit, Trash2, Plus, FileText } from 'lucide-react';
 
 export default function AllCampaignsPage() {
+    const router = useRouter();
+    const { user } = useAuthStore();
     const queryClient = useQueryClient();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingCampaign, setEditingCampaign] = useState<Campaign | null>(null);
@@ -22,6 +26,13 @@ export default function AllCampaignsPage() {
         queryKey: ['dashboard'],
         queryFn: dashboardApi.fetchDashboardData,
     });
+
+    // Protection: Only Owners and Managers can manage campaigns
+    React.useEffect(() => {
+        if (!isLoading && user && user.role === 'staff') {
+            router.push('/dashboard');
+        }
+    }, [user, isLoading, router]);
 
     const campaigns = data?.campaigns || [];
 
