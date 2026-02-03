@@ -28,7 +28,8 @@ const presets = {
     button: "w-full h-14 rounded-2xl bg-primary text-white font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-30 disabled:hover:scale-100 disabled:cursor-not-allowed",
     input: "w-full h-12 px-5 bg-gray-50 border-none rounded-xl font-bold text-sm focus:ring-2 focus:ring-primary/10 transition-all outline-none",
     label: "text-[9px] font-black uppercase text-gray-400 ml-1",
-    error: "text-[10px] font-bold text-red-500 mt-1 ml-1"
+    error: "text-[10px] font-bold text-red-500 mt-1 ml-1",
+    secondaryButton: "w-full h-14 rounded-2xl bg-gray-50 text-text-main font-black uppercase tracking-widest text-xs hover:bg-gray-100 active:scale-95 transition-all flex items-center justify-center gap-2"
 };
 
 export default function UserStepPage() {
@@ -208,7 +209,7 @@ export default function UserStepPage() {
             </div>
 
             {currentStep !== 'SELECT_TYPE' && (
-                <div className="fixed top-20 left-1/2 -translate-x-1/2 w-full max-w-xs px-6 flex gap-1.5 z-[70]">
+                <div className="fixed top-20 left-1/2 -translate-x-1/2 w-full max-w-xs px-6 flex gap-1.5 z-50">
                     {[1, 2, 3, 4].map((i) => {
                         const stepsMap: Record<CustomerStep, number> = {
                             'SELECT_TYPE': 0,
@@ -444,15 +445,15 @@ export default function UserStepPage() {
                             </motion.div>
 
                             <span className="text-[10px] font-bold text-primary mb-3 uppercase tracking-[0.3em] block">Welcome Back</span>
-                            <h1 className={`${getStoreNameStyle(userData?.name || 'Guest')} text-text-main tracking-tight leading-tight mb-3`}>
-                                Hello, {userData?.name?.split(' ')[0] || 'there'}!
+                            <h1 className={`${getStoreNameStyle(userData?.name || storedIdentity?.name || 'Guest')} text-text-main tracking-tight font-black leading-tight mb-3 text-4xl`}>
+                                Hi, <span className="text-primary">{userData?.name?.split(' ')[0] || storedIdentity?.name?.split(' ')[0] || 'there'}!</span>
                             </h1>
                             <p className="text-gray-500 font-medium text-sm leading-relaxed mb-10">
-                                Great to see you again at <span className="text-primary font-bold">{storeName}</span>.
+                                It's great to see you again, <span className="text-primary font-bold">{userData?.name || storedIdentity?.name || 'Guest'}</span>.
                             </p>
 
                             {hasRewardSetup && (
-                                <div className="mb-10 p-6 rounded-3xl bg-gray-50/50 border border-gray-100 text-left relative overflow-hidden group">
+                                <div className="mb-10 p-6 rounded-2xl bg-gray-50/50 border border-gray-100 text-left relative overflow-hidden group">
                                     <div className="relative z-10">
                                         <div className="flex justify-between items-end mb-4">
                                             <div>
@@ -547,15 +548,17 @@ export default function UserStepPage() {
                     )}
 
                     {currentStep === 'FINAL_SUCCESS' && (
-                        <motion.div key="final" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className={presets.card + " text-center"}>
-                            <div className="size-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-2xl shadow-green-200">
-                                <span className="material-symbols-outlined text-white text-4xl font-black">celebration</span>
+                        <motion.div key="final-success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className={presets.card + " text-center"}>
+                            <div className="size-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-500/20">
+                                <span className="material-symbols-outlined text-white text-4xl">check_circle</span>
                             </div>
-                            <h1 className={presets.title}>Task Achieved!</h1>
-                            <p className={`${presets.body} mt-4 mb-12 italic`}>
-                                Successfully interacted with <span className="text-primary font-bold">{storeName}</span> via LaTap.
+                            <h1 className={presets.title}>Successfully Linked!</h1>
+                            <p className={presets.body + " mt-4 mb-8"}>
+                                {customSuccessMessage || getBusinessConfig().finalSuccessMessage}
                             </p>
-                            <button onClick={resetFlow} className={presets.button}>Close & Return to Start</button>
+                            <button onClick={resetFlow} className={presets.secondaryButton}>
+                                Finish Process
+                            </button>
                         </motion.div>
                     )}
                 </AnimatePresence>

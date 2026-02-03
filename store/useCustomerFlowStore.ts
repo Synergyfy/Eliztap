@@ -25,6 +25,7 @@ interface BusinessConfig {
     actionLabel: string;
     outcomeTitle: string;
     outcomeDesc: string;
+    finalSuccessMessage: string;
     specificIcon: string;
     logoUrl?: string;
 }
@@ -39,6 +40,7 @@ export const businessConfigs: Record<BusinessType, BusinessConfig> = {
         actionLabel: 'Browse Digital Menu',
         outcomeTitle: 'Table 14 Linked',
         outcomeDesc: 'Our servers have been notified. You can now browse our full menu below.',
+        finalSuccessMessage: 'Your table is now connected! Enjoy your meal at The Azure Bistro.',
         specificIcon: 'menu_book',
         logoUrl: '/azure-bistro-logo.png'
     },
@@ -50,8 +52,9 @@ export const businessConfigs: Record<BusinessType, BusinessConfig> = {
         description: 'VIP pricing and personalized styling.',
         actionLabel: 'Start VIP Shopping',
         outcomeTitle: 'VIP Member Active',
-        outcomeDesc: 'Your exclusive member rates have been applied to your session.',
-        specificIcon: 'loyalty',
+        outcomeDesc: 'Unlock exclusive in-store discounts and earn points on every purchase.',
+        finalSuccessMessage: 'You are all set! Show this screen at the counter for your 5% member discount.',
+        specificIcon: 'shopping_bag',
         logoUrl: 'https://cdn-icons-png.flaticon.com/512/3081/3081559.png'
     },
     GYM: {
@@ -62,8 +65,9 @@ export const businessConfigs: Record<BusinessType, BusinessConfig> = {
         description: 'Swift check-in and locker allocation.',
         actionLabel: 'Check Locker Status',
         outcomeTitle: 'Check-in Complete',
-        outcomeDesc: 'Welcome back! Your locker #42 is ready. Have a great workout.',
-        specificIcon: 'lock_open',
+        outcomeDesc: 'Access event schedules, maps, and exclusive digital content.',
+        finalSuccessMessage: 'Welcome to the event! Your digital pass is now active.',
+        specificIcon: 'confirmation_number',
         logoUrl: 'https://cdn-icons-png.flaticon.com/512/2964/2964514.png'
     },
     EVENT: {
@@ -74,8 +78,9 @@ export const businessConfigs: Record<BusinessType, BusinessConfig> = {
         description: 'Digital passes and stage schedules.',
         actionLabel: 'Access Digital Pass',
         outcomeTitle: 'Pass Validated',
-        outcomeDesc: 'You have full access to Stage A and the Networking Lounge.',
-        specificIcon: 'qr_code_2',
+        outcomeDesc: 'Track your workouts and get seamless entry with your digital tag.',
+        finalSuccessMessage: 'Access granted! Have a great workout session today.',
+        specificIcon: 'fitness_center',
         logoUrl: 'https://cdn-icons-png.flaticon.com/512/1037/1037803.png'
     }
 };
