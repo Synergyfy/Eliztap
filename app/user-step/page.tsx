@@ -216,7 +216,7 @@ export default function UserStepPage() {
                     {currentStep === 'SELECT_TYPE' && (
                         <motion.div key="select" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="md:col-span-2 mb-4">
-                                <span className={presets.subtitle}>Simulated Environment</span>
+                                <span className={presets.tag}>Simulated Environment</span>
                                 <h1 className={presets.title}>Select Industry</h1>
                                 <p className={presets.body}>Choose a business type to experience the tailored guest flow.</p>
                             </div>
@@ -240,7 +240,7 @@ export default function UserStepPage() {
                     )}
                     {currentStep === 'SCANNING' && (
                         <motion.div key="scanning" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className={presets.card}>
-                            <span className={presets.subtitle}>Connection Hub</span>
+                            <span className={presets.tag}>Connection Hub</span>
                             <h1 className={presets.title}>Locating...</h1>
                             <p className={`${presets.body} mt-4 mb-12`}>Syncing with the sensor at <span className="text-primary font-bold">{storeName}</span>.</p>
                             <div className="size-48 mx-auto relative flex items-center justify-center">
