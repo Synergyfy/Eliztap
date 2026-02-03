@@ -57,6 +57,7 @@ export const metadata: Metadata = {
 
 import QueryProvider from "./providers/QueryProvider";
 import CookieBanner from "@/components/shared/CookieBanner";
+import ToastProvider from "@/components/providers/ToastProvider";
 
 export default function RootLayout({
     children,
@@ -74,6 +75,7 @@ export default function RootLayout({
                 className={`${inter.variable} ${outfit.variable} antialiased`}
             >
                 <QueryProvider>
+                    <ToastProvider />
                     {children}
                     <CookieBanner />
                 </QueryProvider>

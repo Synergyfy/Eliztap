@@ -1,0 +1,67 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { presets } from './presets';
+
+interface StepOutcomeProps {
+    config: any;
+    customSuccessMessage?: string | null;
+    customRewardMessage?: string | null;
+    hasRewardSetup: boolean;
+    isDownloading: boolean;
+    onDownload: () => void;
+    onFinish: () => void;
+    onRestart: () => void;
+}
+
+export const StepOutcome: React.FC<StepOutcomeProps> = ({
+    config,
+    customSuccessMessage,
+    customRewardMessage,
+    hasRewardSetup,
+    isDownloading,
+    onDownload,
+    onFinish,
+    onRestart
+}) => {
+    return (
+        <motion.div key="outcome" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className={presets.card}>
+            <div className="flex flex-col items-center text-center">
+                <div className="size-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-8 shadow-inner">
+                    <span className="material-symbols-outlined text-4xl">{config.specificIcon}</span>
+                </div>
+                <h1 className={presets.title}>{customSuccessMessage || config.outcomeTitle}</h1>
+                <p className={`${presets.body} mt-4 mb-10`}>{config.outcomeDesc}</p>
+
+                {hasRewardSetup && (
+                    <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        whileInView={{ y: 0, opacity: 1 }}
+                        className="w-full bg-linear-to-br from-primary to-primary-dark rounded-2xl p-8 text-white relative overflow-hidden mb-10 text-left shadow-2xl shadow-primary/20"
+                    >
+                        <div className="z-10 relative">
+                            <p className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-1">Your Reward</p>
+                            <h3 className="text-2xl font-black italic mb-8 tracking-tighter">
+                                {customRewardMessage || "Access Granted"}
+                            </h3>
+                            <button
+                                onClick={onDownload}
+                                disabled={isDownloading}
+                                className="w-full h-12 bg-white text-primary font-black uppercase tracking-widest text-[10px] rounded-xl flex items-center justify-center gap-2 hover:bg-gray-50 transition-all"
+                            >
+                                {isDownloading ? <span className="animate-spin material-symbols-outlined text-sm">sync</span> : <span className="material-symbols-outlined text-sm">file_download</span>}
+                                {isDownloading ? 'Processing...' : 'Save Reward to Phone'}
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
+
+                <div className="w-full space-y-4">
+                    {!hasRewardSetup && (
+                        <button onClick={onFinish} className={presets.button}>Finish</button>
+                    )}
+                    <button onClick={onRestart} className="text-[10px] font-black text-gray-300 uppercase tracking-widest hover:text-red-400 transition-colors">Return to Start</button>
+                </div>
+            </div>
+        </motion.div>
+    );
+};
