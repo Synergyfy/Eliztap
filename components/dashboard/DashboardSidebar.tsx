@@ -13,6 +13,7 @@ import {
     Home, Users, Nfc, Send, Gift, BarChart, Users2, Settings,
     ChevronDown, LogOut, Bell, Search, HelpCircle
 } from 'lucide-react';
+import Logo from '@/components/brand/Logo';
 
 interface SidebarProps {
     children: React.ReactNode;
@@ -145,11 +146,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                 {/* Logo with Wordmark */}
                 <div className="h-16 flex items-center px-6 border-b border-gray-200">
                     <Link href="/dashboard" className="flex items-center gap-2">
-                        <Nfc className="text-primary" size={28} strokeWidth={2.5} />
-                        <div className="flex flex-col">
-                            <span className="font-display font-bold text-lg text-text-main leading-none">LaTap</span>
-                            <span className="text-[10px] text-text-secondary font-medium uppercase tracking-wider">Business</span>
-                        </div>
+                        <Logo iconSize={28} fontSize="text-lg" />
                     </Link>
                 </div>
 

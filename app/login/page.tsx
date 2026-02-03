@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import AuthSidePanel from '@/components/auth/AuthSidePanel';
 import { useAuthStore } from '@/store/useAuthStore';
 import { notify } from '@/lib/notify';
+import Logo from '@/components/brand/Logo';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -59,9 +60,8 @@ export default function LoginPage() {
             {/* Left Side: Login Form */}
             <div className="w-full lg:w-[60%] flex flex-col overflow-y-auto">
                 <div className="p-8 md:p-16 lg:p-24">
-                    <Link href="/" className="flex items-center gap-2 mb-24">
-                        <span className="material-icons-round text-primary text-2xl">nfc</span>
-                        <span className="font-display font-semibold text-xl tracking-tight text-text-main">LaTap</span>
+                    <Link href="/" className="mb-24 block w-fit">
+                        <Logo iconSize={32} fontSize="text-2xl" />
                     </Link>
 
                     <div className="max-w-md w-full mx-auto lg:mx-0">

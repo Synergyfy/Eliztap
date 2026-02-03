@@ -6,8 +6,9 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
 import {
     Home, Store, Users, Nfc, CreditCard, BarChart, MessageSquare,
-    Settings, ChevronDown, Shield, LogOut, Search, Bell, HelpCircle
+    Settings, ChevronDown, Shield, LogOut, LayoutGrid, Search, Bell, HelpCircle
 } from 'lucide-react';
+import Logo from '@/components/brand/Logo';
 
 interface AdminSidebarProps {
     children: React.ReactNode;
@@ -100,11 +101,7 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
                 {/* Logo with Wordmark */}
                 <div className="h-16 flex items-center px-6 border-b border-gray-200">
                     <Link href="/admin/dashboard" className="flex items-center gap-2">
-                        <Shield className="text-primary" size={28} strokeWidth={2.5} />
-                        <div className="flex flex-col">
-                            <span className="font-display font-bold text-lg text-text-main leading-none">LaTap</span>
-                            <span className="text-[10px] text-text-secondary font-medium uppercase tracking-wider">Admin Panel</span>
-                        </div>
+                        <Logo iconSize={28} fontSize="text-lg" />
                     </Link>
                 </div>
 

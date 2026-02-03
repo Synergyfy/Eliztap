@@ -8,6 +8,7 @@ import {
     LayoutGrid, History, Gift, User, Nfc, Bell,
     LogOut, Menu, Star
 } from 'lucide-react';
+import Logo from '@/components/brand/Logo';
 
 interface CustomerSidebarProps {
     children: React.ReactNode;
@@ -27,7 +28,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
 
     const handleLogout = () => {
         logout();
-        router.push('/customer/login');
+        router.push('/login');
     };
 
     const menuItems = [
@@ -66,11 +67,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                 {/* Logo */}
                 <div className="h-20 flex items-center px-6 border-b border-gray-100">
                     <Link href="/customer/dashboard" className="flex items-center gap-2">
-                        <Nfc className="text-primary" size={24} strokeWidth={2.5} />
-                        <div>
-                            <span className="font-display font-bold text-lg text-text-main block tracking-tight leading-none">LaTap</span>
-                            <span className="text-[10px] text-text-secondary font-bold uppercase tracking-widest">Customer Portal</span>
-                        </div>
+                        <Logo iconSize={24} fontSize="text-lg" />
                     </Link>
                 </div>
 
@@ -131,8 +128,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
             {/* Mobile Header (Visible only on small screens) */}
             <div className="lg:hidden absolute top-0 left-0 w-full h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 z-10">
                 <Link href="/customer/dashboard" className="flex items-center gap-2">
-                    <Nfc className="text-primary" size={20} />
-                    <span className="font-display font-bold text-base text-text-main">LaTap</span>
+                    <Logo iconSize={20} fontSize="text-base" />
                 </Link>
                 <button className="p-2 text-text-main">
                     <Menu size={24} />
