@@ -11,6 +11,8 @@ interface StepWelcomeBackProps {
     visitCount: number;
     rewardVisitThreshold: number;
     hasRewardSetup: boolean;
+    redemptionStatus: 'none' | 'pending' | 'approved' | 'declined';
+    onRedeem: () => void;
     onContinue: () => void;
     onClear: () => void;
 }
@@ -23,6 +25,8 @@ export const StepWelcomeBack: React.FC<StepWelcomeBackProps> = ({
     visitCount,
     rewardVisitThreshold,
     hasRewardSetup,
+    redemptionStatus,
+    onRedeem,
     onContinue,
     onClear
 }) => {
@@ -80,15 +84,40 @@ export const StepWelcomeBack: React.FC<StepWelcomeBackProps> = ({
             )}
 
             <div className="space-y-4">
-                <button
-                    onClick={onContinue}
-                    className="w-full h-14 rounded-2xl bg-primary text-white font-bold uppercase tracking-widest text-xs shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center"
-                >
-                    Continue to Experience
-                </button>
+                {visitCount >= rewardVisitThreshold && redemptionStatus === 'none' ? (
+                    <button
+                        onClick={onRedeem}
+                        className="w-full h-14 rounded-2xl bg-emerald-500 text-white font-bold uppercase tracking-widest text-xs shadow-xl shadow-emerald-500/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                    >
+                        <span className="material-symbols-outlined text-sm">redeem</span>
+                        Redeem My Reward
+                    </button>
+                ) : (
+                    <button
+                        onClick={onContinue}
+                        disabled={redemptionStatus === 'pending'}
+                        className={`w-full h-14 rounded-2xl ${redemptionStatus === 'pending' ? 'bg-gray-100 text-gray-400' : 'bg-primary text-white shadow-primary/20'} font-bold uppercase tracking-widest text-xs shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2`}
+                    >
+                        {redemptionStatus === 'approved' ? (
+                            <>
+                                <span className="material-symbols-outlined text-sm text-white">check_circle</span>
+                                Claim Approved Reward
+                            </>
+                        ) : redemptionStatus === 'pending' ? (
+                            <>
+                                <span className="material-symbols-outlined text-sm animate-spin">sync</span>
+                                Pending Staff Approval...
+                            </>
+                        ) : (
+                            'Continue to Experience'
+                        )}
+                    </button>
+                )}
+
                 <button
                     onClick={onClear}
-                    className="text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors py-2 block w-full"
+                    disabled={redemptionStatus === 'pending'}
+                    className="text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors py-2 block w-full disabled:opacity-50"
                 >
                     Not you? Clear Profile
                 </button>

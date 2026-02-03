@@ -16,6 +16,7 @@ export const dashboardApi = {
       campaigns: state.campaigns,
       staffMembers: state.staffMembers,
       devices: state.devices,
+      redemptionRequests: state.redemptionRequests,
     };
   },
 
@@ -160,7 +161,16 @@ export const dashboardApi = {
   // Device Actions
   addDevice: async (device: any) => {
     await delay(800);
-    const newDevice = { ...device, lastActive: 'Never', status: 'inactive', battery: 'Full' };
+    const id = Math.random().toString(36).substr(2, 9);
+    const newDevice = { 
+      ...device, 
+      id,
+      lastActive: 'Never', 
+      status: 'active', 
+      batteryLevel: 100,
+      totalScans: 0,
+      timestamp: Date.now()
+    };
     useMockDashboardStore.getState().addDevice(newDevice);
     return newDevice;
   },
@@ -181,5 +191,17 @@ export const dashboardApi = {
     await delay(500);
     useMockDashboardStore.getState().updateReward(id, updates);
     return { id, updates };
+  },
+
+  approveRedemption: async (id: string) => {
+    await delay(700);
+    useMockDashboardStore.getState().approveRedemption(id);
+    return id;
+  },
+
+  declineRedemption: async (id: string) => {
+    await delay(600);
+    useMockDashboardStore.getState().declineRedemption(id);
+    return id;
   }
 };

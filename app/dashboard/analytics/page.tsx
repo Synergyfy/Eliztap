@@ -5,8 +5,27 @@ import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
 import ChartCard from '@/components/dashboard/ChartCard';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useQuery } from '@tanstack/react-query';
+import { dashboardApi } from '@/lib/api/dashboard';
 
 export default function AnalyticsDashboardPage() {
+    const router = useRouter();
+    const { user } = useAuthStore();
+
+    const { isLoading } = useQuery({
+        queryKey: ['dashboard'],
+        queryFn: dashboardApi.fetchDashboardData,
+    });
+
+    // Protection: Only Owners and Managers can view analytics
+    React.useEffect(() => {
+        if (!isLoading && user && user.role === 'staff') {
+            router.push('/dashboard');
+        }
+    }, [user, isLoading, router]);
+
     const stats = [
         { label: 'Total Visits', value: '12,847', icon: 'visibility', color: 'blue', trend: { value: '+18%', isUp: true } },
         { label: 'Unique Visitors', value: '4,124', icon: 'people', color: 'green', trend: { value: '+24%', isUp: true } },

@@ -109,6 +109,8 @@ interface CustomerFlowState {
     customPrivacyMessage: string | null;
     customRewardMessage: string | null;
     logoUrl: string | null;
+    redemptionStatus: 'none' | 'pending' | 'approved' | 'declined';
+    lastRedemptionId: string | null;
     
     // Actions
     setStep: (step: CustomerStep) => void;
@@ -129,6 +131,11 @@ interface CustomerFlowState {
         logoUrl?: string;
         rewardVisitThreshold?: number;
     }) => void;
+    recordVisit: () => void;
+    incrementVisits: () => void;
+    requestRedemption: (rewardTitle: string) => void;
+    setRedemptionStatus: (status: CustomerFlowState['redemptionStatus']) => void;
+    resetVisitCountAfterRedemption: (threshold: number) => void;
 }
 
 export const useCustomerFlowStore = create<CustomerFlowState>()(
@@ -151,6 +158,8 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
     customPrivacyMessage: null,
     customRewardMessage: null,
     logoUrl: null,
+    redemptionStatus: 'none',
+    lastRedemptionId: null,
 
     setStep: (step) => set({ currentStep: step }),
     setUserData: (data) => {
@@ -168,7 +177,9 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         customSuccessMessage: null,
         customPrivacyMessage: null,
         customRewardMessage: null,
-        logoUrl: null
+        logoUrl: null,
+        redemptionStatus: 'none',
+        lastRedemptionId: null
     }),
     toggleFeedback: (show) => set({ showFeedback: show }),
     setRewardSetup: (has) => set({ hasRewardSetup: has }),
@@ -215,5 +226,21 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         hasRewardSetup: settings.rewardEnabled ?? state.hasRewardSetup,
         logoUrl: settings.logoUrl ?? state.logoUrl,
         rewardVisitThreshold: settings.rewardVisitThreshold ?? state.rewardVisitThreshold
+    })),
+    recordVisit: () => set((state) => ({ 
+        isReturningUser: true,
+        currentStep: 'WELCOME_BACK',
+        visitCount: state.visitCount + 1 
+    })),
+    incrementVisits: () => set((state) => ({
+        visitCount: state.visitCount + 1
+    })),
+    requestRedemption: (rewardTitle) => set({
+        redemptionStatus: 'pending',
+        lastRedemptionId: `RR-${Date.now()}`
+    }),
+    setRedemptionStatus: (status) => set({ redemptionStatus: status }),
+    resetVisitCountAfterRedemption: (threshold) => set((state) => ({
+        visitCount: Math.max(0, state.visitCount - threshold)
     })),
 }), { name: 'customer-flow-storage' }));

@@ -41,6 +41,25 @@ export default function NotificationsPage() {
         }
     });
 
+    const approveMutation = useMutation({
+        mutationFn: dashboardApi.approveRedemption,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            toast.success('Redemption approved!');
+        }
+    });
+
+    const declineMutation = useMutation({
+        mutationFn: dashboardApi.declineRedemption,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            toast.success('Redemption declined');
+        }
+    });
+
+    const redemptionRequests = data?.redemptionRequests || [];
+    const pendingRedemptions = redemptionRequests.filter((r: any) => r.status === 'pending');
+
     const getIcon = (type: string) => {
         switch (type) {
             case 'success': return <CheckCircle2 className="text-green-500" size={20} />;
@@ -81,6 +100,46 @@ export default function NotificationsPage() {
                         </div>
                     }
                 />
+
+                {pendingRedemptions.length > 0 && (
+                    <div className="mb-8">
+                        <div className="flex items-center gap-2 mb-4">
+                            <span className="material-symbols-outlined text-primary">redeem</span>
+                            <h2 className="text-lg font-bold text-text-main tracking-tight">Pending Redemptions</h2>
+                            <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-black rounded-full uppercase">Action Required</span>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {pendingRedemptions.map((req: any) => (
+                                <div key={req.id} className="bg-white p-6 rounded-2xl border border-primary/20 shadow-sm flex flex-col justify-between">
+                                    <div>
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div className="size-10 bg-primary/5 rounded-xl flex items-center justify-center text-primary">
+                                                <span className="material-symbols-outlined">person</span>
+                                            </div>
+                                            <span className="text-[10px] font-medium text-text-secondary">{new Date(req.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                        </div>
+                                        <h3 className="font-bold text-text-main mb-1">{req.visitorName}</h3>
+                                        <p className="text-xs text-text-secondary font-medium mb-4">Wants to redeem: <span className="text-primary font-bold">{req.rewardTitle}</span></p>
+                                    </div>
+                                    <div className="flex gap-2 pt-4 border-t border-gray-50">
+                                        <button
+                                            onClick={() => approveMutation.mutate(req.id)}
+                                            className="flex-1 h-10 bg-primary text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary-hover transition-all"
+                                        >
+                                            Approve
+                                        </button>
+                                        <button
+                                            onClick={() => declineMutation.mutate(req.id)}
+                                            className="px-4 h-10 bg-gray-50 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-gray-100 transition-all border border-gray-100"
+                                        >
+                                            Decline
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
                     {isLoading ? (
