@@ -295,7 +295,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                                                     className={`p-4 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors ${!note.read ? 'bg-blue-50/30' : ''}`}
                                                 >
                                                     <div className="flex items-start gap-3">
-                                                        <div className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${!note.read ? 'bg-primary' : 'bg-transparent'}`}></div>
+                                                        <div className={`mt-1 w-2 h-2 rounded-full shrink-0 ${!note.read ? 'bg-primary' : 'bg-transparent'}`}></div>
                                                         <div className="flex-1">
                                                             <p className={`text-sm ${!note.read ? 'font-bold text-text-main' : 'text-text-secondary'}`}>
                                                                 {note.title}

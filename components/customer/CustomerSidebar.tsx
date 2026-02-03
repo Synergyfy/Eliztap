@@ -91,7 +91,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
     return (
         <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
             {/* Sidebar */}
-            <aside className="w-64 bg-white border-r border-gray-200 flex flex-col hidden lg:flex">
+            <aside className="w-64 bg-white border-r border-gray-200 hidden lg:flex flex-col">
                 {/* Logo */}
                 <div className="h-20 flex items-center px-6 border-b border-gray-100">
                     <Link href="/customer/dashboard" className="flex items-center gap-2">
@@ -121,7 +121,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                     </div>
 
                     {/* Promo Card */}
-                    <div className="mt-8 bg-gradient-to-br from-primary to-blue-600 rounded-xl p-4 text-white relative overflow-hidden">
+                    <div className="mt-8 bg-linear-to-br from-primary to-blue-600 rounded-xl p-4 text-white relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full translate-x-10 -translate-y-10 blur-xl"></div>
                         <Star className="text-white mb-2 bg-white/20 p-2 rounded-lg backdrop-blur-sm" size={32} />
                         <h3 className="font-bold text-sm mb-1">Earn more points!</h3>
@@ -215,7 +215,7 @@ export default function CustomerSidebar({ children }: CustomerSidebarProps) {
                                                     className={`p-4 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors ${!note.read ? 'bg-primary/5' : ''}`}
                                                 >
                                                     <div className="flex items-start gap-3">
-                                                        <div className={`mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${!note.read ? 'bg-primary' : 'bg-transparent'}`}></div>
+                                                        <div className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${!note.read ? 'bg-primary' : 'bg-transparent'}`}></div>
                                                         <div className="flex-1">
                                                             <p className={`text-sm ${!note.read ? 'font-bold text-text-main' : 'text-text-secondary'}`}>
                                                                 {note.title}

@@ -14,6 +14,8 @@ export const dashboardApi = {
       rewards: state.rewards,
       notifications: state.notifications,
       campaigns: state.campaigns,
+      staffMembers: state.staffMembers,
+      devices: state.devices,
     };
   },
 
@@ -78,7 +80,6 @@ export const dashboardApi = {
 
   // Notification Actions
   markNotificationRead: async (id: string) => {
-      // Immediate optimistic update usually, but we can delay
       useMockDashboardStore.getState().markNotificationRead(id);
       return id;
   },
@@ -117,6 +118,12 @@ export const dashboardApi = {
     return newCampaign;
   },
 
+  updateCampaign: async ({ id, updates }: { id: string, updates: any }) => {
+    await delay(600);
+    useMockDashboardStore.getState().updateCampaign(id, updates);
+    return { id, updates };
+  },
+
   deleteCampaign: async (id: string) => {
     await delay(500);
     useMockDashboardStore.getState().deleteCampaign(id);
@@ -127,5 +134,52 @@ export const dashboardApi = {
     await delay(300);
     useMockDashboardStore.getState().updateCampaignStatus(id, status);
     return { id, status };
+  },
+
+  // Staff Actions
+  addStaff: async (staff: any) => {
+    await delay(800);
+    const id = Math.random().toString(36).substr(2, 9);
+    const newStaff = { ...staff, id, lastActive: 'Never', status: 'Active' };
+    useMockDashboardStore.getState().addStaff(newStaff);
+    return newStaff;
+  },
+
+  updateStaffMember: async ({ id, updates }: { id: string, updates: any }) => {
+    await delay(500);
+    useMockDashboardStore.getState().updateStaffMember(id, updates);
+    return { id, updates };
+  },
+
+  deleteStaff: async (id: string) => {
+    await delay(400);
+    useMockDashboardStore.getState().deleteStaff(id);
+    return id;
+  },
+
+  // Device Actions
+  addDevice: async (device: any) => {
+    await delay(800);
+    const newDevice = { ...device, lastActive: 'Never', status: 'inactive', battery: 'Full' };
+    useMockDashboardStore.getState().addDevice(newDevice);
+    return newDevice;
+  },
+
+  updateDevice: async ({ id, updates }: { id: string, updates: any }) => {
+    await delay(500);
+    useMockDashboardStore.getState().updateDevice(id, updates);
+    return { id, updates };
+  },
+
+  deleteDevice: async (id: string) => {
+    await delay(400);
+    useMockDashboardStore.getState().deleteDevice(id);
+    return id;
+  },
+
+  updateReward: async ({ id, updates }: { id: string, updates: any }) => {
+    await delay(500);
+    useMockDashboardStore.getState().updateReward(id, updates);
+    return { id, updates };
   }
 };

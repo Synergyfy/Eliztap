@@ -6,6 +6,7 @@ import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
+import CreateCampaignModal from '@/components/dashboard/CreateCampaignModal';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { Campaign } from '@/lib/store/mockDashboardStore';
@@ -14,13 +15,15 @@ import { BarChart, Send, Eye, Edit, Trash2, Plus, FileText } from 'lucide-react'
 
 export default function AllCampaignsPage() {
     const queryClient = useQueryClient();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingCampaign, setEditingCampaign] = useState<Campaign | null>(null);
+
     const { data, isLoading } = useQuery({
         queryKey: ['dashboard'],
         queryFn: dashboardApi.fetchDashboardData,
     });
 
     const campaigns = data?.campaigns || [];
-    const stats_data = data?.stats;
 
     const deleteMutation = useMutation({
         mutationFn: dashboardApi.deleteCampaign,
@@ -34,26 +37,26 @@ export default function AllCampaignsPage() {
         mutationFn: dashboardApi.createCampaign,
         onSuccess: (newCampaign) => {
             queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            setIsModalOpen(false);
             toast.success(`Campaign "${newCampaign.name}" created!`);
         }
     });
 
-    const handleCreateCampaign = () => {
-        const name = prompt('Enter campaign name:');
-        if (!name) return;
-
-        const type = prompt('Enter channel (WhatsApp, SMS, Email):', 'WhatsApp') as any;
-        if (!['WhatsApp', 'SMS', 'Email'].includes(type)) {
-            toast.error('Invalid channel');
-            return;
+    const updateMutation = useMutation({
+        mutationFn: dashboardApi.updateCampaign,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            setEditingCampaign(null);
+            toast.success('Campaign updated successfully');
         }
+    });
 
-        createMutation.mutate({
-            name,
-            type,
-            audience: 'All Customers',
-            status: 'Active'
-        });
+    const handleCreateOrUpdate = (formData: any) => {
+        if (editingCampaign) {
+            updateMutation.mutate({ id: editingCampaign.id, updates: formData });
+        } else {
+            createMutation.mutate(formData);
+        }
     };
 
     const handleDelete = (id: string, name: string) => {
@@ -111,18 +114,21 @@ export default function AllCampaignsPage() {
                     <button
                         className="p-1.5 text-text-secondary hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
                         onClick={() => toast(`Analytics for ${item.name} coming soon`)}
+                        title="View Analytics"
                     >
                         <BarChart size={18} />
                     </button>
                     <button
                         className="p-1.5 text-text-secondary hover:text-text-main hover:bg-gray-100 rounded-lg transition-colors"
-                        onClick={() => toast(`Edit functionality for ${item.name} coming soon`)}
+                        onClick={() => setEditingCampaign(item)}
+                        title="Edit Campaign"
                     >
                         <Edit size={18} />
                     </button>
                     <button
                         className="p-1.5 text-text-secondary hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                         onClick={() => handleDelete(item.id, item.name)}
+                        title="Delete Campaign"
                     >
                         <Trash2 size={18} />
                     </button>
@@ -147,14 +153,25 @@ export default function AllCampaignsPage() {
                                 Templates
                             </button>
                             <button
-                                onClick={handleCreateCampaign}
-                                className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
+                                onClick={() => setIsModalOpen(true)}
+                                className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-lg shadow-primary/20 active:scale-95"
                             >
                                 <Plus size={18} />
                                 Create Campaign
                             </button>
                         </div>
                     }
+                />
+
+                <CreateCampaignModal
+                    isOpen={isModalOpen || !!editingCampaign}
+                    onClose={() => {
+                        setIsModalOpen(false);
+                        setEditingCampaign(null);
+                    }}
+                    onSubmit={handleCreateOrUpdate}
+                    isLoading={createMutation.isPending || updateMutation.isPending}
+                    initialData={editingCampaign}
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -178,7 +195,7 @@ export default function AllCampaignsPage() {
                                 description="Start your first marketing campaign to drive repeat visits and increase revenue."
                                 action={{
                                     label: "Create Campaign",
-                                    onClick: handleCreateCampaign,
+                                    onClick: () => setIsModalOpen(true),
                                     icon: "add"
                                 }}
                             />
