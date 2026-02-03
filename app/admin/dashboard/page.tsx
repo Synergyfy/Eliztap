@@ -2,8 +2,11 @@
 
 import React from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
+import Notification from '@/components/ui/Notification';
+import { notify } from '@/lib/notify'; // Import for demonstration
 
 export default function AdminDashboardPage() {
+    // ... (stats and recentBusinesses same as before)
     const platformStats = [
         {
             label: 'Total Businesses',
@@ -48,10 +51,14 @@ export default function AdminDashboardPage() {
     ];
 
     const systemAlerts = [
-        { type: 'warning', message: '3 businesses pending approval', time: '10 mins ago' },
-        { type: 'error', message: '12 devices offline for >24 hours', time: '1 hour ago' },
-        { type: 'info', message: '5 support tickets unresolved', time: '2 hours ago' },
+        { type: 'warning', message: '3 businesses pending approval', time: '10 mins ago', id: 1 },
+        { type: 'error', message: '12 devices offline for >24 hours', time: '1 hour ago', id: 2 },
+        { type: 'info', message: '5 support tickets unresolved', time: '2 hours ago', id: 3 },
     ];
+
+    const handleQuickAction = (action: string) => {
+        notify.info(`${action} initiated...`);
+    };
 
     return (
         <AdminSidebar>
@@ -62,27 +69,15 @@ export default function AdminDashboardPage() {
                     <p className="text-text-secondary font-medium">Platform overview and system management</p>
                 </div>
 
-                {/* System Alerts */}
+                {/* System Alerts - Using Notification Component */}
                 <div className="mb-8 space-y-3">
-                    {systemAlerts.map((alert, index) => (
-                        <div key={index} className={`p-4 rounded-xl border flex items-center gap-3 ${alert.type === 'error' ? 'bg-red-50 border-red-200' :
-                                alert.type === 'warning' ? 'bg-yellow-50 border-yellow-200' :
-                                    'bg-blue-50 border-blue-200'
-                            }`}>
-                            <span className={`material-icons-round ${alert.type === 'error' ? 'text-red-600' :
-                                    alert.type === 'warning' ? 'text-yellow-600' :
-                                        'text-blue-600'
-                                }`}>
-                                {alert.type === 'error' ? 'error' : alert.type === 'warning' ? 'warning' : 'info'}
-                            </span>
-                            <div className="flex-1">
-                                <p className={`text-sm font-bold ${alert.type === 'error' ? 'text-red-900' :
-                                        alert.type === 'warning' ? 'text-yellow-900' :
-                                            'text-blue-900'
-                                    }`}>{alert.message}</p>
-                            </div>
-                            <span className="text-xs text-gray-600 font-medium">{alert.time}</span>
-                        </div>
+                    {systemAlerts.map((alert) => (
+                        <Notification
+                            key={alert.id}
+                            type={alert.type as 'warning' | 'error' | 'info'}
+                            message={`${alert.message} (${alert.time})`}
+                            onClose={() => notify.success('Alert dismissed')}
+                        />
                     ))}
                 </div>
 
@@ -92,14 +87,14 @@ export default function AdminDashboardPage() {
                         <div key={index} className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow">
                             <div className="flex items-start justify-between mb-4">
                                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.color === 'green' ? 'bg-green-50' :
-                                        stat.color === 'yellow' ? 'bg-yellow-50' :
-                                            stat.color === 'purple' ? 'bg-purple-50' :
-                                                'bg-primary/10'
+                                    stat.color === 'yellow' ? 'bg-yellow-50' :
+                                        stat.color === 'purple' ? 'bg-purple-50' :
+                                            'bg-primary/10'
                                     }`}>
                                     <span className={`material-icons-round text-xl ${stat.color === 'green' ? 'text-green-600' :
-                                            stat.color === 'yellow' ? 'text-yellow-600' :
-                                                stat.color === 'purple' ? 'text-purple-600' :
-                                                    'text-primary'
+                                        stat.color === 'yellow' ? 'text-yellow-600' :
+                                            stat.color === 'purple' ? 'text-purple-600' :
+                                                'text-primary'
                                         }`}>{stat.icon}</span>
                                 </div>
                                 <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${stat.trend === 'up' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
@@ -147,8 +142,8 @@ export default function AdminDashboardPage() {
                                             {business.plan}
                                         </span>
                                         <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${business.status === 'active' ? 'bg-green-50 text-green-600' :
-                                                business.status === 'pending' ? 'bg-yellow-50 text-yellow-600' :
-                                                    'bg-red-50 text-red-600'
+                                            business.status === 'pending' ? 'bg-yellow-50 text-yellow-600' :
+                                                'bg-red-50 text-red-600'
                                             }`}>
                                             {business.status}
                                         </span>
@@ -162,23 +157,38 @@ export default function AdminDashboardPage() {
                     <div className="bg-white rounded-xl p-6 border border-gray-200">
                         <h2 className="text-xl font-display font-bold text-text-main mb-4">Quick Actions</h2>
                         <div className="space-y-3">
-                            <button className="w-full flex items-center gap-3 p-4 bg-primary text-white rounded-xl hover:bg-primary-hover transition-colors">
+                            <button
+                                onClick={() => handleQuickAction('Add Business')}
+                                className="w-full flex items-center gap-3 p-4 bg-primary text-white rounded-xl hover:bg-primary-hover transition-colors"
+                            >
                                 <span className="material-icons-round">add_business</span>
                                 <span className="font-bold text-sm">Add Business</span>
                             </button>
-                            <button className="w-full flex items-center gap-3 p-4 bg-gray-50 text-text-main rounded-xl hover:bg-gray-100 transition-colors">
+                            <button
+                                onClick={() => handleQuickAction('Create User')}
+                                className="w-full flex items-center gap-3 p-4 bg-gray-50 text-text-main rounded-xl hover:bg-gray-100 transition-colors"
+                            >
                                 <span className="material-icons-round">person_add</span>
                                 <span className="font-bold text-sm">Create User</span>
                             </button>
-                            <button className="w-full flex items-center gap-3 p-4 bg-gray-50 text-text-main rounded-xl hover:bg-gray-100 transition-colors">
+                            <button
+                                onClick={() => handleQuickAction('Register Device')}
+                                className="w-full flex items-center gap-3 p-4 bg-gray-50 text-text-main rounded-xl hover:bg-gray-100 transition-colors"
+                            >
                                 <span className="material-icons-round">nfc</span>
                                 <span className="font-bold text-sm">Register Device</span>
                             </button>
-                            <button className="w-full flex items-center gap-3 p-4 bg-gray-50 text-text-main rounded-xl hover:bg-gray-100 transition-colors">
+                            <button
+                                onClick={() => handleQuickAction('Export Reports')}
+                                className="w-full flex items-center gap-3 p-4 bg-gray-50 text-text-main rounded-xl hover:bg-gray-100 transition-colors"
+                            >
                                 <span className="material-icons-round">file_download</span>
                                 <span className="font-bold text-sm">Export Reports</span>
                             </button>
-                            <button className="w-full flex items-center gap-3 p-4 bg-gray-50 text-text-main rounded-xl hover:bg-gray-100 transition-colors">
+                            <button
+                                onClick={() => handleQuickAction('System Settings')}
+                                className="w-full flex items-center gap-3 p-4 bg-gray-50 text-text-main rounded-xl hover:bg-gray-100 transition-colors"
+                            >
                                 <span className="material-icons-round">settings</span>
                                 <span className="font-bold text-sm">System Settings</span>
                             </button>
