@@ -124,7 +124,7 @@ export default function AllCampaignsPage() {
                 <div className="flex items-center gap-2">
                     <button
                         className="p-1.5 text-text-secondary hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
-                        onClick={() => toast(`Analytics for ${item.name} coming soon`)}
+                        onClick={() => router.push(`/dashboard/campaigns/${item.id}`)}
                         title="View Analytics"
                     >
                         <BarChart size={18} />

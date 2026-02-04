@@ -40,7 +40,10 @@ export interface Campaign {
   status: 'Active' | 'Scheduled' | 'Recurring' | 'Completed' | 'Draft';
   sent: number;
   delivered: string;
+  deliveryRate: number; // Percentage
   clicks: number;
+  opens?: number; // For Email/WhatsApp
+  ctr: number; // Click-through rate percentage
   timestamp: number;
 }
 
@@ -148,10 +151,60 @@ const initialNotifications: Notification[] = [
 ];
 
 const initialCampaigns: Campaign[] = [
-  { id: '1', name: 'Weekend Coffee Special', type: 'WhatsApp', audience: 'All Customers', status: 'Active', sent: 1240, delivered: '98%', clicks: 156, timestamp: Date.now() - 86400000 },
-  { id: '2', name: 'Welcome Message', type: 'SMS', audience: 'New Customers', status: 'Recurring', sent: 412, delivered: '95%', clicks: 84, timestamp: Date.now() - 172800000 },
-  { id: '3', name: 'VIP Night Invitation', type: 'WhatsApp', audience: 'VIP Members', status: 'Scheduled', sent: 0, delivered: '0%', clicks: 0, timestamp: Date.now() + 86400000 },
-  { id: '4', name: 'October Newsletter', type: 'Email', audience: 'Newsletter Subs', status: 'Completed', sent: 2840, delivered: '92%', clicks: 312, timestamp: Date.now() - 604800000 },
+  { 
+    id: '1', 
+    name: 'Weekend Coffee Special', 
+    type: 'WhatsApp', 
+    audience: 'All Customers', 
+    status: 'Active', 
+    sent: 1240, 
+    delivered: '1.2k', 
+    deliveryRate: 98,
+    clicks: 156, 
+    opens: 1180,
+    ctr: 12.5,
+    timestamp: Date.now() - 86400000 
+  },
+  { 
+    id: '2', 
+    name: 'Welcome Message', 
+    type: 'SMS', 
+    audience: 'New Customers', 
+    status: 'Recurring', 
+    sent: 412, 
+    delivered: '395', 
+    deliveryRate: 95,
+    clicks: 84, 
+    ctr: 20.3,
+    timestamp: Date.now() - 172800000 
+  },
+  { 
+    id: '3', 
+    name: 'VIP Night Invitation', 
+    type: 'WhatsApp', 
+    audience: 'VIP Members', 
+    status: 'Scheduled', 
+    sent: 0, 
+    delivered: '0', 
+    deliveryRate: 0,
+    clicks: 0, 
+    ctr: 0,
+    timestamp: Date.now() + 86400000 
+  },
+  { 
+    id: '4', 
+    name: 'October Newsletter', 
+    type: 'Email', 
+    audience: 'Newsletter Subs', 
+    status: 'Completed', 
+    sent: 2840, 
+    delivered: '2.6k', 
+    deliveryRate: 92,
+    clicks: 312, 
+    opens: 1950,
+    ctr: 10.9,
+    timestamp: Date.now() - 604800000 
+  },
 ];
 
 const initialStaff: Staff[] = [
