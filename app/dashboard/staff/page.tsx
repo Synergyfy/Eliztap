@@ -10,7 +10,17 @@ import { Staff } from '@/lib/store/mockDashboardStore';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
 import toast from 'react-hot-toast';
-import { UserPlus, Shield, Edit3, Trash2, X, Check } from 'lucide-react';
+import { UserPlus, Shield, Edit3, Trash2, X, Check, Lock, Eye, Settings as SettingsIcon, MessageSquare, BarChart3, Users as UsersIcon } from 'lucide-react';
+import Modal from '@/components/ui/Modal';
+
+const PERMISSIONS = [
+    { id: 'dashboard', label: 'Dashboard', icon: Eye },
+    { id: 'visitors', label: 'Visitors', icon: UsersIcon },
+    { id: 'messages', label: 'Messages', icon: MessageSquare },
+    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+    { id: 'staff', label: 'Team', icon: UsersIcon },
+    { id: 'settings', label: 'Settings', icon: SettingsIcon },
+];
 
 export default function StaffManagementPage() {
     const router = useRouter();
@@ -18,6 +28,8 @@ export default function StaffManagementPage() {
     const queryClient = useQueryClient();
     const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
     const [editingStaff, setEditingStaff] = useState<Staff | null>(null);
+    const [staffToDelete, setStaffToDelete] = useState<{ id: string, name: string } | null>(null);
+    const [selectedPermissions, setSelectedPermissions] = useState<string[]>(['dashboard', 'visitors']);
 
     const { data: storeData, isLoading } = useQuery({
         queryKey: ['dashboard'],
@@ -66,8 +78,10 @@ export default function StaffManagementPage() {
             name: formData.get('name') as string,
             email: formData.get('email') as string,
             role: formData.get('role') as any,
+            permissions: selectedPermissions,
         };
         addStaffMutation.mutate(staffData);
+        setSelectedPermissions(['dashboard', 'visitors']);
     };
 
     const handleUpdateRole = (id: string, role: string) => {
@@ -75,8 +89,13 @@ export default function StaffManagementPage() {
     };
 
     const handleDelete = (id: string, name: string) => {
-        if (confirm(`Are you sure you want to remove ${name}?`)) {
-            deleteStaffMutation.mutate(id);
+        setStaffToDelete({ id, name });
+    };
+
+    const confirmDelete = () => {
+        if (staffToDelete) {
+            deleteStaffMutation.mutate(staffToDelete.id);
+            setStaffToDelete(null);
         }
     };
 
@@ -199,73 +218,144 @@ export default function StaffManagementPage() {
             </div>
 
             {/* Invite Modal */}
-            {isInviteModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsInviteModalOpen(false)}></div>
-                    <div className="relative w-full max-w-md bg-white rounded-2xl p-8 shadow-2xl animate-in fade-in zoom-in duration-200">
-                        <div className="flex items-center justify-between mb-6">
-                            <div>
-                                <h2 className="text-2xl font-display font-bold text-text-main">Invite Staff Member</h2>
-                                <p className="text-sm text-text-secondary">Add a new teammate to your business</p>
-                            </div>
-                            <button onClick={() => setIsInviteModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                                <X size={24} className="text-text-secondary" />
-                            </button>
+            <Modal
+                isOpen={isInviteModalOpen}
+                onClose={() => setIsInviteModalOpen(false)}
+                title="Invite Staff Member"
+                description="Add a new teammate to your business and define their access."
+                size="lg"
+            >
+                <form onSubmit={handleInviteStaff} className="space-y-6 py-4">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Full Name</label>
+                            <input name="name" required className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all font-bold text-sm" placeholder="e.g. John Doe" />
                         </div>
-                        <form onSubmit={handleInviteStaff} className="space-y-4">
-                            <div>
-                                <label className="block text-xs font-black uppercase tracking-widest text-text-secondary mb-2">Full Name</label>
-                                <input name="name" required className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all font-bold text-sm" placeholder="e.g. John Doe" />
-                            </div>
-                            <div>
-                                <label className="block text-xs font-black uppercase tracking-widest text-text-secondary mb-2">Email Address</label>
-                                <input name="email" type="email" required className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all font-bold text-sm" placeholder="john@example.com" />
-                            </div>
-                            <div>
-                                <label className="block text-xs font-black uppercase tracking-widest text-text-secondary mb-2">Assign Role</label>
-                                <select name="role" className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all font-bold text-sm">
-                                    <option value="Staff">Staff Member</option>
-                                    <option value="Manager">Manager</option>
-                                    <option value="Owner">Business Owner</option>
-                                </select>
-                            </div>
-                            <button disabled={addStaffMutation.isPending} className="w-full h-14 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 mt-6 active:scale-95 disabled:opacity-50">
-                                {addStaffMutation.isPending ? (<div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>) : (<><UserPlus size={20} />Send Invitation</>)}
-                            </button>
-                        </form>
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Email Address</label>
+                            <input name="email" type="email" required className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all font-bold text-sm" placeholder="john@example.com" />
+                        </div>
                     </div>
-                </div>
-            )}
 
-            {/* Edit Role Modal */}
-            {editingStaff && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setEditingStaff(null)}></div>
-                    <div className="relative w-full max-w-sm bg-white rounded-2xl p-8 shadow-2xl animate-in fade-in zoom-in duration-200">
-                        <h2 className="text-xl font-display font-bold text-text-main mb-2 text-center">Update Role</h2>
-                        <p className="text-sm text-text-secondary text-center mb-6">Changing role for <span className="font-bold text-text-main">{editingStaff.name}</span></p>
+                    <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Assign Base Role</label>
+                        <select name="role" className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all font-bold text-sm appearance-none">
+                            <option value="Staff">Staff Member</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Owner">Business Owner</option>
+                        </select>
+                    </div>
 
-                        <div className="space-y-3">
+                    <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Module Access & Permissions</label>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            {PERMISSIONS.map((p) => {
+                                const Icon = p.icon;
+                                const isSelected = selectedPermissions.includes(p.id);
+                                return (
+                                    <button
+                                        key={p.id}
+                                        type="button"
+                                        onClick={() => setSelectedPermissions(prev =>
+                                            isSelected ? prev.filter(id => id !== p.id) : [...prev, p.id]
+                                        )}
+                                        className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all group ${isSelected ? 'border-primary bg-primary/5' : 'border-gray-50 hover:border-gray-100 bg-gray-50/50'}`}
+                                    >
+                                        <div className={`p-1.5 rounded-lg ${isSelected ? 'bg-primary text-white' : 'bg-white text-text-secondary border border-gray-100'}`}>
+                                            <Icon size={14} />
+                                        </div>
+                                        <span className={`text-[11px] font-bold ${isSelected ? 'text-primary' : 'text-text-secondary'}`}>{p.label}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    <div className="flex gap-3 pt-4">
+                        <button type="button" onClick={() => setIsInviteModalOpen(false)} className="flex-1 h-14 border border-gray-100 text-text-main font-bold rounded-2xl hover:bg-gray-50 transition-all text-base active:scale-95">Cancel</button>
+                        <button disabled={addStaffMutation.isPending} className="flex-[2] h-14 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50 text-base">
+                            {addStaffMutation.isPending ? (<div className="size-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>) : (<><UserPlus size={20} />Send Invitation</>)}
+                        </button>
+                    </div>
+                </form>
+            </Modal>
+
+            {/* Edit Role & Permissions Modal */}
+            <Modal
+                isOpen={!!editingStaff}
+                onClose={() => setEditingStaff(null)}
+                title="Edit Access"
+                description={`Modify role and permissions for ${editingStaff?.name}`}
+                size="lg"
+            >
+                <div className="space-y-6 py-4">
+                    <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Staff Role</label>
+                        <div className="grid grid-cols-3 gap-3">
                             {['Staff', 'Manager', 'Owner'].map((role) => (
                                 <button
                                     key={role}
-                                    onClick={() => handleUpdateRole(editingStaff.id, role)}
-                                    className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all group ${editingStaff.role === role ? 'border-primary bg-primary/5' : 'border-gray-100 hover:border-primary/30'
-                                        }`}
+                                    onClick={() => handleUpdateRole(editingStaff!.id, role)}
+                                    className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${editingStaff?.role === role ? 'border-primary bg-primary/5' : 'border-gray-50 hover:border-gray-100 bg-gray-50/50'}`}
                                 >
-                                    <div className="text-left">
-                                        <p className={`font-bold text-sm ${editingStaff.role === role ? 'text-primary' : 'text-text-main'}`}>{role}</p>
-                                        <p className="text-[10px] text-text-secondary font-medium">
-                                            {role === 'Owner' ? 'Unlimited access' : role === 'Manager' ? 'Operations & Analytics' : 'Check-ins only'}
-                                        </p>
-                                    </div>
-                                    {editingStaff.role === role && <Check size={18} className="text-primary" />}
+                                    <Shield size={20} className={editingStaff?.role === role ? 'text-primary' : 'text-gray-300'} />
+                                    <span className={`text-[11px] font-black uppercase mt-2 ${editingStaff?.role === role ? 'text-primary' : 'text-text-secondary'}`}>{role}</span>
                                 </button>
                             ))}
                         </div>
                     </div>
+
+                    <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Update Module Access</label>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            {PERMISSIONS.map((p) => {
+                                const Icon = p.icon;
+                                // In a real app, editingStaff would have permissions. Here we simulate.
+                                const isSelected = selectedPermissions.includes(p.id);
+                                return (
+                                    <button
+                                        key={p.id}
+                                        type="button"
+                                        className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all ${isSelected ? 'border-primary bg-primary/5' : 'border-gray-50 bg-gray-50/50 opacity-60'}`}
+                                        onClick={() => {
+                                            setSelectedPermissions(prev => isSelected ? prev.filter(id => id !== p.id) : [...prev, p.id]);
+                                            toast.success(`${p.label} access updated for ${editingStaff?.name}`);
+                                        }}
+                                    >
+                                        <div className={`p-1.5 rounded-lg ${isSelected ? 'bg-primary text-white' : 'bg-white text-text-secondary'}`}>
+                                            <Icon size={14} />
+                                        </div>
+                                        <span className={`text-[11px] font-bold ${isSelected ? 'text-primary' : 'text-text-secondary'}`}>{p.label}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    <div className="pt-4">
+                        <button onClick={() => setEditingStaff(null)} className="w-full h-14 bg-gray-900 text-white font-bold rounded-2xl hover:bg-black transition-all shadow-xl active:scale-95 text-base">
+                            Save Changes
+                        </button>
+                    </div>
                 </div>
-            )}
+            </Modal>
+
+            {/* Delete Confirmation Modal */}
+            <Modal
+                isOpen={!!staffToDelete}
+                onClose={() => setStaffToDelete(null)}
+                title="Remove Staff Member"
+                description={`Are you sure you want to remove ${staffToDelete?.name}? This action cannot be undone.`}
+            >
+                <div className="flex gap-3 py-4">
+                    <button onClick={() => setStaffToDelete(null)} className="flex-1 h-12 border border-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">
+                        Cancel
+                    </button>
+                    <button onClick={confirmDelete} className="flex-1 h-12 bg-red-500 text-white font-bold rounded-xl hover:bg-red-600 transition-all shadow-lg shadow-red-500/20 text-sm">
+                        Remove
+                    </button>
+                </div>
+            </Modal>
         </DashboardSidebar>
     );
 }

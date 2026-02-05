@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
@@ -10,10 +10,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { Visitor } from '@/lib/store/mockDashboardStore';
 import { UserPlus, Calendar, TrendingUp, Timer, Send, Hand } from 'lucide-react';
+import SendMessageModal from '@/components/dashboard/SendMessageModal';
 import toast from 'react-hot-toast';
 
 export default function NewVisitorsPage() {
     const queryClient = useQueryClient();
+
+    const [selectedVisitorForMsg, setSelectedVisitorForMsg] = useState<Visitor | null>(null);
 
     const { data: storeData, isLoading } = useQuery({
         queryKey: ['dashboard'],
@@ -24,15 +27,15 @@ export default function NewVisitorsPage() {
     const newVisitors = allVisitors.filter((v: Visitor) => v.status === 'new');
 
     const handleWelcomeVisitor = (visitor: Visitor) => {
-        toast.success(`Welcome message sent to ${visitor.name}!`);
+        setSelectedVisitorForMsg(visitor);
     };
 
-    const handleSendWelcomeCampaign = () => {
+    const handleSendWelcomeMessage = () => {
         if (newVisitors.length === 0) {
-            toast.error('No new visitors to send welcome campaign to');
+            toast.error('No new visitors to send welcome message to');
             return;
         }
-        toast.success(`Welcome campaign sent to ${newVisitors.length} new visitors!`);
+        toast.success(`Welcome message sent to ${newVisitors.length} new visitors!`);
     };
 
     const stats = [
@@ -91,13 +94,21 @@ export default function NewVisitorsPage() {
                     description="Identify and welcome your first-time customers"
                     actions={
                         <button
-                            onClick={handleSendWelcomeCampaign}
+                            onClick={handleSendWelcomeMessage}
                             className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
                         >
                             <Send size={18} />
-                            Send Welcome Campaign
+                            Send Welcome Message
                         </button>
                     }
+                />
+
+                <SendMessageModal
+                    isOpen={!!selectedVisitorForMsg}
+                    onClose={() => setSelectedVisitorForMsg(null)}
+                    recipientName={selectedVisitorForMsg?.name || ''}
+                    recipientPhone={selectedVisitorForMsg?.phone}
+                    type="welcome"
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

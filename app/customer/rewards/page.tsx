@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import CustomerSidebar from '@/components/customer/CustomerSidebar';
+import Modal from '@/components/ui/Modal';
 import { notify } from '@/lib/notify';
 import { Star, Gift, Search, Info, CheckCircle2, QrCode, X, Clock, MapPin } from 'lucide-react';
 
@@ -154,72 +155,69 @@ export default function CustomerRewardsPage() {
                     </div>
                 </section>
 
-                {/* Reward Detail Modal */}
-                {selectedReward && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                        <div className="absolute inset-0 bg-text-main/80 backdrop-blur-xl animate-in fade-in" onClick={() => setSelectedReward(null)}></div>
-                        <div className="relative w-full max-w-lg bg-white rounded-[3rem] overflow-hidden shadow-2xl animate-in zoom-in slide-in-from-bottom-10 duration-500">
-                            <div className={`h-40 relative flex items-center justify-center ${selectedReward.color}`}>
-                                <button
-                                    onClick={() => setSelectedReward(null)}
-                                    className="absolute top-6 right-6 p-2 bg-white/20 hover:bg-white/40 rounded-full transition-colors text-white"
-                                >
-                                    <X size={20} />
-                                </button>
+                <Modal
+                    isOpen={!!selectedReward}
+                    onClose={() => setSelectedReward(null)}
+                    size="lg"
+                >
+                    {selectedReward && (
+                        <div className="-m-6"> {/* Negative margin to bleed to edges if desired, or just use standard padding */}
+                            <div className={`h-32 relative flex items-center justify-center ${selectedReward.color}`}>
                                 <span className="material-icons-round text-6xl opacity-20 scale-150 absolute top-0 left-0 -translate-x-4 -translate-y-4">{selectedReward.image}</span>
-                                <span className="material-icons-round text-7xl drop-shadow-2xl">{selectedReward.image}</span>
+                                <span className="material-icons-round text-5xl drop-shadow-2xl">{selectedReward.image}</span>
                             </div>
 
-                            <div className="p-10">
+                            <div className="p-8">
                                 <div className="flex items-start justify-between mb-8">
                                     <div>
-                                        <h2 className="text-3xl font-display font-bold text-text-main mb-1">{selectedReward.title}</h2>
-                                        <div className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-widest">
-                                            <MapPin size={14} />
+                                        <h2 className="text-2xl font-display font-bold text-slate-900 mb-1">{selectedReward.title}</h2>
+                                        <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
+                                            <MapPin size={12} />
                                             {selectedReward.business}
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-[10px] font-black uppercase text-text-secondary tracking-widest mb-1">Value</p>
-                                        <p className="text-xl font-display font-bold text-text-main">{selectedReward.value}</p>
+                                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Value</p>
+                                        <p className="text-lg font-display font-bold text-slate-900">{selectedReward.value}</p>
                                     </div>
                                 </div>
 
-                                <div className="space-y-6 mb-10">
-                                    <div className="flex gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                                        <Clock className="text-primary shrink-0" size={20} />
+                                <div className="space-y-4 mb-8">
+                                    <div className="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                        <Clock className="text-primary shrink-0" size={18} />
                                         <div>
-                                            <p className="font-bold text-sm text-text-main">Voucher Validity</p>
-                                            <p className="text-xs text-text-secondary font-medium">Valid for 30 days once activated. Single use only.</p>
+                                            <p className="font-bold text-sm text-slate-900">Voucher Validity</p>
+                                            <p className="text-xs text-slate-500 font-medium">Valid for 30 days once activated. Single use only.</p>
                                         </div>
                                     </div>
                                     <div>
-                                        <p className="font-bold text-sm text-text-main mb-2">Description</p>
-                                        <p className="text-sm text-text-secondary font-medium leading-relaxed">{selectedReward.desc}</p>
+                                        <p className="font-bold text-xs text-slate-400 uppercase tracking-widest mb-2 ml-1">Description</p>
+                                        <p className="text-sm text-slate-600 font-medium leading-relaxed bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
+                                            {selectedReward.desc}
+                                        </p>
                                     </div>
                                 </div>
 
                                 {selectedReward.progress >= 100 || !selectedReward.progress ? (
                                     <div className="space-y-6">
-                                        <div className="bg-primary/5 rounded-4xl p-8 border-2 border-dashed border-primary/20 text-center flex flex-col items-center">
-                                            <QrCode size={120} className="text-text-main mb-4 opacity-30" />
-                                            <p className="text-xs font-bold text-primary mb-1">Activation Required</p>
-                                            <p className="text-[10px] text-text-secondary font-black uppercase tracking-widest leading-tight px-4">QR Code will appear here after activation</p>
+                                        <div className="bg-slate-50 rounded-3xl p-6 border-2 border-dashed border-slate-200 text-center flex flex-col items-center">
+                                            <QrCode size={80} className="text-slate-300 mb-3" />
+                                            <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest leading-tight">Activation Required</p>
                                         </div>
                                         <button
                                             onClick={() => handleRedeem(selectedReward)}
-                                            className="w-full h-16 bg-primary text-white font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-primary-hover shadow-2xl shadow-primary/30 transition-all active:scale-95 flex items-center justify-center gap-3"
+                                            className="w-full h-14 bg-primary text-white font-black uppercase tracking-widest rounded-2xl hover:bg-primary-hover shadow-xl shadow-primary/20 transition-all active:scale-95 flex items-center justify-center gap-3"
                                         >
-                                            Burn {selectedReward.points} Points & Activate
+                                            Redeem {selectedReward.points} Points
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="p-8 bg-gray-50 rounded-[2.5rem] text-center">
-                                        <p className="text-lg font-bold text-text-main mb-2">Check-in at {selectedReward.business}</p>
-                                        <p className="text-sm text-text-secondary font-medium mb-6">You need {selectedReward.points - 1250} more points to unlock this reward.</p>
+                                    <div className="p-6 bg-slate-50 rounded-3xl text-center border border-slate-100">
+                                        <p className="text-sm font-bold text-slate-900 mb-1">More points needed</p>
+                                        <p className="text-xs text-slate-500 font-medium mb-4">Check-in at {selectedReward.business} to earn {selectedReward.points - 1250} more pts.</p>
                                         <button
                                             onClick={() => setSelectedReward(null)}
-                                            className="w-full h-14 bg-white border border-gray-200 text-text-secondary font-bold rounded-2xl hover:bg-gray-100 transition-all"
+                                            className="w-full h-12 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-100 transition-all text-sm"
                                         >
                                             Back to Vault
                                         </button>
@@ -227,8 +225,8 @@ export default function CustomerRewardsPage() {
                                 )}
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </Modal>
             </div>
         </CustomerSidebar>
     );

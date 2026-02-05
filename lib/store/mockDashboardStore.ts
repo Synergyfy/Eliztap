@@ -29,7 +29,8 @@ export interface Notification {
   message: string;
   timestamp: number;
   read: boolean;
-  type: 'info' | 'success' | 'warning';
+  type: 'info' | 'success' | 'warning' | 'error';
+  scope: 'ADMIN' | 'DASHBOARD';
 }
 
 export interface Campaign {
@@ -149,7 +150,10 @@ const initialRewards: Reward[] = [
 ];
 
 const initialNotifications: Notification[] = [
-  { id: '1', title: 'Welcome', message: 'Welcome to your new dashboard!', timestamp: Date.now(), read: false, type: 'info' },
+    { id: '1', title: 'Welcome', message: 'Welcome to your new dashboard!', timestamp: Date.now(), read: false, type: 'info', scope: 'DASHBOARD' },
+    { id: '2', title: 'System Healthy', message: 'Platform services are running optimally.', timestamp: Date.now(), read: true, type: 'success', scope: 'ADMIN' },
+    { id: '3', title: 'Pending Approval', message: '3 businesses are waiting for verification.', timestamp: Date.now() - 3600000, read: false, type: 'warning', scope: 'ADMIN' },
+    { id: '4', title: 'Device Offline', message: '12 devices in Lagos sector are offline.', timestamp: Date.now() - 7200000, read: false, type: 'error', scope: 'ADMIN' },
 ];
 
 const initialCampaigns: Campaign[] = [
@@ -359,7 +363,8 @@ export const useMockDashboardStore = create<DashboardState>()(
           message: `${visitorData.name} just tapped at your NFC point.`,
           timestamp: Date.now(),
           read: false,
-          type: 'success'
+          type: 'success',
+          scope: 'DASHBOARD'
         };
 
         return {
@@ -383,7 +388,8 @@ export const useMockDashboardStore = create<DashboardState>()(
           message: `${request.visitorName} wants to redeem ${request.rewardTitle}.`,
           timestamp: Date.now(),
           read: false,
-          type: 'warning'
+          type: 'warning',
+          scope: 'DASHBOARD'
         };
         
         return {
@@ -402,7 +408,8 @@ export const useMockDashboardStore = create<DashboardState>()(
           message: `Approved ${request.rewardTitle} for ${request.visitorName}.`,
           timestamp: Date.now(),
           read: false,
-          type: 'success'
+          type: 'success',
+          scope: 'DASHBOARD'
         };
 
         return {
@@ -421,7 +428,8 @@ export const useMockDashboardStore = create<DashboardState>()(
           message: `Declined ${request.rewardTitle} for ${request.visitorName}.`,
           timestamp: Date.now(),
           read: false,
-          type: 'info'
+          type: 'info',
+          scope: 'DASHBOARD'
         };
 
         return {

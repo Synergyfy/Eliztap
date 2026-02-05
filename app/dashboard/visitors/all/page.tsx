@@ -11,7 +11,8 @@ import StatsCard from '@/components/dashboard/StatsCard';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
 import AddVisitorModal, { VisitorFormData } from '@/components/dashboard/AddVisitorModal';
-import { Users, UserPlus, Repeat, Star, Download, Search, Edit, Trash2, MoreVertical, Send } from 'lucide-react';
+import SendMessageModal from '@/components/dashboard/SendMessageModal';
+import { Users, UserPlus, Repeat, Star, Download, Search, Edit, Trash2, MoreVertical, Send, MessageSquare } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AllVisitorsPage() {
@@ -20,6 +21,7 @@ export default function AllVisitorsPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [selectedVisitorForMsg, setSelectedVisitorForMsg] = useState<Visitor | null>(null);
 
     const { data: storeData, isLoading } = useQuery({
         queryKey: ['dashboard'],
@@ -79,17 +81,15 @@ export default function AllVisitorsPage() {
     };
 
     const handleDeleteVisitor = (id: string, name: string) => {
-        if (confirm(`Are you sure you want to delete ${name}?`)) {
-            deleteMutation.mutate(id);
-        }
+        deleteMutation.mutate(id);
     };
 
     const handleInviteVisitor = (visitor: Visitor) => {
-        toast.success(`Welcome message sent to ${visitor.name}!`);
+        setSelectedVisitorForMsg(visitor);
     };
 
-    const handleSendCampaign = () => {
-        toast('Campaign builder coming soon');
+    const handleSendMessage = () => {
+        toast('Message composer coming soon');
     };
 
     const stats = [
@@ -212,6 +212,14 @@ export default function AllVisitorsPage() {
                     isLoading={isLoading || addVisitorMutation.isPending}
                 />
 
+                <SendMessageModal
+                    isOpen={!!selectedVisitorForMsg}
+                    onClose={() => setSelectedVisitorForMsg(null)}
+                    recipientName={selectedVisitorForMsg?.name || ''}
+                    recipientPhone={selectedVisitorForMsg?.phone}
+                    type="welcome"
+                />
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     {stats.map((stat, index) => (
                         <StatsCard key={index} {...stat} />
@@ -240,7 +248,7 @@ export default function AllVisitorsPage() {
                             <option value="returning">Returning</option>
                         </select>
                         <button
-                            onClick={handleSendCampaign}
+                            onClick={handleSendMessage}
                             className="h-12 px-6 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm"
                         >
                             Send Message

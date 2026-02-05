@@ -44,20 +44,20 @@ export default function Pricing() {
 
     return (
         <section id="pricing" className="py-24 bg-gray-50 overflow-hidden relative">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="text-center max-w-3xl mx-auto mb-16">
                     <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 text-text-main">Smart plans for every scale</h2>
                     <p className="text-lg text-text-secondary font-medium">Clear pricing with no hidden fees. All plans include secure NFC technology.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {plans.map((plan, index) => (
                         <div
                             key={index}
                             className={`
                                 relative flex flex-col p-8 rounded-xl transition-all duration-500
                                 ${plan.highlight
-                                    ? 'bg-primary shadow-2xl shadow-primary/30 transform lg:-translate-y-4'
+                                    ? 'bg-primary shadow-2xl shadow-primary/30 transform lg:scale-105 z-10'
                                     : 'bg-white border border-gray-100 shadow-sm hover:shadow-xl'
                                 }
                             `}
@@ -88,14 +88,14 @@ export default function Pricing() {
                                 ))}
                             </ul>
                             <Link
-                                href="/get-started"
+                                href={(plan as any).href || "/get-started"}
                                 className={`
                                     w-full py-4 rounded-2xl font-bold text-center transition-all cursor-pointer shadow-lg
                                     ${plan.highlight
                                         ? 'bg-white text-primary hover:bg-blue-50'
                                         : 'border-2 border-primary text-primary hover:bg-primary hover:text-white'
                                     }
-                                    ${plan.name === 'Enterprise' ? 'bg-primary text-white border-none hover:bg-black' : ''}
+                                    ${plan.name === 'Enterprise' || plan.name === 'White-Label' ? 'bg-primary text-white border-none hover:bg-black' : ''}
                                 `}
                             >
                                 {plan.cta}

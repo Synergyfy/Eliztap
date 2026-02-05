@@ -11,10 +11,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { Visitor, Reward } from '@/lib/store/mockDashboardStore';
 import toast from 'react-hot-toast';
-import { Repeat, Users, Star, AlertTriangle, Gift, Award } from 'lucide-react';
+import SendMessageModal from '@/components/dashboard/SendMessageModal';
+import { Repeat, Users, Star, AlertTriangle, Gift, Award, Send } from 'lucide-react';
 
 export default function ReturningVisitorsPage() {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [selectedVisitorForMsg, setSelectedVisitorForMsg] = useState<Visitor | null>(null);
     const queryClient = useQueryClient();
 
     const { data: storeData, isLoading } = useQuery({
@@ -44,7 +46,7 @@ export default function ReturningVisitorsPage() {
     };
 
     const handleRewardVisitor = (visitor: Visitor) => {
-        toast.success(`Individual reward sent to ${visitor.name}!`);
+        setSelectedVisitorForMsg(visitor);
     };
 
     const stats = [
@@ -88,8 +90,8 @@ export default function ReturningVisitorsPage() {
                     }}
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-primary-hover transition-colors"
                 >
-                    <Award size={14} />
-                    Reward
+                    <Send size={14} />
+                    Message
                 </button>
             )
         }
@@ -117,6 +119,14 @@ export default function ReturningVisitorsPage() {
                     onClose={() => setIsCreateModalOpen(false)}
                     onSubmit={handleCreateReward}
                     isLoading={createRewardMutation.isPending}
+                />
+
+                <SendMessageModal
+                    isOpen={!!selectedVisitorForMsg}
+                    onClose={() => setSelectedVisitorForMsg(null)}
+                    recipientName={selectedVisitorForMsg?.name || ''}
+                    recipientPhone={selectedVisitorForMsg?.phone}
+                    type="reward"
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
