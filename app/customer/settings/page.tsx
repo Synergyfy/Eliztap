@@ -40,11 +40,11 @@ export default function CustomerSettingsPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                     {/* Left Column: Navigation/Profile Summary */}
                     <div className="space-y-6">
-                        <div className="bg-white rounded-[2rem] border border-gray-100 p-8 shadow-sm text-center relative overflow-hidden group">
-                            <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-r from-primary/10 to-blue-500/10"></div>
+                        <div className="bg-white rounded-4xl border border-gray-100 p-8 shadow-sm text-center relative overflow-hidden group">
+                            <div className="absolute top-0 inset-x-0 h-24 bg-linear-to-r from-primary/10 to-blue-500/10"></div>
 
                             <div className="relative mt-4 mb-6 inline-block">
-                                <div className="w-24 h-24 rounded-[2rem] bg-white shadow-xl flex items-center justify-center border-4 border-white overflow-hidden">
+                                <div className="w-24 h-24 rounded-4xl bg-white shadow-xl flex items-center justify-center border-4 border-white overflow-hidden">
                                     <div className="w-full h-full bg-primary/5 flex items-center justify-center text-primary">
                                         <User size={40} />
                                     </div>

@@ -201,7 +201,7 @@ export default function CustomerRewardsPage() {
 
                                 {selectedReward.progress >= 100 || !selectedReward.progress ? (
                                     <div className="space-y-6">
-                                        <div className="bg-primary/5 rounded-[2rem] p-8 border-2 border-dashed border-primary/20 text-center flex flex-col items-center">
+                                        <div className="bg-primary/5 rounded-4xl p-8 border-2 border-dashed border-primary/20 text-center flex flex-col items-center">
                                             <QrCode size={120} className="text-text-main mb-4 opacity-30" />
                                             <p className="text-xs font-bold text-primary mb-1">Activation Required</p>
                                             <p className="text-[10px] text-text-secondary font-black uppercase tracking-widest leading-tight px-4">QR Code will appear here after activation</p>

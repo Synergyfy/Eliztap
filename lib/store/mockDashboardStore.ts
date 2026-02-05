@@ -114,6 +114,8 @@ export interface DashboardState {
   addDevice: (device: Device) => void;
   updateDevice: (id: string, updates: Partial<Device>) => void;
   deleteDevice: (id: string) => void;
+  updateVisitor: (id: string, updates: Partial<Visitor>) => void;
+  deleteVisitor: (id: string) => void;
   addRedemptionRequest: (request: Omit<RedemptionRequest, 'id' | 'status' | 'timestamp'>) => void;
   approveRedemption: (id: string) => void;
   declineRedemption: (id: string) => void;
@@ -304,6 +306,12 @@ export const useMockDashboardStore = create<DashboardState>()(
         devices: state.devices.map(d => d.id === id ? { ...d, ...updates } : d)
       })),
       deleteDevice: (id) => set((state) => ({ devices: state.devices.filter(d => d.id !== id) })),
+      updateVisitor: (id, updates) => set((state) => ({
+        visitors: state.visitors.map(v => v.id === id ? { ...v, ...updates } : v)
+      })),
+      deleteVisitor: (id) => set((state) => ({
+        visitors: state.visitors.filter(v => v.id !== id)
+      })),
       recordExternalTap: (visitorData) => set((state) => {
         const existingIndex = state.visitors.findIndex(v => 
           (visitorData.phone && v.phone === visitorData.phone) || 

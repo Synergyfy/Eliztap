@@ -53,51 +53,55 @@ export default function CreateRewardModal({ isOpen, onClose, onSubmit, isLoading
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose}></div>
             <div className="relative w-full max-w-md bg-white rounded-2xl p-8 shadow-xl animate-in fade-in zoom-in duration-200">
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center justify-between mb-8">
                     <div>
-                        <h2 className="text-xl font-display font-bold text-text-main">Create New Reward</h2>
-                        <p className="text-sm text-text-secondary">Set up a new loyalty reward</p>
+                        <h2 className="text-xl font-display font-bold text-text-main">
+                            {initialData ? 'Edit reward' : 'Create new reward'}
+                        </h2>
+                        <p className="text-sm text-text-secondary">
+                            {initialData ? 'Update the details of your loyalty reward' : 'Set up a new loyalty reward for your customers'}
+                        </p>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    <button onClick={onClose} className="p-2.5 hover:bg-gray-100 rounded-full transition-colors">
                         <X className="text-text-secondary" size={20} />
                     </button>
                 </div>
 
                 <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
                     <div>
-                        <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider mb-1.5">
-                            Reward Title
+                        <label className="block text-[10px] font-bold text-text-secondary ml-1 mb-1.5">
+                            Reward title
                         </label>
                         <input
                             {...register('title', { required: 'Title is required' })}
                             placeholder="e.g. Free Coffee"
-                            className="w-full h-11 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm font-medium"
+                            className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm font-medium"
                         />
                         {errors.title && <span className="text-xs text-red-500 mt-1">{errors.title.message}</span>}
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider mb-1.5">
-                            Points Required
+                        <label className="block text-[10px] font-bold text-text-secondary ml-1 mb-1.5">
+                            Points required
                         </label>
                         <input
                             type="number"
                             {...register('points', { required: 'Points are required', min: 1 })}
                             placeholder="e.g. 100"
-                            className="w-full h-11 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm font-medium"
+                            className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm font-medium"
                         />
                         {errors.points && <span className="text-xs text-red-500 mt-1">{errors.points.message}</span>}
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider mb-1.5">
+                        <label className="block text-[10px] font-bold text-text-secondary ml-1 mb-1.5">
                             Description
                         </label>
                         <textarea
                             {...register('description', { required: 'Description is required' })}
                             placeholder="Describe what the customer gets..."
                             rows={3}
-                            className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm font-medium resize-none"
+                            className="w-full p-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm font-medium resize-none"
                         ></textarea>
                         {errors.description && <span className="text-xs text-red-500 mt-1">{errors.description.message}</span>}
                     </div>
@@ -113,14 +117,14 @@ export default function CreateRewardModal({ isOpen, onClose, onSubmit, isLoading
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="flex-1 h-12 flex items-center justify-center gap-2 font-bold text-white bg-primary hover:bg-primary-hover rounded-xl transition-colors text-sm shadow-lg shadow-primary/25 disabled:opacity-70 disabled:cursor-not-allowed"
+                            className="flex-[1.5] h-12 flex items-center justify-center gap-2 font-bold text-white bg-primary hover:bg-primary-hover rounded-xl transition-all text-sm shadow-xl shadow-primary/20 disabled:opacity-70 disabled:cursor-not-allowed active:scale-[0.98]"
                         >
                             {isLoading ? (
                                 <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
                             ) : (
                                 <>
-                                    <Plus size={18} />
-                                    Create Reward
+                                    {!initialData && <Plus size={18} />}
+                                    {initialData ? 'Update reward' : 'Create reward'}
                                 </>
                             )}
                         </button>

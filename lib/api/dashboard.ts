@@ -203,5 +203,17 @@ export const dashboardApi = {
     await delay(600);
     useMockDashboardStore.getState().declineRedemption(id);
     return id;
+  },
+
+  updateVisitor: async ({ id, updates }: { id: string, updates: any }) => {
+    await delay(500);
+    useMockDashboardStore.getState().updateVisitor(id, updates);
+    return { id, updates };
+  },
+
+  deleteVisitor: async (id: string) => {
+    await delay(400);
+    useMockDashboardStore.getState().deleteVisitor(id);
+    return id;
   }
 };

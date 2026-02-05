@@ -87,7 +87,7 @@ export default function CustomerNotificationsPage() {
                         </div>
                     ) : notifications.length === 0 ? (
                         <div className="p-32 flex flex-col items-center justify-center text-center">
-                            <div className="w-24 h-24 bg-gray-50 rounded-[2rem] flex items-center justify-center mb-6 shadow-inner">
+                            <div className="w-24 h-24 bg-gray-50 rounded-4xl flex items-center justify-center mb-6 shadow-inner">
                                 <Bell className="text-gray-300" size={40} />
                             </div>
                             <h3 className="text-xl font-display font-bold text-text-main mb-2">Peace & Quiet</h3>
@@ -101,7 +101,7 @@ export default function CustomerNotificationsPage() {
                                 <div
                                     key={note.id}
                                     onClick={() => !note.read && readMutation.mutate(note.id)}
-                                    className={`p-8 flex items-start gap-6 hover:bg-gray-50/50 transition-all cursor-pointer relative group ${!note.read ? 'bg-primary/[0.02]' : ''}`}
+                                    className={`p-8 flex items-start gap-6 hover:bg-gray-50/50 transition-all cursor-pointer relative group ${!note.read ? 'bg-primary/2' : ''}`}
                                 >
                                     {/* Unread indicator bar */}
                                     {!note.read && (
@@ -161,7 +161,7 @@ export default function CustomerNotificationsPage() {
                 </div>
 
                 {/* Engagement Card */}
-                <div className="bg-gradient-to-r from-primary to-blue-600 rounded-[2.5rem] p-10 text-white relative overflow-hidden shadow-2xl shadow-primary/20">
+                <div className="bg-linear-to-r from-primary to-blue-600 rounded-[2.5rem] p-10 text-white relative overflow-hidden shadow-2xl shadow-primary/20">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full translate-x-20 -translate-y-20 blur-3xl"></div>
                     <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                         <div>

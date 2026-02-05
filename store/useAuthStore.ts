@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware';
 export type UserRole = 'owner' | 'manager' | 'staff' | 'admin' | 'customer' | null;
 
 interface User {
+  id?: string;
   email: string;
   name: string;
   role: UserRole;
@@ -21,6 +22,7 @@ interface AuthState {
 // Mock users for demonstration
 const MOCK_USERS: Record<string, any> = {
   owner: {
+    id: 'OW-001',
     email: 'business@eliztap.com',
     password: 'business123',
     name: 'John Smith',
@@ -29,6 +31,7 @@ const MOCK_USERS: Record<string, any> = {
     businessId: 'bistro_001'
   },
   manager: {
+    id: 'MG-001',
     email: 'manager@eliztap.com',
     password: 'manager123',
     name: 'Sarah Supervisor',
@@ -37,6 +40,7 @@ const MOCK_USERS: Record<string, any> = {
     businessId: 'bistro_001'
   },
   staff: {
+    id: 'ST-001',
     email: 'staff@eliztap.com',
     password: 'staff123',
     name: 'Michael Cashier',
@@ -45,12 +49,14 @@ const MOCK_USERS: Record<string, any> = {
     businessId: 'bistro_001'
   },
   admin: {
+    id: 'AD-001',
     email: 'admin@eliztap.com',
     password: 'admin123',
     name: 'Admin User',
     role: 'admin' as UserRole
   },
   customer: {
+    id: 'CS-2847',
     email: 'customer@eliztap.com',
     password: 'customer123',
     name: 'Jane Customer',

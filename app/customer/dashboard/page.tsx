@@ -5,7 +5,7 @@ import CustomerSidebar from '@/components/customer/CustomerSidebar';
 import Link from 'next/link';
 import {
     History, Star, PiggyBank, Coffee, Smartphone, Dumbbell,
-    QrCode, Scan, X, ExternalLink, ArrowRight
+    QrCode, Scan, X, ExternalLink, ArrowRight, ChevronRight
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
@@ -52,7 +52,7 @@ export default function CustomerDashboardPage() {
             <div className="max-w-5xl mx-auto space-y-8 pb-12">
 
                 {/* ID Card / Quick Scan - Hero Section */}
-                <div className="bg-gradient-to-br from-primary via-blue-600 to-indigo-700 rounded-[2rem] p-8 md:p-12 text-white relative overflow-hidden shadow-2xl shadow-primary/30 group">
+                <div className="bg-linear-to-br from-primary via-blue-600 to-indigo-700 rounded-4xl p-8 md:p-12 text-white relative overflow-hidden shadow-2xl shadow-primary/30 group">
                     <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-32 -translate-y-32 blur-3xl group-hover:scale-110 transition-transform duration-700"></div>
                     <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/20 rounded-full -translate-x-20 translate-y-20 blur-2xl"></div>
 
@@ -105,8 +105,8 @@ export default function CustomerDashboardPage() {
                         return (
                             <div key={index} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all flex items-center gap-5 group">
                                 <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-colors ${stat.color === 'blue' ? 'bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white' :
-                                        stat.color === 'primary' ? 'bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white' :
-                                            'bg-green-50 text-green-600 group-hover:bg-green-600 group-hover:text-white'
+                                    stat.color === 'primary' ? 'bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white' :
+                                        'bg-green-50 text-green-600 group-hover:bg-green-600 group-hover:text-white'
                                     }`}>
                                     <IconComponent size={24} />
                                 </div>
@@ -125,7 +125,7 @@ export default function CustomerDashboardPage() {
                 {/* Main Content Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
                     {/* Recent Activity */}
-                    <div className="lg:col-span-3 bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm">
+                    <div className="lg:col-span-3 bg-white p-8 rounded-4xl border border-gray-100 shadow-sm">
                         <div className="flex items-center justify-between mb-8">
                             <div>
                                 <h3 className="font-display font-bold text-xl text-text-main">Recent Activity</h3>
@@ -161,7 +161,7 @@ export default function CustomerDashboardPage() {
                     </div>
 
                     {/* Featured Rewards */}
-                    <div className="lg:col-span-2 bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm">
+                    <div className="lg:col-span-2 bg-white p-8 rounded-4xl border border-gray-100 shadow-sm">
                         <div className="flex items-center justify-between mb-8">
                             <div>
                                 <h3 className="font-display font-bold text-xl text-text-main">Unlocked Rewards</h3>
@@ -174,7 +174,7 @@ export default function CustomerDashboardPage() {
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-orange-100/50 rounded-full translate-x-16 -translate-y-16 blur-2xl group-hover:scale-150 transition-transform"></div>
                                 <div className="relative z-10">
                                     <div className="flex items-center gap-4 mb-4">
-                                        <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0 text-orange-600">
+                                        <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center shrink-0 text-orange-600">
                                             <Coffee size={24} />
                                         </div>
                                         <div className="flex-1">
@@ -200,7 +200,7 @@ export default function CustomerDashboardPage() {
                                 <div className="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                                 <div className="relative z-10">
                                     <div className="flex items-center gap-4 mb-4">
-                                        <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0 text-blue-600 animate-bounce transition-all">
+                                        <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center shrink-0 text-blue-600 animate-bounce transition-all">
                                             <Dumbbell size={24} />
                                         </div>
                                         <div className="flex-1">
@@ -249,8 +249,8 @@ export default function CustomerDashboardPage() {
                             <p className="text-sm text-text-secondary font-medium">EntryConnect Member since 2024</p>
                         </div>
 
-                        <div className="bg-gray-50 rounded-[2rem] p-8 mb-8 border border-gray-100 text-center relative group">
-                            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-[2rem]"></div>
+                        <div className="bg-gray-50 rounded-4xl p-8 mb-8 border border-gray-100 text-center relative group">
+                            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-4xl"></div>
                             <QrCode size={200} className="mx-auto text-text-main relative z-10" />
                             <p className="mt-6 text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">Scan at Terminal</p>
                         </div>
@@ -283,8 +283,3 @@ export default function CustomerDashboardPage() {
     );
 }
 
-const ChevronRight = ({ className, size }: { className?: string, size?: number }) => (
-    <svg className={className} width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="m9 18 6-6-6-6" />
-    </svg>
-);

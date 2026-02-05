@@ -1,5 +1,5 @@
-import React from 'react';
-import { Cpu, Shield, Zap, Palette, Printer } from 'lucide-react';
+import Link from 'next/link';
+import { Cpu, Shield, Zap, Palette, Printer, ArrowRight } from 'lucide-react';
 
 export default function HardwarePricing() {
     const hardwareOptions = [
@@ -116,10 +116,16 @@ export default function HardwarePricing() {
                                 <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
                                     <h4 className="text-2xl font-bold text-white mb-4 text-center">Custom Quote</h4>
                                     <p className="text-sm text-white/80 text-center mb-8">Pricing for white-label starts at 1,000+ units. Contact us for bulk rates.</p>
-                                    <button className="w-full h-14 bg-white text-primary font-bold rounded-xl hover:bg-blue-50 transition-all flex items-center justify-center gap-2 shadow-xl">
-                                        Request White-Label Quote
-                                        <Zap size={18} />
-                                    </button>
+                                    <div className="space-y-4">
+                                        <button className="w-full h-14 bg-white text-primary font-bold rounded-xl hover:bg-blue-50 transition-all flex items-center justify-center gap-2 shadow-xl">
+                                            Request White-Label Quote
+                                            <Zap size={18} />
+                                        </button>
+                                        <Link href="/whitepaper" className="w-full h-14 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 border border-white/20">
+                                            View Hardware Whitepaper
+                                            <ArrowRight size={18} />
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>

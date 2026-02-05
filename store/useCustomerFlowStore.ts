@@ -114,7 +114,7 @@ interface CustomerFlowState {
     
     // Actions
     setStep: (step: CustomerStep) => void;
-    setUserData: (data: { name: string; email?: string; phone?: string }) => void;
+    setUserData: (data: { name: string; email?: string; phone?: string; uniqueId?: string }) => void;
     resetFlow: () => void;
     toggleFeedback: (show: boolean) => void;
     setRewardSetup: (has: boolean) => void;
@@ -163,7 +163,7 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
 
     setStep: (step) => set({ currentStep: step }),
     setUserData: (data) => {
-        const uniqueId = `LT-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+        const uniqueId = data.uniqueId || `LT-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
         set({ userData: { ...data, uniqueId }, visitCount: 1 });
     },
     resetFlow: () => set({ 

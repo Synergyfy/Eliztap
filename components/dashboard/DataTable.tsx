@@ -1,4 +1,4 @@
-import React from 'react';
+import { Loader2 } from 'lucide-react';
 
 export interface Column<T> {
     header: string;
@@ -24,7 +24,7 @@ export default function DataTable<T extends { id: string | number }>({
     if (isLoading) {
         return (
             <div className="w-full h-64 flex items-center justify-center bg-white rounded-xl border border-gray-200">
-                <span className="material-icons-round animate-spin text-primary text-3xl">refresh</span>
+                <Loader2 className="animate-spin text-primary" size={32} />
             </div>
         );
     }

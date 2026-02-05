@@ -128,7 +128,7 @@ export default function LoginPage() {
                                         </div>
                                     )}
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="grid grid-cols-1 gap-6">
                                         <div className="space-y-3">
                                             <label className="text-[11px] font-black uppercase tracking-[0.2em] text-text-secondary ml-1">Email Address</label>
                                             <div className="relative">
