@@ -31,7 +31,7 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
         refetchInterval: 5000,
     });
 
-    const notifications = data?.notifications || [];
+    const notifications = (data?.notifications || []).filter((n: Notification) => n.scope === 'ADMIN');
     const unreadCount = notifications.filter((n: Notification) => !n.read).length;
 
     const readNotificationMutation = useMutation({

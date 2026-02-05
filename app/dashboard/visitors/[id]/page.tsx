@@ -24,7 +24,7 @@ export default function VisitorProfilePage({ params }: { params: { id: string } 
     const timeline = [
         { date: 'Today, 2:15 PM', activity: 'Visited Main Entrance', location: 'Branch A', icon: 'nfc' },
         { date: 'Yesterday, 9:20 AM', activity: 'Redeemed Free Coffee Reward', location: 'Branch A', icon: 'redeem' },
-        { date: 'Oct 25, 2024', activity: 'Received SMS Campaign "Weekend Special"', location: 'System', icon: 'sms' },
+        { date: 'Oct 25, 2024', activity: 'Received SMS Message "Weekend Special"', location: 'System', icon: 'sms' },
         { date: 'Oct 20, 2024', activity: 'Visited Table 4', location: 'Branch A', icon: 'nfc' },
         { date: 'Oct 15, 2024', activity: 'Visited Bar Area', location: 'Branch A', icon: 'nfc' },
     ];
@@ -105,7 +105,7 @@ export default function VisitorProfilePage({ params }: { params: { id: string } 
                     {/* Right Column: Activity Timeline */}
                     <div className="lg:col-span-2">
                         <ChartCard title="Activity Timeline" subtitle="Recent interactions with your business">
-                            <div className="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-200 before:to-transparent">
+                            <div className="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-linear-to-b before:from-transparent before:via-gray-200 before:to-transparent">
                                 {timeline.map((item, index) => (
                                     <div key={index} className="relative flex items-center justify-between gap-6">
                                         <div className="flex items-center gap-6">

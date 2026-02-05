@@ -34,7 +34,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
         refetchInterval: 5000,
     });
 
-    const notifications = data?.notifications || [];
+    const notifications = (data?.notifications || []).filter((n: Notification) => n.scope === 'DASHBOARD');
     const redemptionRequests = data?.redemptionRequests || [];
     const unreadCount = notifications.filter((n: Notification) => !n.read).length;
     const pendingRedemptions = redemptionRequests.filter((r: any) => r.status === 'pending').length;
@@ -100,7 +100,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             icon: Send,
             roles: ['owner', 'manager'],
             submenu: [
-                { label: 'All Campaigns', href: '/dashboard/campaigns' },
+                { label: 'All Messages', href: '/dashboard/campaigns' },
                 { label: 'Create New', href: '/dashboard/campaigns/new' },
                 { label: 'Scheduled', href: '/dashboard/campaigns/scheduled' },
                 { label: 'Templates', href: '/dashboard/campaigns/templates' },
@@ -268,7 +268,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                             <input
                                 type="text"
-                                placeholder="Search visitors, campaigns..."
+                                placeholder="Search visitors, messages..."
                                 className="w-full h-10 pl-10 pr-4 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all"
                             />
                         </div>

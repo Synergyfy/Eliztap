@@ -1,14 +1,11 @@
 'use client';
 
-import React from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
-import Notification from '@/components/ui/Notification';
-import { notify } from '@/lib/notify'; // Import for demonstration
+import { notify } from '@/lib/notify'; 
 import { useRouter } from 'next/navigation';
 
 export default function AdminDashboardPage() {
     const router = useRouter(); // Initialize router
-    // ... (stats and recentBusinesses same as before)
     const platformStats = [
         {
             label: 'Total Businesses',
@@ -52,12 +49,6 @@ export default function AdminDashboardPage() {
         { name: 'Restaurant 360', owner: 'David Brown', plan: 'Basic', status: 'suspended', joined: '2 weeks ago' },
     ];
 
-    const systemAlerts = [
-        { type: 'warning', message: '3 businesses pending approval', time: '10 mins ago', id: 1 },
-        { type: 'error', message: '12 devices offline for >24 hours', time: '1 hour ago', id: 2 },
-        { type: 'info', message: '5 support tickets unresolved', time: '2 hours ago', id: 3 },
-    ];
-
     const handleQuickAction = (action: string) => {
         switch (action) {
             case 'Add Business':
@@ -92,18 +83,6 @@ export default function AdminDashboardPage() {
                 <div className="mb-8">
                     <h1 className="text-3xl font-display font-bold text-text-main mb-2">Admin Dashboard</h1>
                     <p className="text-text-secondary font-medium">Platform overview and system management</p>
-                </div>
-
-                {/* System Alerts - Using Notification Component */}
-                <div className="mb-8 space-y-3">
-                    {systemAlerts.map((alert) => (
-                        <Notification
-                            key={alert.id}
-                            type={alert.type as 'warning' | 'error' | 'info'}
-                            message={`${alert.message} (${alert.time})`}
-                            onClose={() => notify.success('Alert dismissed')}
-                        />
-                    ))}
                 </div>
 
                 {/* Stats Grid */}

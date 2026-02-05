@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import CustomerSidebar from '@/components/customer/CustomerSidebar';
+import Modal from '@/components/ui/Modal';
 import Link from 'next/link';
 import {
     History, Star, PiggyBank, Coffee, Smartphone, Dumbbell,
@@ -227,58 +228,47 @@ export default function CustomerDashboardPage() {
             </div>
 
             {/* My ID Modal */}
-            {showIdModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div
-                        className="absolute inset-0 bg-text-main/80 backdrop-blur-xl animate-in fade-in duration-300"
-                        onClick={() => setShowIdModal(false)}
-                    ></div>
-                    <div className="relative w-full max-w-sm bg-white rounded-[2.5rem] p-8 shadow-2xl animate-in zoom-in slide-in-from-bottom-10 duration-500">
-                        <button
-                            onClick={() => setShowIdModal(false)}
-                            className="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition-colors text-text-secondary"
-                        >
-                            <X size={20} />
-                        </button>
+            <Modal
+                isOpen={showIdModal}
+                onClose={() => setShowIdModal(false)}
+                size="sm"
+            >
+                <div className="text-center mb-8">
+                    <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-xl">
+                        <span className="text-2xl font-black text-primary uppercase">{user?.name?.substring(0, 2) || 'JD'}</span>
+                    </div>
+                    <h2 className="text-2xl font-display font-bold text-slate-900">{user?.name || 'Customer'}</h2>
+                    <p className="text-sm text-slate-500 font-medium mt-1">EntryConnect Member since 2024</p>
+                </div>
 
-                        <div className="text-center mb-8">
-                            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-xl">
-                                <span className="text-2xl font-black text-primary uppercase">{user?.name?.substring(0, 2) || 'JD'}</span>
-                            </div>
-                            <h2 className="text-2xl font-display font-bold text-text-main">{user?.name || 'Customer'}</h2>
-                            <p className="text-sm text-text-secondary font-medium">EntryConnect Member since 2024</p>
-                        </div>
+                <div className="bg-slate-50 rounded-4xl p-8 mb-8 border border-slate-100 text-center relative group">
+                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-4xl"></div>
+                    <QrCode size={180} className="mx-auto text-slate-900 relative z-10" />
+                    <p className="mt-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Scan at Terminal</p>
+                </div>
 
-                        <div className="bg-gray-50 rounded-4xl p-8 mb-8 border border-gray-100 text-center relative group">
-                            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-4xl"></div>
-                            <QrCode size={200} className="mx-auto text-text-main relative z-10" />
-                            <p className="mt-6 text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">Scan at Terminal</p>
-                        </div>
+                <div className="flex gap-4 mb-8">
+                    <button className="flex-1 h-14 bg-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-200 transition-all text-[10px] uppercase tracking-widest active:scale-95">
+                        Apple Wallet
+                    </button>
+                    <button className="flex-1 h-14 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all text-[10px] uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-95">
+                        G-Pay
+                    </button>
+                </div>
 
-                        <div className="flex gap-4">
-                            <button className="flex-1 h-14 bg-gray-100 text-text-secondary font-bold rounded-2xl hover:bg-gray-200 transition-all text-xs uppercase tracking-widest active:scale-95">
-                                Add to Apple Wallet
-                            </button>
-                            <button className="flex-1 h-14 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all text-xs uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-95">
-                                G-Pay
-                            </button>
-                        </div>
-
-                        <div className="mt-8 pt-6 border-t border-gray-100 flex items-center justify-between">
-                            <div className="text-left">
-                                <p className="text-[10px] font-black uppercase text-text-secondary tracking-widest">Points Balance</p>
-                                <p className="text-lg font-display font-bold text-primary">1,250 pts</p>
-                            </div>
-                            <div className="text-right">
-                                <p className="text-[10px] font-black uppercase text-text-secondary tracking-widest">Membership</p>
-                                <p className="text-lg font-display font-bold text-text-main group hover:text-primary transition-colors cursor-pointer flex items-center gap-1">
-                                    Gold <ExternalLink size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </p>
-                            </div>
-                        </div>
+                <div className="pt-6 border-t border-slate-100 flex items-center justify-between">
+                    <div className="text-left">
+                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Points Balance</p>
+                        <p className="text-lg font-display font-bold text-primary">1,250 pts</p>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Membership</p>
+                        <p className="text-lg font-display font-bold text-slate-900 group hover:text-primary transition-colors cursor-pointer flex items-center gap-1">
+                            Gold <ExternalLink size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </p>
                     </div>
                 </div>
-            )}
+            </Modal>
         </CustomerSidebar>
     );
 }

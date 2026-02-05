@@ -19,16 +19,12 @@ interface RewardFormData {
     description: string;
 }
 
-export default function CreateRewardModal({ isOpen, onClose, onSubmit, isLoading, initialData }: CreateRewardModalProps) {
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<RewardFormData>({
-        defaultValues: initialData ? {
-            title: initialData.title,
-            points: initialData.points,
-            description: initialData.description,
-        } : undefined
-    });
+import Modal from '@/components/ui/Modal';
 
-    // Reset form when initialData changes (e.g. when opening modal for a new reward or a different edit)
+export default function CreateRewardModal({ isOpen, onClose, onSubmit, isLoading, initialData }: CreateRewardModalProps) {
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<RewardFormData>();
+
+    // Reset form when initialData changes
     React.useEffect(() => {
         if (isOpen) {
             reset(initialData ? {
@@ -47,90 +43,77 @@ export default function CreateRewardModal({ isOpen, onClose, onSubmit, isLoading
         onSubmit(data);
     };
 
-    if (!isOpen) return null;
-
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose}></div>
-            <div className="relative w-full max-w-md bg-white rounded-2xl p-8 shadow-xl animate-in fade-in zoom-in duration-200">
-                <div className="flex items-center justify-between mb-8">
-                    <div>
-                        <h2 className="text-xl font-display font-bold text-text-main">
-                            {initialData ? 'Edit reward' : 'Create new reward'}
-                        </h2>
-                        <p className="text-sm text-text-secondary">
-                            {initialData ? 'Update the details of your loyalty reward' : 'Set up a new loyalty reward for your customers'}
-                        </p>
-                    </div>
-                    <button onClick={onClose} className="p-2.5 hover:bg-gray-100 rounded-full transition-colors">
-                        <X className="text-text-secondary" size={20} />
-                    </button>
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            title={initialData ? 'Edit Reward' : 'Create New Reward'}
+            description={initialData ? 'Update the details of your loyalty reward' : 'Set up a new loyalty reward for your customers'}
+            size="md"
+        >
+            <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+                <div className="space-y-2">
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">
+                        Reward title
+                    </label>
+                    <input
+                        {...register('title', { required: 'Title is required' })}
+                        placeholder="e.g. Free Coffee"
+                        className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all text-sm font-bold"
+                    />
+                    {errors.title && <span className="text-xs text-red-500 mt-1 ml-1 font-bold">{errors.title.message}</span>}
                 </div>
 
-                <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-                    <div>
-                        <label className="block text-[10px] font-bold text-text-secondary ml-1 mb-1.5">
-                            Reward title
-                        </label>
-                        <input
-                            {...register('title', { required: 'Title is required' })}
-                            placeholder="e.g. Free Coffee"
-                            className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm font-medium"
-                        />
-                        {errors.title && <span className="text-xs text-red-500 mt-1">{errors.title.message}</span>}
-                    </div>
+                <div className="space-y-2">
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">
+                        Points required
+                    </label>
+                    <input
+                        type="number"
+                        {...register('points', { required: 'Points are required', min: 1 })}
+                        placeholder="e.g. 100"
+                        className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all text-sm font-bold"
+                    />
+                    {errors.points && <span className="text-xs text-red-500 mt-1 ml-1 font-bold">{errors.points.message}</span>}
+                </div>
 
-                    <div>
-                        <label className="block text-[10px] font-bold text-text-secondary ml-1 mb-1.5">
-                            Points required
-                        </label>
-                        <input
-                            type="number"
-                            {...register('points', { required: 'Points are required', min: 1 })}
-                            placeholder="e.g. 100"
-                            className="w-full h-12 px-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm font-medium"
-                        />
-                        {errors.points && <span className="text-xs text-red-500 mt-1">{errors.points.message}</span>}
-                    </div>
+                <div className="space-y-2">
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">
+                        Description
+                    </label>
+                    <textarea
+                        {...register('description', { required: 'Description is required' })}
+                        placeholder="Describe what the customer gets..."
+                        rows={3}
+                        className="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all text-sm font-bold resize-none"
+                    ></textarea>
+                    {errors.description && <span className="text-xs text-red-500 mt-1 ml-1 font-bold">{errors.description.message}</span>}
+                </div>
 
-                    <div>
-                        <label className="block text-[10px] font-bold text-text-secondary ml-1 mb-1.5">
-                            Description
-                        </label>
-                        <textarea
-                            {...register('description', { required: 'Description is required' })}
-                            placeholder="Describe what the customer gets..."
-                            rows={3}
-                            className="w-full p-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm font-medium resize-none"
-                        ></textarea>
-                        {errors.description && <span className="text-xs text-red-500 mt-1">{errors.description.message}</span>}
-                    </div>
-
-                    <div className="pt-4 flex gap-3">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="flex-1 h-12 flex items-center justify-center font-bold text-text-secondary bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors text-sm"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="flex-[1.5] h-12 flex items-center justify-center gap-2 font-bold text-white bg-primary hover:bg-primary-hover rounded-xl transition-all text-sm shadow-xl shadow-primary/20 disabled:opacity-70 disabled:cursor-not-allowed active:scale-[0.98]"
-                        >
-                            {isLoading ? (
-                                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                            ) : (
-                                <>
-                                    {!initialData && <Plus size={18} />}
-                                    {initialData ? 'Update reward' : 'Create reward'}
-                                </>
-                            )}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                <div className="pt-4 flex gap-3">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="flex-1 h-12 flex items-center justify-center font-bold text-slate-500 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors text-sm active:scale-95"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="flex-[1.5] h-12 flex items-center justify-center gap-2 font-bold text-white bg-primary hover:bg-primary-hover rounded-xl transition-all text-sm shadow-xl shadow-primary/20 disabled:opacity-70 disabled:cursor-not-allowed active:scale-95"
+                    >
+                        {isLoading ? (
+                            <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                        ) : (
+                            <>
+                                {!initialData && <Plus size={18} />}
+                                {initialData ? 'Update Reward' : 'Create Reward'}
+                            </>
+                        )}
+                    </button>
+                </div>
+            </form>
+        </Modal>
     );
 }

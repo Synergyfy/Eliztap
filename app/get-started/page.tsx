@@ -3,19 +3,26 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { designPresets as presets } from '@/styles/presets';
 import AuthSidePanel from '@/components/auth/AuthSidePanel';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function GetStarted() {
+    const router = useRouter();
+    const { signup } = useAuthStore();
     const [step, setStep] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
-        fullName: '',
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
         confirmPassword: '',
         businessName: '',
         category: '',
+        role: 'Owner' as 'Owner' | 'Manager',
         visitors: '',
         goal: '',
         serialNumber: '',
@@ -28,6 +35,31 @@ export default function GetStarted() {
 
     const nextStep = () => setStep(prev => prev + 1);
     const prevStep = () => setStep(prev => prev - 1);
+
+    const handleFinalize = async () => {
+        setIsLoading(true);
+        try {
+            const userData = {
+                email: formData.email,
+                name: `${formData.firstName} ${formData.lastName}`,
+                role: formData.role.toLowerCase() as any,
+                businessName: formData.businessName,
+                businessId: 'new_' + Math.random().toString(36).substr(2, 6)
+            };
+
+            await signup(userData);
+            setStep(5);
+
+            // Auto redirect after 3 seconds
+            setTimeout(() => {
+                router.push('/dashboard');
+            }, 3000);
+        } catch (error) {
+            toast.error('Failed to create account. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className="h-screen bg-white flex overflow-hidden font-sans">
@@ -62,17 +94,32 @@ export default function GetStarted() {
                                     </div>
 
                                     <div className="space-y-5">
-                                        <div className="space-y-1.5">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Full Name</label>
-                                            <div className="relative">
-                                                <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">person</span>
-                                                <input
-                                                    type="text"
-                                                    placeholder="Daniel Smith"
-                                                    className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                                    value={formData.fullName}
-                                                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                                                />
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-1.5">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">First Name</label>
+                                                <div className="relative">
+                                                    <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">person</span>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Daniel"
+                                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                                                        value={formData.firstName}
+                                                        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Last Name</label>
+                                                <div className="relative">
+                                                    <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">person</span>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Smith"
+                                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                                                        value={formData.lastName}
+                                                        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="space-y-1.5">
@@ -139,7 +186,7 @@ export default function GetStarted() {
                                         <button
                                             onClick={nextStep}
                                             disabled={!formData.agreeToTerms}
-                                            className="w-full h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all flex items-center justify-center gap-2 text-sm mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="w-full h-14 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all flex items-center justify-center gap-2 text-sm mt-4 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
                                         >
                                             Create Account
                                             <span className="material-icons-round text-lg">arrow_forward</span>
@@ -216,6 +263,22 @@ export default function GetStarted() {
                                         </div>
 
                                         <div className="space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Your Role at the Business</label>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {['Owner', 'Manager'].map((r) => (
+                                                    <button
+                                                        key={r}
+                                                        onClick={() => setFormData({ ...formData, role: r as any })}
+                                                        className={`h-12 rounded-xl text-[11px] font-bold transition-all border flex items-center justify-center gap-2 ${formData.role === r ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-gray-50 border-gray-100 text-text-secondary hover:bg-gray-100'}`}
+                                                    >
+                                                        <span className="material-icons-round text-lg">{r === 'Owner' ? 'grade' : 'badge'}</span>
+                                                        Business {r}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-3">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Type</label>
                                             <div className="flex flex-wrap gap-2">
                                                 {categories.map(c => (
@@ -281,7 +344,17 @@ export default function GetStarted() {
 
                                     <div className="flex gap-4 pt-4">
                                         <button onClick={prevStep} className="h-12 px-8 border border-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">Back</button>
-                                        <button onClick={nextStep} className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all text-sm">Finalize Setup</button>
+                                        <button
+                                            onClick={handleFinalize}
+                                            disabled={isLoading || !formData.goal}
+                                            className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all text-sm flex items-center justify-center gap-2"
+                                        >
+                                            {isLoading ? (
+                                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                            ) : (
+                                                'Finalize Setup'
+                                            )}
+                                        </button>
                                     </div>
                                 </motion.div>
                             )}
@@ -356,7 +429,7 @@ export default function GetStarted() {
                         ] : [
                             {
                                 title: "You're all set!",
-                                description: "Your dashboard is ready. Start creating your first NFC campaign and watch the data flow in.",
+                                description: "Your dashboard is ready. Start creating your first NFC message and watch the data flow in.",
                                 icon: "celebration"
                             },
                             {

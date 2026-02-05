@@ -13,7 +13,7 @@ export default function NotificationsPage() {
         },
         {
             title: 'Daily Summary',
-            desc: 'Receive a summary of your daily footfall and campaign performance',
+            desc: 'Receive a summary of your daily footfall and message performance',
             channels: ['Email']
         },
         {
@@ -22,8 +22,8 @@ export default function NotificationsPage() {
             channels: ['Email', 'SMS']
         },
         {
-            title: 'Campaign Reports',
-            desc: 'Final reports when a campaign is completed',
+            title: 'Message Reports',
+            desc: 'Final reports when a message is completed',
             channels: ['Email']
         },
         {

@@ -16,6 +16,7 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signup: (userData: User) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
 }
 
@@ -89,6 +90,14 @@ export const useAuthStore = create<AuthState>()(
         }
 
         return { success: false, error: 'The email or password you entered is incorrect. Please try again or use a demo account.' };
+      },
+
+      signup: async (userData: User) => {
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        set({ user: userData, isAuthenticated: true });
+        return { success: true };
       },
 
       logout: () => {

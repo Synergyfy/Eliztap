@@ -18,6 +18,8 @@ export interface VisitorFormData {
     status: string;
 }
 
+import Modal from '@/components/ui/Modal';
+
 export default function AddVisitorModal({ isOpen, onClose, onSubmit, isLoading }: AddVisitorModalProps) {
     const { register, handleSubmit, formState: { errors }, reset } = useForm<VisitorFormData>();
 
@@ -31,44 +33,36 @@ export default function AddVisitorModal({ isOpen, onClose, onSubmit, isLoading }
         onClose();
     };
 
-    if (!isOpen) return null;
-
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl max-w-md w-full shadow-2xl">
-                {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                    <h2 className="text-xl font-display font-bold text-text-main">Add New Visitor</h2>
-                    <button
-                        onClick={handleClose}
-                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                    >
-                        <X size={20} />
-                    </button>
-                </div>
-
-                {/* Form */}
-                <form onSubmit={handleSubmit(handleFormSubmit)} className="p-6 space-y-4">
+        <Modal
+            isOpen={isOpen}
+            onClose={handleClose}
+            title="Add New Visitor"
+            description="Create a new customer profile manually in your database."
+            size="2xl"
+        >
+            <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Name */}
-                    <div>
-                        <label className="block text-sm font-bold text-text-main mb-2">
-                            Full Name *
+                    <div className="space-y-2">
+                        <label className="block text-[11px] font-black uppercase tracking-wider text-slate-500 ml-1">
+                            Full Name
                         </label>
                         <input
                             {...register('name', { required: 'Name is required' })}
                             type="text"
-                            placeholder="Enter visitor's full name"
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all"
+                            placeholder="e.g. John Doe"
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white focus:border-primary/20 transition-all"
                         />
                         {errors.name && (
-                            <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+                            <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.name.message}</p>
                         )}
                     </div>
 
                     {/* Email */}
-                    <div>
-                        <label className="block text-sm font-bold text-text-main mb-2">
-                            Email Address *
+                    <div className="space-y-2">
+                        <label className="block text-[11px] font-black uppercase tracking-wider text-slate-500 ml-1">
+                            Email Address
                         </label>
                         <input
                             {...register('email', {
@@ -80,76 +74,79 @@ export default function AddVisitorModal({ isOpen, onClose, onSubmit, isLoading }
                             })}
                             type="email"
                             placeholder="visitor@example.com"
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all"
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white focus:border-primary/20 transition-all"
                         />
                         {errors.email && (
-                            <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+                            <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.email.message}</p>
                         )}
                     </div>
 
                     {/* Phone */}
-                    <div>
-                        <label className="block text-sm font-bold text-text-main mb-2">
-                            Phone Number *
+                    <div className="space-y-2">
+                        <label className="block text-[11px] font-black uppercase tracking-wider text-slate-500 ml-1">
+                            Phone Number
                         </label>
                         <input
                             {...register('phone', { required: 'Phone is required' })}
                             type="tel"
                             placeholder="+234 800 000 0000"
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all"
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white focus:border-primary/20 transition-all"
                         />
                         {errors.phone && (
-                            <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
+                            <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.phone.message}</p>
                         )}
                     </div>
 
                     {/* Status */}
-                    <div>
-                        <label className="block text-sm font-bold text-text-main mb-2">
-                            Status *
+                    <div className="space-y-2">
+                        <label className="block text-[11px] font-black uppercase tracking-wider text-slate-500 ml-1">
+                            Current Status
                         </label>
                         <select
                             {...register('status', { required: 'Status is required' })}
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all"
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white focus:border-primary/20 transition-all appearance-none cursor-pointer"
                         >
                             <option value="">Select status</option>
-                            <option value="New">New</option>
-                            <option value="Active">Active</option>
-                            <option value="Returning">Returning</option>
-                            <option value="VIP">VIP</option>
+                            <option value="New">New Visitor</option>
+                            <option value="Active">Active Regular</option>
+                            <option value="Returning">Returning Customer</option>
+                            <option value="VIP">VIP Client</option>
                             <option value="Inactive">Inactive</option>
                         </select>
                         {errors.status && (
-                            <p className="text-red-500 text-xs mt-1">{errors.status.message}</p>
+                            <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.status.message}</p>
                         )}
                     </div>
+                </div>
 
-                    {/* Actions */}
-                    <div className="flex gap-3 pt-4">
-                        <button
-                            type="button"
-                            onClick={handleClose}
-                            className="flex-1 px-4 py-3 bg-gray-100 text-text-main font-bold rounded-lg hover:bg-gray-200 transition-colors text-sm"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="flex-1 px-4 py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                        >
-                            {isLoading ? (
-                                <>
-                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                    Adding...
-                                </>
-                            ) : (
-                                'Add Visitor'
-                            )}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                <div className="p-4 bg-primary/5 border border-primary/10 rounded-2xl">
+                    <p className="text-[11px] text-primary font-bold leading-relaxed">
+                        Note: Adding a visitor manually will include them in your next automated campaign targeting their specific segment.
+                    </p>
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-4 pt-4 border-t border-slate-50">
+                    <button
+                        type="button"
+                        onClick={handleClose}
+                        className="flex-1 px-6 py-4 bg-slate-50 text-slate-600 font-bold rounded-2xl hover:bg-slate-100 transition-all text-sm active:scale-95"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="flex-2 px-6 py-4 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all text-sm shadow-xl shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 active:scale-95"
+                    >
+                        {isLoading ? (
+                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        ) : (
+                            'Confirm & Add Visitor'
+                        )}
+                    </button>
+                </div>
+            </form>
+        </Modal>
     );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React,{useState} from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
@@ -8,13 +8,17 @@ import { Visitor } from '@/lib/store/mockDashboardStore';
 import toast from 'react-hot-toast';
 import {
     Users, UserPlus, Repeat, Calendar, TrendingUp, TrendingDown,
-    ChevronDown, Trash, Send, Nfc, Download, Gift, ArrowRight
+    ChevronDown, Trash, Send, Nfc, Download, Gift, ArrowRight, MessageSquare
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Modal from '@/components/ui/Modal';
+import SendMessageModal from '@/components/dashboard/SendMessageModal';
 
 export default function DashboardPage() {
     const queryClient = useQueryClient();
     const router = useRouter();
+    const [showClearModal, setShowClearModal] = useState(false);
+    const [selectedVisitorForMsg, setSelectedVisitorForMsg] = useState<{ visitor: Visitor, type: 'welcome' | 'reward' } | null>(null);
 
     // Fetch Dashboard Data
     const { data, isLoading } = useQuery({
@@ -54,9 +58,12 @@ export default function DashboardPage() {
     };
 
     const handleClearDashboard = () => {
-        if (confirm('Are you sure you want to clear all dashboard data?')) {
-            clearDashboardMutation.mutate();
-        }
+        setShowClearModal(true);
+    };
+
+    const confirmClear = () => {
+        clearDashboardMutation.mutate();
+        setShowClearModal(false);
     };
 
     const stats = [
@@ -215,7 +222,7 @@ export default function DashboardPage() {
 
                             {[
                                 { label: 'Manual Entry', desc: 'Add visitor manually', icon: UserPlus, route: '/dashboard/visitors/all', color: 'bg-orange-50 text-orange-600', hover: 'hover:border-orange-200' },
-                                { label: 'New Campaign', desc: 'Reach your customers', icon: Send, route: '/dashboard/campaigns', color: 'bg-indigo-50 text-indigo-600', hover: 'hover:border-indigo-200' },
+                                { label: 'New Message', desc: 'Reach your customers', icon: MessageSquare, route: '/dashboard/campaigns', color: 'bg-indigo-50 text-indigo-600', hover: 'hover:border-indigo-200' },
                                 { label: 'Add Device', desc: 'Setup NFC terminal', icon: Nfc, route: '/dashboard/settings/devices', color: 'bg-blue-50 text-blue-600', hover: 'hover:border-blue-200' },
                                 { label: 'Export Data', desc: 'Download CSV reports', icon: Download, route: '/dashboard/visitors/all', color: 'bg-green-50 text-green-600', hover: 'hover:border-green-200' }
                             ].map((action, i) => (
@@ -305,25 +312,15 @@ export default function DashboardPage() {
                                             <button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    if (visitor.status === 'new') {
-                                                        toast.success(`Welcome message sent to ${visitor.name}`);
-                                                    } else {
-                                                        toast.success(`Reward sent to ${visitor.name}`);
-                                                    }
+                                                    setSelectedVisitorForMsg({
+                                                        visitor,
+                                                        type: visitor.status === 'new' ? 'welcome' : 'reward'
+                                                    });
                                                 }}
                                                 className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-primary-hover transition-colors"
                                             >
-                                                {visitor.status === 'new' ? (
-                                                    <>
-                                                        <Send size={12} />
-                                                        Welcome
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Gift size={12} />
-                                                        Reward
-                                                    </>
-                                                )}
+                                                <Send size={12} />
+                                                {visitor.status === 'new' ? 'Welcome' : 'Message'}
                                             </button>
                                         </td>
                                     </tr>
@@ -339,6 +336,30 @@ export default function DashboardPage() {
                         </table>
                     </div>
                 </div>
+
+                <Modal
+                    isOpen={showClearModal}
+                    onClose={() => setShowClearModal(false)}
+                    title="Clear Dashboard Data"
+                    description="Are you sure you want to clear all dashboard data? This will reset all stats and visitor history."
+                >
+                    <div className="flex gap-3 py-4">
+                        <button onClick={() => setShowClearModal(false)} className="flex-1 h-12 border border-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">
+                            Cancel
+                        </button>
+                        <button onClick={confirmClear} className="flex-1 h-12 bg-red-500 text-white font-bold rounded-xl hover:bg-red-600 transition-all shadow-lg shadow-red-500/20 text-sm">
+                            Clear Everything
+                        </button>
+                    </div>
+                </Modal>
+
+                <SendMessageModal
+                    isOpen={!!selectedVisitorForMsg}
+                    onClose={() => setSelectedVisitorForMsg(null)}
+                    recipientName={selectedVisitorForMsg?.visitor.name || ''}
+                    recipientPhone={selectedVisitorForMsg?.visitor.phone}
+                    type={selectedVisitorForMsg?.type || 'welcome'}
+                />
             </div>
         </DashboardSidebar>
     );

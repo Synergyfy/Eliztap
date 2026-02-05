@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
+import Modal from '@/components/ui/Modal';
 import { notify } from '@/lib/notify';
 
 export default function AdminBusinessesPage() {
@@ -29,10 +30,8 @@ export default function AdminBusinessesPage() {
 
     const handleDelete = (id: number) => {
         const business = businesses.find(b => b.id === id);
-        if (window.confirm(`Are you sure you want to remove ${business?.name}?`)) {
-            setBusinesses(businesses.filter(b => b.id !== id));
-            notify.success(`${business?.name} has been removed from the platform.`);
-        }
+        setBusinesses(businesses.filter(b => b.id !== id));
+        notify.success(`${business?.name} has been removed from the platform.`);
     };
 
     const handleToggleStatus = (id: number) => {
@@ -73,9 +72,9 @@ export default function AdminBusinessesPage() {
     };
 
     const filteredBusinesses = businesses.filter(b => {
-        const matchesSearch = b.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                             b.owner.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                             b.email.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch = b.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            b.owner.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            b.email.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesStatus = filterStatus === 'all' || b.status === filterStatus;
         const matchesPlan = filterPlan === 'all' || b.plan.toLowerCase() === filterPlan.toLowerCase();
         return matchesSearch && matchesStatus && matchesPlan;
@@ -104,12 +103,11 @@ export default function AdminBusinessesPage() {
                     {stats.map((stat, index) => (
                         <div key={index} className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
                             <div className="flex items-center gap-4">
-                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                                    stat.color === 'green' ? 'bg-green-50 text-green-600' :
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.color === 'green' ? 'bg-green-50 text-green-600' :
                                     stat.color === 'yellow' ? 'bg-yellow-50 text-yellow-600' :
-                                    stat.color === 'red' ? 'bg-red-50 text-red-600' :
-                                    'bg-primary/10 text-primary'
-                                }`}>
+                                        stat.color === 'red' ? 'bg-red-50 text-red-600' :
+                                            'bg-primary/10 text-primary'
+                                    }`}>
                                     <span className="material-icons-round text-xl">{stat.icon}</span>
                                 </div>
                                 <div>
@@ -147,7 +145,7 @@ export default function AdminBusinessesPage() {
                                 <option value="pending">Pending</option>
                                 <option value="suspended">Suspended</option>
                             </select>
-                            <select 
+                            <select
                                 value={filterPlan}
                                 onChange={(e) => setFilterPlan(e.target.value)}
                                 className="h-12 px-4 bg-gray-50 border border-gray-200 rounded-lg text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/20"
@@ -158,7 +156,7 @@ export default function AdminBusinessesPage() {
                                 <option value="premium">Premium</option>
                                 <option value="enterprise">Enterprise</option>
                             </select>
-                            <button 
+                            <button
                                 onClick={() => notify.info('Exporting business data...')}
                                 className="h-12 px-6 bg-white border border-gray-200 text-text-main font-bold rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
                             >
@@ -216,23 +214,21 @@ export default function AdminBusinessesPage() {
                                                 </div>
                                             </td>
                                             <td className="py-4 px-6">
-                                                <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                                                    business.plan === 'Enterprise' ? 'bg-purple-50 text-purple-600' :
+                                                <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${business.plan === 'Enterprise' ? 'bg-purple-50 text-purple-600' :
                                                     business.plan === 'Premium' ? 'bg-blue-50 text-blue-600' :
-                                                    business.plan === 'Basic' ? 'bg-green-50 text-green-600' :
-                                                    'bg-gray-100 text-gray-500'
-                                                }`}>
+                                                        business.plan === 'Basic' ? 'bg-green-50 text-green-600' :
+                                                            'bg-gray-100 text-gray-500'
+                                                    }`}>
                                                     {business.plan}
                                                 </span>
                                             </td>
                                             <td className="py-4 px-6 font-bold text-sm text-text-main">{business.devices}</td>
                                             <td className="py-4 px-6 font-bold text-sm text-text-main">{business.visitors.toLocaleString()}</td>
                                             <td className="py-4 px-6">
-                                                <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                                                    business.status === 'active' ? 'bg-green-50 text-green-600' :
+                                                <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${business.status === 'active' ? 'bg-green-50 text-green-600' :
                                                     business.status === 'pending' ? 'bg-yellow-50 text-yellow-600' :
-                                                    'bg-red-50 text-red-600'
-                                                }`}>
+                                                        'bg-red-50 text-red-600'
+                                                    }`}>
                                                     {business.status}
                                                 </span>
                                             </td>
@@ -251,11 +247,10 @@ export default function AdminBusinessesPage() {
                                                     </button>
                                                     <button
                                                         onClick={() => handleToggleStatus(business.id)}
-                                                        className={`p-2 rounded-lg transition-all ${
-                                                            business.status === 'suspended' 
-                                                            ? 'text-green-500 hover:bg-green-50' 
+                                                        className={`p-2 rounded-lg transition-all ${business.status === 'suspended'
+                                                            ? 'text-green-500 hover:bg-green-50'
                                                             : 'text-orange-500 hover:bg-orange-50'
-                                                        }`}
+                                                            }`}
                                                         title={business.status === 'suspended' ? 'Activate' : 'Suspend'}
                                                     >
                                                         <span className="material-icons-round text-lg">
@@ -296,100 +291,80 @@ export default function AdminBusinessesPage() {
             </div>
 
             {/* Add/Edit Business Modal */}
-            {isAddModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md animate-in fade-in duration-300" onClick={() => { setIsAddModalOpen(false); setSelectedBusiness(null); }}></div>
-                    <div className="relative w-full max-w-lg bg-white rounded-3xl p-8 shadow-2xl animate-in fade-in zoom-in slide-in-from-bottom-4 duration-300">
-                        <div className="flex items-center justify-between mb-8">
-                            <div>
-                                <h2 className="text-2xl font-display font-bold text-text-main">
-                                    {selectedBusiness ? 'Update Business' : 'Register New Venue'}
-                                </h2>
-                                <p className="text-sm text-text-secondary font-medium mt-1">
-                                    {selectedBusiness ? 'Modify account credentials and access' : 'Enter the details of the new business partner'}
-                                </p>
-                            </div>
-                            <button onClick={() => { setIsAddModalOpen(false); setSelectedBusiness(null); }} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                                <span className="material-icons-round text-gray-400">close</span>
-                            </button>
+            <Modal
+                isOpen={isAddModalOpen}
+                onClose={() => { setIsAddModalOpen(false); setSelectedBusiness(null); }}
+                title={selectedBusiness ? 'Update Business' : 'Register New Venue'}
+                description={selectedBusiness ? 'Modify account credentials and access' : 'Enter the details of the new business partner'}
+                size="lg"
+            >
+                <form onSubmit={handleFormSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Business Name</label>
+                            <input
+                                name="name"
+                                defaultValue={selectedBusiness?.name}
+                                required
+                                className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm"
+                                placeholder="e.g. Skyline Lounge"
+                            />
                         </div>
-
-                        <form onSubmit={handleFormSubmit} className="space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary ml-1">Business Name</label>
-                                    <input
-                                        name="name"
-                                        defaultValue={selectedBusiness?.name}
-                                        required
-                                        className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all font-bold text-sm"
-                                        placeholder="e.g. Skyline Lounge"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary ml-1">Licensing Plan</label>
-                                    <select
-                                        name="plan"
-                                        defaultValue={selectedBusiness?.plan}
-                                        className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all font-bold text-sm"
-                                    >
-                                        <option value="Free">Free Tier</option>
-                                        <option value="Basic">Basic Plan</option>
-                                        <option value="Premium">Premium Account</option>
-                                        <option value="Enterprise">Enterprise License</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary ml-1">Business Owner Name</label>
-                                <div className="relative">
-                                    <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">person</span>
-                                    <input
-                                        name="owner"
-                                        defaultValue={selectedBusiness?.owner}
-                                        required
-                                        className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all font-bold text-sm"
-                                        placeholder="Full legal name"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary ml-1">Primary Email Address</label>
-                                <div className="relative">
-                                    <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">mail</span>
-                                    <input
-                                        name="email"
-                                        defaultValue={selectedBusiness?.email}
-                                        type="email"
-                                        required
-                                        className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all font-bold text-sm"
-                                        placeholder="billing@business.com"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="pt-4 flex gap-4">
-                                <button
-                                    type="button"
-                                    onClick={() => { setIsAddModalOpen(false); setSelectedBusiness(null); }}
-                                    className="flex-1 h-14 bg-gray-100 text-text-secondary font-bold rounded-2xl hover:bg-gray-200 transition-all text-sm active:scale-95"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="flex-2 h-14 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 active:scale-95"
-                                >
-                                    <span className="material-icons-round">{selectedBusiness ? 'save' : 'rocket_launch'}</span>
-                                    {selectedBusiness ? 'Update Credentials' : 'Launch Venue'}
-                                </button>
-                            </div>
-                        </form>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Licensing Plan</label>
+                            <select
+                                name="plan"
+                                defaultValue={selectedBusiness?.plan}
+                                className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm appearance-none cursor-pointer"
+                            >
+                                <option value="Free">Free Tier</option>
+                                <option value="Basic">Basic Plan</option>
+                                <option value="Premium">Premium Account</option>
+                                <option value="Enterprise">Enterprise License</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-            )}
+
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Business Owner Name</label>
+                        <input
+                            name="owner"
+                            defaultValue={selectedBusiness?.owner}
+                            required
+                            className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm"
+                            placeholder="Full legal name"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Primary Email Address</label>
+                        <input
+                            name="email"
+                            defaultValue={selectedBusiness?.email}
+                            type="email"
+                            required
+                            className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm"
+                            placeholder="billing@business.com"
+                        />
+                    </div>
+
+                    <div className="pt-4 flex gap-4">
+                        <button
+                            type="button"
+                            onClick={() => { setIsAddModalOpen(false); setSelectedBusiness(null); }}
+                            className="flex-1 h-14 bg-slate-50 text-slate-500 font-bold rounded-2xl hover:bg-slate-100 transition-all text-sm active:scale-95"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="flex-[2] h-14 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 active:scale-95"
+                        >
+                            {selectedBusiness ? 'Update Business' : 'Launch Venue'}
+                        </button>
+                    </div>
+                </form>
+            </Modal>
         </AdminSidebar>
     );
 }

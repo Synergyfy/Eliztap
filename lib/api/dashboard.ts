@@ -29,7 +29,8 @@ export const dashboardApi = {
         message: `${visitor.name} just checked in!`,
         timestamp: Date.now(),
         read: false,
-        type: 'info'
+        type: 'info',
+        scope: 'DASHBOARD'
     });
     return visitor;
   },
@@ -49,7 +50,8 @@ export const dashboardApi = {
           message: `Reward "${reward.title}" has been created successfully.`,
           timestamp: Date.now(),
           read: false,
-          type: 'success'
+          type: 'success',
+          scope: 'DASHBOARD'
       });
       return reward;
   },
@@ -73,7 +75,8 @@ export const dashboardApi = {
               message: `User redeemed "${reward.title}" for ${reward.points} points.`,
               timestamp: Date.now(),
               read: false,
-              type: 'success'
+              type: 'success',
+              scope: 'DASHBOARD'
           });
       }
       return { userId, rewardId };
@@ -114,7 +117,8 @@ export const dashboardApi = {
       message: `Campaign "${campaign.name}" has been ${campaign.status === 'Active' ? 'launched' : 'scheduled'}.`,
       timestamp: Date.now(),
       read: false,
-      type: 'success'
+      type: 'success',
+      scope: 'DASHBOARD'
     });
     return newCampaign;
   },

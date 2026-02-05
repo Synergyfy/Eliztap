@@ -15,11 +15,14 @@ export default function AuthSidePanel({ features }: AuthSidePanelProps) {
     const [currentSlide, setCurrentSlide] = useState(0);
 
     useEffect(() => {
+        setCurrentSlide(0);
         const timer = setInterval(() => {
             setCurrentSlide((prev) => (prev + 1) % features.length);
         }, 5000); // Change slide every 5 seconds
         return () => clearInterval(timer);
     }, [features.length]);
+
+    const currentFeature = features[currentSlide];
 
     return (
         <div className="relative w-full h-full overflow-hidden bg-white font-sans">
@@ -46,16 +49,16 @@ export default function AuthSidePanel({ features }: AuthSidePanelProps) {
                             transition={{ duration: 0.5 }}
                             className="space-y-6"
                         >
-                            {features[currentSlide].icon && (
+                            {currentFeature?.icon && (
                                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 mb-4 text-white">
-                                    <span className="material-icons-round text-3xl">{features[currentSlide].icon}</span>
+                                    <span className="material-icons-round text-3xl">{currentFeature.icon}</span>
                                 </div>
                             )}
                             <h2 className="text-4xl lg:text-5xl font-display font-bold text-white leading-tight">
-                                {features[currentSlide].title}
+                                {currentFeature?.title}
                             </h2>
                             <p className="text-lg text-white/90 font-medium leading-relaxed max-w-md">
-                                {features[currentSlide].description}
+                                {currentFeature?.description}
                             </p>
                         </motion.div>
                     </AnimatePresence>
