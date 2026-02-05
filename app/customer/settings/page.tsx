@@ -103,7 +103,7 @@ export default function CustomerSettingsPage() {
                     {/* Right Column: Active Form */}
                     <div className="lg:col-span-2 space-y-10">
                         {/* Profile Details */}
-                        <div className="bg-white rounded-[2.5rem] border border-gray-100 p-10 shadow-sm relative overflow-hidden">
+                        <div className="bg-white rounded-5xl border border-gray-100 p-10 shadow-sm relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full translate-x-32 -translate-y-32 blur-3xl"></div>
 
                             <h3 className="text-lg font-display font-bold text-text-main mb-8 flex items-center gap-3">
@@ -193,7 +193,7 @@ export default function CustomerSettingsPage() {
                         </div>
 
                         {/* Security / Danger Zone */}
-                        <div className="bg-red-50/50 border-2 border-dashed border-red-100 rounded-[2.5rem] p-10 relative overflow-hidden group">
+                        <div className="bg-red-50/50 border-2 border-dashed border-red-100 rounded-5xl p-10 relative overflow-hidden group">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-red-100/50 rounded-full translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-700"></div>
                             <div className="relative z-10">
                                 <div className="flex items-center gap-4 mb-6 text-red-800">

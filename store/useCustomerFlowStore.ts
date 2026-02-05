@@ -105,7 +105,13 @@ interface CustomerFlowState {
     // Dynamic Customization
     businessId: string | null;
     customWelcomeMessage: string | null;
+    customWelcomeTitle: string | null;
+    customWelcomeButton: string | null;
+    customWelcomeTag: string | null;
     customSuccessMessage: string | null;
+    customSuccessTitle: string | null;
+    customSuccessButton: string | null;
+    customSuccessTag: string | null;
     customPrivacyMessage: string | null;
     customRewardMessage: string | null;
     logoUrl: string | null;
@@ -124,7 +130,13 @@ interface CustomerFlowState {
     initializeFromBusiness: (business: any) => void;
     updateCustomSettings: (settings: {
         welcomeMessage?: string;
+        welcomeTitle?: string;
+        welcomeButton?: string;
+        welcomeTag?: string;
         successMessage?: string;
+        successTitle?: string;
+        successButton?: string;
+        successTag?: string;
         privacyMessage?: string;
         rewardMessage?: string;
         rewardEnabled?: boolean;
@@ -154,7 +166,13 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
     
     businessId: null,
     customWelcomeMessage: null,
+    customWelcomeTitle: null,
+    customWelcomeButton: null,
+    customWelcomeTag: null,
     customSuccessMessage: null,
+    customSuccessTitle: null,
+    customSuccessButton: null,
+    customSuccessTag: null,
     customPrivacyMessage: null,
     customRewardMessage: null,
     logoUrl: null,
@@ -174,7 +192,11 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         showFeedback: false,
         businessId: null,
         customWelcomeMessage: null,
+        customWelcomeTitle: null,
+        customWelcomeButton: null,
         customSuccessMessage: null,
+        customSuccessTitle: null,
+        customSuccessButton: null,
         customPrivacyMessage: null,
         customRewardMessage: null,
         logoUrl: null,
@@ -211,7 +233,13 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         storeName: business.name,
         businessType: business.type,
         customWelcomeMessage: business.welcomeMessage,
+        customWelcomeTitle: business.welcomeTitle,
+        customWelcomeButton: business.welcomeButton,
+        customWelcomeTag: business.welcomeTag,
         customSuccessMessage: business.successMessage,
+        customSuccessTitle: business.successTitle,
+        customSuccessButton: business.successButton,
+        customSuccessTag: business.successTag,
         customPrivacyMessage: business.privacyMessage,
         customRewardMessage: business.rewardMessage,
         hasRewardSetup: business.rewardEnabled,
@@ -220,7 +248,13 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
     }),
     updateCustomSettings: (settings) => set((state) => ({
         customWelcomeMessage: settings.welcomeMessage ?? state.customWelcomeMessage,
+        customWelcomeTitle: settings.welcomeTitle ?? state.customWelcomeTitle,
+        customWelcomeButton: settings.welcomeButton ?? state.customWelcomeButton,
+        customWelcomeTag: settings.welcomeTag ?? state.customWelcomeTag,
         customSuccessMessage: settings.successMessage ?? state.customSuccessMessage,
+        customSuccessTitle: settings.successTitle ?? state.customSuccessTitle,
+        customSuccessButton: settings.successButton ?? state.customSuccessButton,
+        customSuccessTag: settings.successTag ?? state.customSuccessTag,
         customPrivacyMessage: settings.privacyMessage ?? state.customPrivacyMessage,
         customRewardMessage: settings.rewardMessage ?? state.customRewardMessage,
         hasRewardSetup: settings.rewardEnabled ?? state.hasRewardSetup,

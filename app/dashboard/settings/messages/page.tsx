@@ -19,7 +19,13 @@ export default function MessageSettingsPage() {
     // Local state for preview updates before saving
     const [settings, setSettings] = useState({
         welcomeMessage: store.customWelcomeMessage || 'Welcome back! We are so glad to see you again. Enjoy your stay!',
+        welcomeTitle: store.customWelcomeTitle || 'Hi, {name}!',
+        welcomeButton: store.customWelcomeButton || 'Continue to Experience',
+        welcomeTag: store.customWelcomeTag || 'Welcome back',
         successMessage: store.customSuccessMessage || 'Check-in successful! You are all set. Thank you for visiting us.',
+        successTitle: store.customSuccessTitle || 'Successfully Linked!',
+        successButton: store.customSuccessButton || 'Finish Process',
+        successTag: store.customSuccessTag || '',
         rewardMessage: store.customRewardMessage || 'Congratulations! You have earned a reward for your loyalty.',
         rewardEnabled: store.hasRewardSetup,
         rewardVisitThreshold: store.rewardVisitThreshold,
@@ -95,20 +101,55 @@ export default function MessageSettingsPage() {
                                             </div>
                                         </div>
 
-                                        <div className="space-y-3">
-                                            <label className="text-[10px] font-bold text-text-secondary ml-1">Message content</label>
-                                            <textarea
-                                                rows={5}
-                                                className="w-full bg-gray-50 border border-gray-100 rounded-xl p-5 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm resize-none"
-                                                value={settings.welcomeMessage}
-                                                onChange={(e) => setSettings({ ...settings, welcomeMessage: e.target.value })}
-                                                placeholder="e.g. Welcome back to Green Terrace! Your next coffee is on us after 3 more visits."
-                                            />
-                                            <div className="flex justify-between items-center px-1">
-                                                <div className="flex gap-3">
-                                                    <p className="text-[10px] text-text-secondary font-medium">Tokens: <code className="text-primary font-bold">{"{name}"}</code>, <code className="text-primary font-bold">{"{visits}"}</code>, <code className="text-primary font-bold">{"{remaining}"}</code></p>
+                                        <div className="space-y-4">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-3">
+                                                    <label className="text-[10px] font-bold text-text-secondary ml-1">Small tag</label>
+                                                    <input
+                                                        type="text"
+                                                        className="w-full bg-gray-50 border border-gray-100 rounded-xl px-5 py-3 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm"
+                                                        value={settings.welcomeTag}
+                                                        onChange={(e) => setSettings({ ...settings, welcomeTag: e.target.value })}
+                                                        placeholder="e.g. Returning Guest"
+                                                    />
                                                 </div>
-                                                <p className="text-[10px] text-text-secondary font-medium">{settings.welcomeMessage.length}/200</p>
+                                                <div className="space-y-3">
+                                                    <label className="text-[10px] font-bold text-text-secondary ml-1">Screen heading</label>
+                                                    <input
+                                                        type="text"
+                                                        className="w-full bg-gray-50 border border-gray-100 rounded-xl px-5 py-3 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm"
+                                                        value={settings.welcomeTitle}
+                                                        onChange={(e) => setSettings({ ...settings, welcomeTitle: e.target.value })}
+                                                        placeholder="Use {name} for personalization"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                <label className="text-[10px] font-bold text-text-secondary ml-1">Message content</label>
+                                                <textarea
+                                                    rows={4}
+                                                    className="w-full bg-gray-50 border border-gray-100 rounded-xl p-5 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm resize-none"
+                                                    value={settings.welcomeMessage}
+                                                    onChange={(e) => setSettings({ ...settings, welcomeMessage: e.target.value })}
+                                                    placeholder="e.g. Welcome back to Green Terrace! Your next coffee is on us after 3 more visits."
+                                                />
+                                                <div className="flex justify-between items-center px-1">
+                                                    <div className="flex gap-3">
+                                                        <p className="text-[10px] text-text-secondary font-medium">Tokens: <code className="text-primary font-bold">{"{name}"}</code>, <code className="text-primary font-bold">{"{visits}"}</code>, <code className="text-primary font-bold">{"{remaining}"}</code></p>
+                                                    </div>
+                                                    <p className="text-[10px] text-text-secondary font-medium">{settings.welcomeMessage.length}/200</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                <label className="text-[10px] font-bold text-text-secondary ml-1">Button text</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full bg-gray-50 border border-gray-100 rounded-xl px-5 py-3 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm"
+                                                    value={settings.welcomeButton}
+                                                    onChange={(e) => setSettings({ ...settings, welcomeButton: e.target.value })}
+                                                />
                                             </div>
                                         </div>
                                     </motion.div>
@@ -132,15 +173,49 @@ export default function MessageSettingsPage() {
                                             </div>
                                         </div>
 
-                                        <div className="space-y-3">
-                                            <label className="text-[10px] font-bold text-text-secondary ml-1">Message content</label>
-                                            <textarea
-                                                rows={5}
-                                                className="w-full bg-gray-50 border border-gray-100 rounded-xl p-5 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm resize-none"
-                                                value={settings.successMessage}
-                                                onChange={(e) => setSettings({ ...settings, successMessage: e.target.value })}
-                                                placeholder="e.g. You are all set! Your check-in is verified."
-                                            />
+                                        <div className="space-y-4">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-3">
+                                                    <label className="text-[10px] font-bold text-text-secondary ml-1">Small tag (Optional)</label>
+                                                    <input
+                                                        type="text"
+                                                        className="w-full bg-gray-50 border border-gray-100 rounded-xl px-5 py-3 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm"
+                                                        value={settings.successTag}
+                                                        onChange={(e) => setSettings({ ...settings, successTag: e.target.value })}
+                                                        placeholder="e.g. Verification complete"
+                                                    />
+                                                </div>
+                                                <div className="space-y-3">
+                                                    <label className="text-[10px] font-bold text-text-secondary ml-1">Success heading</label>
+                                                    <input
+                                                        type="text"
+                                                        className="w-full bg-gray-50 border border-gray-100 rounded-xl px-5 py-3 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm"
+                                                        value={settings.successTitle}
+                                                        onChange={(e) => setSettings({ ...settings, successTitle: e.target.value })}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                <label className="text-[10px] font-bold text-text-secondary ml-1">Message content</label>
+                                                <textarea
+                                                    rows={4}
+                                                    className="w-full bg-gray-50 border border-gray-100 rounded-xl p-5 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm resize-none"
+                                                    value={settings.successMessage}
+                                                    onChange={(e) => setSettings({ ...settings, successMessage: e.target.value })}
+                                                    placeholder="e.g. You are all set! Your check-in is verified."
+                                                />
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                <label className="text-[10px] font-bold text-text-secondary ml-1">Button text</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full bg-gray-50 border border-gray-100 rounded-xl px-5 py-3 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:bg-white transition-all text-sm"
+                                                    value={settings.successButton}
+                                                    onChange={(e) => setSettings({ ...settings, successButton: e.target.value })}
+                                                />
+                                            </div>
                                         </div>
                                     </motion.div>
                                 )}
@@ -293,7 +368,10 @@ export default function MessageSettingsPage() {
                                                         <StepWelcomeBack
                                                             storeName={store.storeName}
                                                             logoUrl={store.logoUrl}
+                                                            customWelcomeTag={settings.welcomeTag}
+                                                            customWelcomeTitle={settings.welcomeTitle}
                                                             customWelcomeMessage={settings.welcomeMessage}
+                                                            customWelcomeButton={settings.welcomeButton}
                                                             visitCount={settings.rewardVisitThreshold - 1}
                                                             userData={{ name: 'John Doe', email: 'john@example.com' }}
                                                             rewardVisitThreshold={settings.rewardVisitThreshold}
@@ -319,7 +397,10 @@ export default function MessageSettingsPage() {
                                                 <div className="bg-white w-full h-full rounded-xl overflow-hidden relative flex flex-col">
                                                     <div className="flex-1 overflow-y-auto pt-12 px-5 bg-gray-50">
                                                         <StepFinalSuccess
+                                                            customSuccessTag={settings.successTag}
+                                                            customSuccessTitle={settings.successTitle}
                                                             finalSuccessMessage={settings.successMessage}
+                                                            customSuccessButton={settings.successButton}
                                                             onFinish={() => { }}
                                                         />
                                                     </div>

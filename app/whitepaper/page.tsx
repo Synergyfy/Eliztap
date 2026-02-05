@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import LandingNavbar from '@/components/landing/LandingNavbar';
-import LandingFooter from '@/components/landing/LandingFooter';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 import {
     Cpu, Shield, Zap, Palette, Printer,
     Download, ArrowRight, CheckCircle2,
@@ -77,7 +77,7 @@ export default function HardwareWhitepaperPage() {
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans selection:bg-primary/10">
-            <LandingNavbar />
+            <Navbar />
 
             <main className="pt-32 pb-24">
                 <div className="max-w-5xl mx-auto px-6 lg:px-8">
@@ -114,8 +114,8 @@ export default function HardwareWhitepaperPage() {
                         {sections.map((section, idx) => (
                             <div key={idx} className="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group">
                                 <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-8 ${section.color === 'blue' ? 'bg-blue-50 text-blue-600' :
-                                        section.color === 'purple' ? 'bg-purple-50 text-purple-600' :
-                                            'bg-green-50 text-green-600'
+                                    section.color === 'purple' ? 'bg-purple-50 text-purple-600' :
+                                        'bg-green-50 text-green-600'
                                     }`}>
                                     <section.icon size={28} />
                                 </div>
@@ -249,7 +249,7 @@ export default function HardwareWhitepaperPage() {
                 </div>
             </main>
 
-            <LandingFooter />
+            <Footer />
         </div>
     );
 }
