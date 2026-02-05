@@ -105,7 +105,13 @@ interface CustomerFlowState {
     // Dynamic Customization
     businessId: string | null;
     customWelcomeMessage: string | null;
+    customWelcomeTitle: string | null;
+    customWelcomeButton: string | null;
+    customWelcomeTag: string | null;
     customSuccessMessage: string | null;
+    customSuccessTitle: string | null;
+    customSuccessButton: string | null;
+    customSuccessTag: string | null;
     customPrivacyMessage: string | null;
     customRewardMessage: string | null;
     logoUrl: string | null;
@@ -114,7 +120,7 @@ interface CustomerFlowState {
     
     // Actions
     setStep: (step: CustomerStep) => void;
-    setUserData: (data: { name: string; email?: string; phone?: string }) => void;
+    setUserData: (data: { name: string; email?: string; phone?: string; uniqueId?: string }) => void;
     resetFlow: () => void;
     toggleFeedback: (show: boolean) => void;
     setRewardSetup: (has: boolean) => void;
@@ -124,7 +130,13 @@ interface CustomerFlowState {
     initializeFromBusiness: (business: any) => void;
     updateCustomSettings: (settings: {
         welcomeMessage?: string;
+        welcomeTitle?: string;
+        welcomeButton?: string;
+        welcomeTag?: string;
         successMessage?: string;
+        successTitle?: string;
+        successButton?: string;
+        successTag?: string;
         privacyMessage?: string;
         rewardMessage?: string;
         rewardEnabled?: boolean;
@@ -143,7 +155,7 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         (set, get) => ({
     currentStep: 'SELECT_TYPE',
     serialNumber: 'LT-8829-X',
-    storeName: 'LaTap Venue',
+    storeName: 'ElizTap Venue',
     businessType: 'RESTAURANT',
     visitCount: 1,
     rewardVisitThreshold: 5,
@@ -154,7 +166,13 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
     
     businessId: null,
     customWelcomeMessage: null,
+    customWelcomeTitle: null,
+    customWelcomeButton: null,
+    customWelcomeTag: null,
     customSuccessMessage: null,
+    customSuccessTitle: null,
+    customSuccessButton: null,
+    customSuccessTag: null,
     customPrivacyMessage: null,
     customRewardMessage: null,
     logoUrl: null,
@@ -163,7 +181,7 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
 
     setStep: (step) => set({ currentStep: step }),
     setUserData: (data) => {
-        const uniqueId = `LT-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+        const uniqueId = data.uniqueId || `LT-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
         set({ userData: { ...data, uniqueId }, visitCount: 1 });
     },
     resetFlow: () => set({ 
@@ -174,7 +192,11 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         showFeedback: false,
         businessId: null,
         customWelcomeMessage: null,
+        customWelcomeTitle: null,
+        customWelcomeButton: null,
         customSuccessMessage: null,
+        customSuccessTitle: null,
+        customSuccessButton: null,
         customPrivacyMessage: null,
         customRewardMessage: null,
         logoUrl: null,
@@ -211,7 +233,13 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         storeName: business.name,
         businessType: business.type,
         customWelcomeMessage: business.welcomeMessage,
+        customWelcomeTitle: business.welcomeTitle,
+        customWelcomeButton: business.welcomeButton,
+        customWelcomeTag: business.welcomeTag,
         customSuccessMessage: business.successMessage,
+        customSuccessTitle: business.successTitle,
+        customSuccessButton: business.successButton,
+        customSuccessTag: business.successTag,
         customPrivacyMessage: business.privacyMessage,
         customRewardMessage: business.rewardMessage,
         hasRewardSetup: business.rewardEnabled,
@@ -220,7 +248,13 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
     }),
     updateCustomSettings: (settings) => set((state) => ({
         customWelcomeMessage: settings.welcomeMessage ?? state.customWelcomeMessage,
+        customWelcomeTitle: settings.welcomeTitle ?? state.customWelcomeTitle,
+        customWelcomeButton: settings.welcomeButton ?? state.customWelcomeButton,
+        customWelcomeTag: settings.welcomeTag ?? state.customWelcomeTag,
         customSuccessMessage: settings.successMessage ?? state.customSuccessMessage,
+        customSuccessTitle: settings.successTitle ?? state.customSuccessTitle,
+        customSuccessButton: settings.successButton ?? state.customSuccessButton,
+        customSuccessTag: settings.successTag ?? state.customSuccessTag,
         customPrivacyMessage: settings.privacyMessage ?? state.customPrivacyMessage,
         customRewardMessage: settings.rewardMessage ?? state.customRewardMessage,
         hasRewardSetup: settings.rewardEnabled ?? state.hasRewardSetup,

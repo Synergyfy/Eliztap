@@ -129,7 +129,7 @@ export default function UserStepPage() {
             setStep('FINAL_SUCCESS');
             const link = document.createElement('a');
             link.href = '#';
-            link.download = `LaTap_Reward_${storeName.replace(/\s+/g, '_')}.pdf`;
+            link.download = `ElizTap_Reward_${storeName.replace(/\s+/g, '_')}.pdf`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/dashboard/',
     },
-    sitemap: 'https://entryconect.com/sitemap.xml',
+    sitemap: 'https://la-tap.vercel.app/sitemap.xml',
   }
 }

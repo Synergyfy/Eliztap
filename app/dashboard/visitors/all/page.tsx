@@ -1,64 +1,68 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { dashboardApi } from '@/lib/api/dashboard';
+import { Visitor } from '@/lib/store/mockDashboardStore';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
 import AddVisitorModal, { VisitorFormData } from '@/components/dashboard/AddVisitorModal';
-import { Users, UserPlus, Repeat, Star, Download, Search, Edit, Trash2, MoreVertical } from 'lucide-react';
+import { Users, UserPlus, Repeat, Star, Download, Search, Edit, Trash2, MoreVertical, Send } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-interface Visitor {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-    visits: number;
-    lastVisit: string;
-    status: string;
-}
-
 export default function AllVisitorsPage() {
+    const router = useRouter();
+    const queryClient = useQueryClient();
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [visitors, setVisitors] = useState<Visitor[]>([
-        { id: '1', name: 'Alex Johnson', email: 'alex.j@example.com', phone: '+234 801 234 5678', visits: 12, lastVisit: '2 hours ago', status: 'Active' },
-        { id: '2', name: 'Sarah Williams', email: 'sarah.w@example.com', phone: '+234 802 345 6789', visits: 5, lastVisit: '5 hours ago', status: 'Active' },
-        { id: '3', name: 'Michael Chen', email: 'm.chen@example.com', phone: '+234 803 456 7890', visits: 1, lastVisit: '1 day ago', status: 'New' },
-        { id: '4', name: 'Bisi Adebowale', email: 'bisi.a@example.com', phone: '+234 804 567 8901', visits: 24, lastVisit: '3 hours ago', status: 'VIP' },
-        { id: '5', name: 'David Okafor', email: 'd.okafor@example.com', phone: '+234 805 678 9012', visits: 8, lastVisit: '2 days ago', status: 'Returning' },
-        { id: '6', name: 'Faith Amadi', email: 'f.amadi@example.com', phone: '+234 806 789 0123', visits: 3, lastVisit: '4 days ago', status: 'Inactive' },
-    ]);
 
-    const handleAddVisitor = (data: VisitorFormData) => {
-        setIsLoading(true);
-        // Simulate API call
-        setTimeout(() => {
+    const { data: storeData, isLoading } = useQuery({
+        queryKey: ['dashboard'],
+        queryFn: dashboardApi.fetchDashboardData,
+    });
+
+    const visitors = storeData?.recentVisitors || [];
+
+    const deleteMutation = useMutation({
+        mutationFn: dashboardApi.deleteVisitor,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            toast.success('Visitor removed successfully');
+        }
+    });
+
+    const addVisitorMutation = useMutation({
+        mutationFn: (data: VisitorFormData) => {
             const newVisitor: Visitor = {
                 id: Math.random().toString(36).substr(2, 9),
                 name: data.name,
-                email: data.email,
                 phone: data.phone,
-                visits: 1,
-                lastVisit: 'Just now',
-                status: data.status
+                time: 'Just now',
+                timestamp: Date.now(),
+                status: data.status as any
             };
-            setVisitors(prev => [newVisitor, ...prev]);
-            setIsLoading(false);
+            return dashboardApi.addVisitor(newVisitor);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
             setIsAddModalOpen(false);
-            toast.success(`${data.name} added successfully!`);
-        }, 1000);
+            toast.success('Visitor added successfully');
+        }
+    });
+
+    const handleAddVisitor = (data: VisitorFormData) => {
+        addVisitorMutation.mutate(data);
     };
 
     const handleExportCSV = () => {
-        // Simulate CSV export
         const csvContent = [
-            ['Name', 'Email', 'Phone', 'Visits', 'Last Visit', 'Status'],
-            ...visitors.map(v => [v.name, v.email, v.phone, v.visits, v.lastVisit, v.status])
+            ['Name', 'Phone', 'Status'],
+            ...visitors.map((v: Visitor) => [v.name, v.phone, v.status])
         ].map(row => row.join(',')).join('\n');
 
         const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -74,60 +78,30 @@ export default function AllVisitorsPage() {
         toast.success('CSV exported successfully!');
     };
 
-    const handleEditVisitor = (visitor: Visitor) => {
-        // Simulate edit
-        const newName = prompt('Enter new name:', visitor.name);
-        if (newName && newName.trim()) {
-            setVisitors(prev => prev.map(v =>
-                v.id === visitor.id ? { ...v, name: newName.trim() } : v
-            ));
-            toast.success(`Updated ${visitor.name} to ${newName}`);
+    const handleDeleteVisitor = (id: string, name: string) => {
+        if (confirm(`Are you sure you want to delete ${name}?`)) {
+            deleteMutation.mutate(id);
         }
     };
 
-    const handleDeleteVisitor = (visitor: Visitor) => {
-        if (confirm(`Are you sure you want to delete ${visitor.name}?`)) {
-            setVisitors(prev => prev.filter(v => v.id !== visitor.id));
-            toast.success(`Deleted ${visitor.name}`);
-        }
-    };
-
-    const handleMoreActions = (visitor: Visitor) => {
-        // Simulate sending message
-        const action = confirm(`Send message to ${visitor.name}?`);
-        if (action) {
-            toast.success(`Message sent to ${visitor.name}!`);
-            console.log('Sent message to:', visitor);
-        }
+    const handleInviteVisitor = (visitor: Visitor) => {
+        toast.success(`Welcome message sent to ${visitor.name}!`);
     };
 
     const handleSendCampaign = () => {
-        if (visitors.length === 0) {
-            toast.error('No visitors to send campaign to');
-            return;
-        }
-
-        const confirmed = confirm(`Send campaign to all ${visitors.length} visitors?`);
-        if (confirmed) {
-            toast.loading('Sending campaign...', { duration: 1000 });
-            setTimeout(() => {
-                toast.success(`Campaign sent to ${visitors.length} visitors!`);
-            }, 1000);
-        }
+        toast('Campaign builder coming soon');
     };
 
     const stats = [
         { label: 'Total Visitors', value: visitors.length.toString(), icon: Users, color: 'blue' as const, trend: { value: '+12%', isUp: true } },
-        { label: 'New This Month', value: visitors.filter(v => v.status === 'New').length.toString(), icon: UserPlus, color: 'green' as const, trend: { value: '+5%', isUp: true } },
+        { label: 'New This Month', value: visitors.filter((v: Visitor) => v.status === 'new').length.toString(), icon: UserPlus, color: 'green' as const, trend: { value: '+5%', isUp: true } },
         { label: 'Avg. Frequency', value: '3.2', icon: Repeat, color: 'purple' as const, trend: { value: '-2%', isUp: false } },
-        { label: 'VIP Guests', value: visitors.filter(v => v.status === 'VIP').length.toString(), icon: Star, color: 'yellow' as const, trend: { value: '+8%', isUp: true } },
+        { label: 'Top Segment', value: 'Returning', icon: Star, color: 'yellow' as const, trend: { value: '+8%', isUp: true } },
     ];
 
-    // Filter visitors based on search and status
-    const filteredVisitors = visitors.filter(visitor => {
+    const filteredVisitors = visitors.filter((visitor: Visitor) => {
         const matchesSearch = searchQuery === '' ||
             visitor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            visitor.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
             visitor.phone.includes(searchQuery);
 
         const matchesStatus = filterStatus === 'all' ||
@@ -146,27 +120,22 @@ export default function AllVisitorsPage() {
                     </div>
                     <div>
                         <p className="font-bold text-text-main">{item.name}</p>
-                        <p className="text-xs text-text-secondary">{item.email}</p>
+                        <p className="text-xs text-text-secondary">Customer ID: {item.id.toUpperCase()}</p>
                     </div>
                 </div>
             )
         },
         { header: 'Phone Number', accessor: 'phone' },
         {
-            header: 'Total Visits',
+            header: 'Last Seen',
             accessor: (item: Visitor) => (
-                <span className="font-bold text-text-main">{item.visits}</span>
+                <span className="text-sm text-text-secondary font-medium">{item.time}</span>
             )
         },
-        { header: 'Last Visit', accessor: 'lastVisit' },
         {
             header: 'Status',
             accessor: (item: Visitor) => (
-                <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${item.status === 'VIP' ? 'bg-yellow-100 text-yellow-700' :
-                    item.status === 'New' ? 'bg-green-100 text-green-700' :
-                        item.status === 'Active' ? 'bg-blue-100 text-blue-700' :
-                            item.status === 'Returning' ? 'bg-purple-100 text-purple-700' :
-                                'bg-gray-100 text-gray-700'
+                <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${item.status === 'new' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
                     }`}>
                     {item.status}
                 </span>
@@ -179,17 +148,17 @@ export default function AllVisitorsPage() {
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleEditVisitor(item);
+                            handleInviteVisitor(item);
                         }}
                         className="p-1.5 text-text-secondary hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
-                        title="Edit visitor"
+                        title="Send message"
                     >
-                        <Edit size={18} />
+                        <Send size={18} />
                     </button>
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleDeleteVisitor(item);
+                            handleDeleteVisitor(item.id, item.name);
                         }}
                         className="p-1.5 text-text-secondary hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         title="Delete visitor"
@@ -199,10 +168,9 @@ export default function AllVisitorsPage() {
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleMoreActions(item);
+                            toast('Details coming soon');
                         }}
                         className="p-1.5 text-text-secondary hover:text-text-main hover:bg-gray-100 rounded-lg transition-colors"
-                        title="Send message"
                     >
                         <MoreVertical size={18} />
                     </button>
@@ -241,7 +209,7 @@ export default function AllVisitorsPage() {
                     isOpen={isAddModalOpen}
                     onClose={() => setIsAddModalOpen(false)}
                     onSubmit={handleAddVisitor}
-                    isLoading={isLoading}
+                    isLoading={isLoading || addVisitorMutation.isPending}
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -268,16 +236,14 @@ export default function AllVisitorsPage() {
                             onChange={(e) => setFilterStatus(e.target.value)}
                         >
                             <option value="all">All Status</option>
-                            <option value="active">Active</option>
                             <option value="new">New</option>
-                            <option value="vip">VIP</option>
-                            <option value="inactive">Inactive</option>
+                            <option value="returning">Returning</option>
                         </select>
                         <button
                             onClick={handleSendCampaign}
                             className="h-12 px-6 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm"
                         >
-                            Send Campaign
+                            Send Message
                         </button>
                     </div>
                 </div>
@@ -285,8 +251,8 @@ export default function AllVisitorsPage() {
                 <DataTable
                     columns={columns}
                     data={filteredVisitors}
+                    isLoading={isLoading}
                     onRowClick={(visitor) => {
-                        console.log('Clicked visitor:', visitor);
                         toast(`Viewing ${visitor.name}'s profile`);
                     }}
                     emptyState={

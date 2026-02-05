@@ -7,6 +7,9 @@ interface StepWelcomeBackProps {
     storeName: string;
     logoUrl?: string | null;
     customWelcomeMessage?: string | null;
+    customWelcomeTitle?: string | null;
+    customWelcomeButton?: string | null;
+    customWelcomeTag?: string | null;
     userData: any;
     visitCount: number;
     rewardVisitThreshold: number;
@@ -21,6 +24,9 @@ export const StepWelcomeBack: React.FC<StepWelcomeBackProps> = ({
     storeName,
     logoUrl,
     customWelcomeMessage,
+    customWelcomeTitle,
+    customWelcomeButton,
+    customWelcomeTag,
     userData,
     visitCount,
     rewardVisitThreshold,
@@ -41,9 +47,11 @@ export const StepWelcomeBack: React.FC<StepWelcomeBackProps> = ({
             <VisitorHeader logoUrl={logoUrl} storeName={storeName} tag="Returning Guest" />
 
             <div className="mb-10 text-left">
-                <span className={presets.tag}>Welcome back</span>
+                <span className={presets.tag}>{customWelcomeTag || "Welcome back"}</span>
                 <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight mb-2">
-                    Hi, <span className="text-primary">{userData?.name?.split(' ')[0] || 'there'}!</span>
+                    {customWelcomeTitle ? customWelcomeTitle.replace('{name}', userData?.name?.split(' ')[0] || 'there') : (
+                        <>Hi, <span className="text-primary">{userData?.name?.split(' ')[0] || 'there'}!</span></>
+                    )}
                 </h1>
                 <p className="text-sm font-medium text-slate-500 leading-relaxed">
                     {customWelcomeMessage || `It's great to see you again at ${storeName}.`}
@@ -109,7 +117,7 @@ export const StepWelcomeBack: React.FC<StepWelcomeBackProps> = ({
                                 Pending Staff Approval...
                             </>
                         ) : (
-                            'Continue to Experience'
+                            customWelcomeButton || 'Continue to Experience'
                         )}
                     </button>
                 )}

@@ -4,8 +4,10 @@ import React from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import Notification from '@/components/ui/Notification';
 import { notify } from '@/lib/notify'; // Import for demonstration
+import { useRouter } from 'next/navigation';
 
 export default function AdminDashboardPage() {
+    const router = useRouter(); // Initialize router
     // ... (stats and recentBusinesses same as before)
     const platformStats = [
         {
@@ -57,7 +59,30 @@ export default function AdminDashboardPage() {
     ];
 
     const handleQuickAction = (action: string) => {
-        notify.info(`${action} initiated...`);
+        switch (action) {
+            case 'Add Business':
+                router.push('/admin/businesses/new');
+                break;
+            case 'Create User':
+                router.push('/admin/users/new');
+                break;
+            case 'Register Device':
+                router.push('/admin/devices/new');
+                break;
+            case 'Export Reports':
+                notify.success('Report export started. Check your email shortly.');
+                break;
+            case 'System Settings':
+                router.push('/admin/settings');
+                break;
+            default:
+                notify.info(`${action} initiated...`);
+        }
+    };
+
+    const handleViewBusiness = (businessName: string) => {
+        notify.success(`Opening details for ${businessName}`);
+        router.push(`/admin/businesses`); // Redirect to list for now as we don't have IDs
     };
 
     return (
@@ -147,6 +172,13 @@ export default function AdminDashboardPage() {
                                             }`}>
                                             {business.status}
                                         </span>
+                                        <button
+                                            onClick={() => handleViewBusiness(business.name)}
+                                            className="p-2 hover:bg-gray-200 rounded-lg text-gray-400 hover:text-primary transition-colors"
+                                            title="Manage Business"
+                                        >
+                                            <span className="material-icons-round">more_vert</span>
+                                        </button>
                                     </div>
                                 </div>
                             ))}

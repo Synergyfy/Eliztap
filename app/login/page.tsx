@@ -48,159 +48,176 @@ export default function LoginPage() {
     return (
         <div className="h-screen bg-white flex overflow-hidden font-sans">
             {/* Left Side: Login Form */}
-            <div className="w-full lg:w-[60%] flex flex-col overflow-y-auto">
-                <div className="p-8 md:p-16 lg:p-24">
-                    <Link href="/" className="mb-24 block w-fit">
+            <div className="w-full lg:w-1/2 flex flex-col overflow-y-auto">
+                <div className="p-8 md:p-12 lg:p-20 flex flex-col min-h-full">
+                    <Link href="/" className="mb-12 md:mb-20 block w-fit">
                         <Logo iconSize={32} fontSize="text-2xl" />
                     </Link>
 
-                    <div className="max-w-md w-full mx-auto lg:mx-0">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="space-y-8"
-                        >
-                            <div>
-                                <h1 className="text-3xl font-display font-bold text-text-main mb-3 leading-tight tracking-tight">Welcome back</h1>
-                                <p className="text-sm text-text-secondary font-medium leading-relaxed">Login to manage your business and check your customer data.</p>
-                            </div>
-
-                            {/* Demo Credentials */}
-                            <div className="bg-primary/5 border border-primary/10 rounded-2xl p-6 shadow-sm overflow-hidden relative group">
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full translate-x-10 -translate-y-10 blur-2xl group-hover:bg-primary/20 transition-all"></div>
-
-                                <p className="text-[10px] font-black underline decoration-primary/30 underline-offset-4 text-primary mb-5 uppercase tracking-[0.15em] flex items-center gap-2">
-                                    <span className="material-icons-round text-sm">explore</span>
-                                    Instant Quick Access Demo
-                                </p>
-
-                                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 relative z-10">
-                                    {[
-                                        { id: 'owner', label: 'Owner', icon: 'storefront', email: 'business@latap.com', pass: 'business123', route: '/dashboard' },
-                                        { id: 'manager', label: 'Manager', icon: 'supervisor_account', email: 'manager@latap.com', pass: 'manager123', route: '/dashboard' },
-                                        { id: 'staff', label: 'Staff', icon: 'badge', email: 'staff@latap.com', pass: 'staff123', route: '/dashboard' },
-                                        { id: 'customer', label: 'User', icon: 'person', email: 'customer@latap.com', pass: 'customer123', route: '/customer/dashboard' },
-                                        { id: 'admin', label: 'Admin', icon: 'admin_panel_settings', email: 'admin@latap.com', pass: 'admin123', route: '/admin/dashboard' }
-                                    ].map((demo) => (
-                                        <button
-                                            key={demo.id}
-                                            type="button"
-                                            onClick={async () => {
-                                                setFormData({ email: demo.email, password: demo.pass, rememberMe: true });
-                                                setError('');
-                                                setIsLoading(true);
-                                                const result = await login(demo.email, demo.pass);
-                                                if (result.success) {
-                                                    router.push(demo.route);
-                                                    notify.success(`Logged in as ${demo.label}`);
-                                                } else {
-                                                    setError(result.error || 'Demo login failed');
-                                                }
-                                                setIsLoading(false);
-                                            }}
-                                            disabled={isLoading}
-                                            className="group/btn flex flex-col items-center justify-center gap-1.5 p-3 bg-white border border-gray-100 rounded-xl hover:border-primary/30 hover:shadow-md transition-all disabled:opacity-50"
-                                        >
-                                            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover/btn:bg-primary/10 transition-colors">
-                                                <span className="material-icons-round text-lg text-gray-400 group-hover/btn:text-primary">{demo.icon}</span>
-                                            </div>
-                                            <span className="text-[10px] font-bold text-text-main group-hover/btn:text-primary text-center leading-tight">{demo.label}</span>
-                                        </button>
-                                    ))}
-                                </div>
-                                <p className="text-[10px] text-text-secondary text-center mt-4 font-medium italic opacity-70">
-                                    Click any card to start a live demo session
-                                </p>
-                            </div>
-
-                            <form onSubmit={handleLogin} className="space-y-6">
-                                {error && (
-                                    <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3">
-                                        <span className="material-icons-round text-red-600">error</span>
-                                        <p className="text-sm font-medium text-red-900">{error}</p>
-                                    </div>
-                                )}
-
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Email</label>
-                                    <div className="relative">
-                                        <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">mail</span>
-                                        <input
-                                            type="email"
-                                            placeholder="name@company.com"
-                                            className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                            value={formData.email}
-                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            required
-                                        />
-                                    </div>
+                    <div className="flex-1 flex flex-col justify-center">
+                        <div className="w-full max-w-2xl mx-auto lg:mx-0">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="space-y-10"
+                            >
+                                <div>
+                                    <h1 className="text-4xl font-display font-bold text-text-main mb-4 leading-tight tracking-tight">Welcome back</h1>
+                                    <p className="text-base text-text-secondary font-medium leading-relaxed max-w-lg">Login to manage your business and check your customer data in real-time.</p>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center px-1">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Password</label>
-                                        <Link href="/forgot-password" className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">Forgot password?</Link>
+                                {/* Demo Credentials */}
+                                <div className="bg-primary/5 border border-primary/10 rounded-2xl p-8 shadow-sm overflow-hidden relative group">
+                                    <div className="absolute top-0 right-0 w-48 h-48 bg-primary/10 rounded-full translate-x-10 -translate-y-10 blur-3xl group-hover:bg-primary/20 transition-all"></div>
+
+                                    <p className="text-xs font-black underline decoration-primary/30 underline-offset-4 text-primary mb-6 uppercase tracking-[0.2em] flex items-center gap-2">
+                                        <span className="material-icons-round text-base">explore</span>
+                                        Instant Quick Access Demo
+                                    </p>
+
+                                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 relative z-10">
+                                        {[
+                                            { id: 'owner', label: 'Business Owner', icon: 'storefront', email: 'business@eliztap.com', pass: 'business123', route: '/dashboard' },
+                                            { id: 'manager', label: 'Store Manager', icon: 'supervisor_account', email: 'manager@eliztap.com', pass: 'manager123', route: '/dashboard' },
+                                            { id: 'staff', label: 'Staff Member', icon: 'badge', email: 'staff@eliztap.com', pass: 'staff123', route: '/dashboard' },
+                                            { id: 'customer', label: 'Customer/User', icon: 'person', email: 'customer@eliztap.com', pass: 'customer123', route: '/customer/dashboard' },
+                                            { id: 'admin', label: 'Platform Admin', icon: 'admin_panel_settings', email: 'admin@eliztap.com', pass: 'admin123', route: '/admin/dashboard' }
+                                        ].map((demo) => (
+                                            <button
+                                                key={demo.id}
+                                                type="button"
+                                                onClick={async (e) => {
+                                                    e.preventDefault();
+                                                    setFormData({ email: demo.email, password: demo.pass, rememberMe: true });
+                                                    setError('');
+                                                    setIsLoading(true);
+                                                    try {
+                                                        const result = await login(demo.email.trim(), demo.pass.trim());
+                                                        if (result.success) {
+                                                            notify.success(`Logged in as ${demo.label}`);
+                                                            router.push(demo.route);
+                                                        } else {
+                                                            setError(result.error || 'Demo login failed');
+                                                            setIsLoading(false);
+                                                        }
+                                                    } catch (err) {
+                                                        setError('An unexpected error occurred');
+                                                        setIsLoading(false);
+                                                    }
+                                                }}
+                                                disabled={isLoading}
+                                                className="group/btn flex flex-col items-center justify-center gap-3 p-4 bg-white border border-gray-100 rounded-2xl hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all disabled:opacity-50"
+                                            >
+                                                <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center group-hover/btn:bg-primary/10 transition-colors">
+                                                    <span className="material-icons-round text-2xl text-gray-400 group-hover/btn:text-primary">{demo.icon}</span>
+                                                </div>
+                                                <span className="text-[11px] font-bold text-text-main group-hover/btn:text-primary text-center leading-tight">{demo.label}</span>
+                                            </button>
+                                        ))}
                                     </div>
-                                    <div className="relative">
-                                        <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">lock</span>
-                                        <input
-                                            type={showPassword ? "text" : "password"}
-                                            placeholder="••••••••"
-                                            className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-12 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
-                                            value={formData.password}
-                                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                            required
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors"
-                                        >
-                                            <span className="material-icons-round text-lg">{showPassword ? 'visibility_off' : 'visibility'}</span>
-                                        </button>
-                                    </div>
+                                    <p className="text-xs text-text-secondary text-center mt-6 font-medium italic opacity-70">
+                                        Click any account card above to start a live demo session
+                                    </p>
                                 </div>
 
-                                <div className="flex items-center gap-3">
-                                    <input
-                                        type="checkbox"
-                                        id="remember"
-                                        className="size-4 accent-primary rounded"
-                                        checked={formData.rememberMe}
-                                        onChange={(e) => setFormData({ ...formData, rememberMe: e.target.checked })}
-                                    />
-                                    <label htmlFor="remember" className="text-[11px] font-medium text-text-secondary">Keep me signed in for 30 days</label>
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    disabled={isLoading}
-                                    className="w-full h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all flex items-center justify-center gap-2 text-sm mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    {isLoading ? (
-                                        <>
-                                            <span className="material-icons-round animate-spin">refresh</span>
-                                            Signing in...
-                                        </>
-                                    ) : (
-                                        <>
-                                            Sign In
-                                            <span className="material-icons-round text-lg">login</span>
-                                        </>
+                                <form onSubmit={handleLogin} className="space-y-8">
+                                    {error && (
+                                        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-center gap-3 animate-shake">
+                                            <span className="material-icons-round text-red-600">error</span>
+                                            <p className="text-sm font-semibold text-red-900">{error}</p>
+                                        </div>
                                     )}
-                                </button>
-                            </form>
-                        </motion.div>
 
-                        <p className="text-[10px] text-center lg:text-left text-text-secondary font-bold uppercase tracking-widest mt-12">
-                            New to LaTap? <Link href="/get-started" className="text-primary hover:underline">Create an account</Link>
-                        </p>
+                                    <div className="grid grid-cols-1 gap-6">
+                                        <div className="space-y-3">
+                                            <label className="text-[11px] font-black uppercase tracking-[0.2em] text-text-secondary ml-1">Email Address</label>
+                                            <div className="relative">
+                                                <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">low_priority</span>
+                                                <input
+                                                    type="email"
+                                                    placeholder="name@company.com"
+                                                    className="w-full h-14 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all text-sm"
+                                                    value={formData.email}
+                                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            <div className="flex justify-between items-center px-1">
+                                                <label className="text-[11px] font-black uppercase tracking-[0.2em] text-text-secondary">Security Password</label>
+                                                <Link href="/forgot-password" hidden className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">Forgot?</Link>
+                                            </div>
+                                            <div className="relative">
+                                                <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">shield</span>
+                                                <input
+                                                    type={showPassword ? "text" : "password"}
+                                                    placeholder="••••••••"
+                                                    className="w-full h-14 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-12 font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/30 focus:bg-white transition-all text-sm"
+                                                    value={formData.password}
+                                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                                    required
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors"
+                                                >
+                                                    <span className="material-icons-round text-xl">{showPassword ? 'visibility_off' : 'visibility'}</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-between">
+                                        <label className="flex items-center gap-3 cursor-pointer group">
+                                            <div className="relative flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    id="remember"
+                                                    className="peer sr-only"
+                                                    checked={formData.rememberMe}
+                                                    onChange={(e) => setFormData({ ...formData, rememberMe: e.target.checked })}
+                                                />
+                                                <div className="size-5 border-2 border-gray-200 rounded-lg peer-checked:bg-primary peer-checked:border-primary transition-all"></div>
+                                                <span className="material-icons-round absolute text-white text-xs scale-0 peer-checked:scale-100 transition-transform left-[4px]">check</span>
+                                            </div>
+                                            <span className="text-xs font-semibold text-text-secondary group-hover:text-text-main transition-colors">Keep me signed in for 30 days</span>
+                                        </label>
+                                        <Link href="/forgot-password" id="forgot-password" className="text-xs font-bold text-primary hover:underline underline-offset-4">Forgot password?</Link>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        disabled={isLoading}
+                                        className="w-full h-14 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/20 hover:bg-primary-hover hover:-translate-y-0.5 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-base mt-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                                    >
+                                        {isLoading ? (
+                                            <>
+                                                <span className="material-icons-round animate-spin">refresh</span>
+                                                Proccessing Secure Login...
+                                            </>
+                                        ) : (
+                                            <>
+                                                Sign In to Dashboard
+                                                <span className="material-icons-round text-xl">arrow_forward</span>
+                                            </>
+                                        )}
+                                    </button>
+                                </form>
+                            </motion.div>
+
+                            <p className="text-xs text-center lg:text-left text-text-secondary font-bold uppercase tracking-[0.2em] mt-16">
+                                Don't have an ElizTap business account? <Link href="/get-started" className="text-primary hover:underline underline-offset-4">Join now</Link>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Right Side: Shared Mockup Image */}
-            <div className="hidden lg:block lg:w-[40%] relative overflow-hidden h-screen">
+            <div className="hidden lg:block lg:w-1/2 relative overflow-hidden h-screen">
                 <AuthSidePanel
                     features={[
                         {
@@ -219,3 +236,4 @@ export default function LoginPage() {
         </div>
     );
 }
+

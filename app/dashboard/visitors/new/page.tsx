@@ -1,42 +1,30 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
 import EmptyState from '@/components/dashboard/EmptyState';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { dashboardApi } from '@/lib/api/dashboard';
+import { Visitor } from '@/lib/store/mockDashboardStore';
 import { UserPlus, Calendar, TrendingUp, Timer, Send, Hand } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-interface NewVisitor {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-    joined: string;
-    source: string;
-    status: string;
-}
-
 export default function NewVisitorsPage() {
-    const [newVisitors, setNewVisitors] = useState<NewVisitor[]>([
-        { id: '1', name: 'James Wilson', email: 'j.wilson@example.com', phone: '+234 810 123 4567', joined: '1 hour ago', source: 'Front Desk NFC', status: 'New' },
-        { id: '2', name: 'Amaka Eze', email: 'amaka.e@example.com', phone: '+234 811 234 5678', joined: '3 hours ago', source: 'Table 4 NFC', status: 'New' },
-        { id: '3', name: 'Robert Smith', email: 'r.smith@example.com', phone: '+234 812 345 6789', joined: 'Yesterday', source: 'Entrance NFC', status: 'New' },
-        { id: '4', name: 'Chioma Okeke', email: 'chioma.o@example.com', phone: '+234 813 456 7890', joined: '2 days ago', source: 'Bar NFC', status: 'New' },
-    ]);
+    const queryClient = useQueryClient();
 
-    const stats = [
-        { label: 'New Today', value: '18', icon: UserPlus, color: 'green' as const, trend: { value: '+20%', isUp: true } },
-        { label: 'New This Week', value: '124', icon: Calendar, color: 'blue' as const, trend: { value: '+15%', isUp: true } },
-        { label: 'Conversion Rate', value: '68%', icon: TrendingUp, color: 'purple' as const, trend: { value: '+2%', isUp: true } },
-        { label: 'Wait Time', value: '2m', icon: Timer, color: 'yellow' as const, trend: { value: '-30s', isUp: true } },
-    ];
+    const { data: storeData, isLoading } = useQuery({
+        queryKey: ['dashboard'],
+        queryFn: dashboardApi.fetchDashboardData,
+    });
 
-    const handleWelcomeVisitor = (visitor: NewVisitor) => {
+    const allVisitors = storeData?.recentVisitors || [];
+    const newVisitors = allVisitors.filter((v: Visitor) => v.status === 'new');
+
+    const handleWelcomeVisitor = (visitor: Visitor) => {
         toast.success(`Welcome message sent to ${visitor.name}!`);
-        console.log('Sending welcome to:', visitor);
     };
 
     const handleSendWelcomeCampaign = () => {
@@ -45,27 +33,31 @@ export default function NewVisitorsPage() {
             return;
         }
         toast.success(`Welcome campaign sent to ${newVisitors.length} new visitors!`);
-        console.log('Sending welcome campaign to:', newVisitors);
     };
 
-    const columns: Column<NewVisitor>[] = [
+    const stats = [
+        { label: 'New Today', value: newVisitors.length.toString(), icon: UserPlus, color: 'green' as const, trend: { value: '+20%', isUp: true } },
+        { label: 'Weekly New', value: '124', icon: Calendar, color: 'blue' as const, trend: { value: '+15%', isUp: true } },
+        { label: 'Conv. Rate', value: '68%', icon: TrendingUp, color: 'purple' as const, trend: { value: '+2%', isUp: true } },
+        { label: 'Avg. Wait', value: '2m', icon: Timer, color: 'yellow' as const, trend: { value: '-30s', isUp: true } },
+    ];
+
+    const columns: Column<Visitor>[] = [
         {
             header: 'Visitor',
-            accessor: (item: NewVisitor) => (
+            accessor: (item: Visitor) => (
                 <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center text-green-600 font-bold text-xs border border-green-100">
                         {item.name.split(' ').map((n: string) => n[0]).join('')}
                     </div>
                     <div>
                         <p className="font-bold text-text-main">{item.name}</p>
-                        <p className="text-xs text-text-secondary">{item.email}</p>
+                        <p className="text-xs text-text-secondary">{item.phone}</p>
                     </div>
                 </div>
             )
         },
-        { header: 'Phone Number', accessor: 'phone' },
-        { header: 'Joined', accessor: 'joined' },
-        { header: 'Source Device', accessor: 'source' },
+        { header: 'Joined', accessor: 'time' },
         {
             header: 'Status',
             accessor: () => (
@@ -76,7 +68,7 @@ export default function NewVisitorsPage() {
         },
         {
             header: 'Actions',
-            accessor: (item: NewVisitor) => (
+            accessor: (item: Visitor) => (
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
@@ -117,7 +109,8 @@ export default function NewVisitorsPage() {
                 <DataTable
                     columns={columns}
                     data={newVisitors}
-                    onRowClick={(visitor) => console.log('Clicked visitor:', visitor)}
+                    isLoading={isLoading}
+                    onRowClick={(visitor) => toast(`Viewing ${visitor.name}'s profile`)}
                     emptyState={
                         <EmptyState
                             icon="person_add"

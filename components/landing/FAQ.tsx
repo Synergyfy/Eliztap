@@ -19,7 +19,7 @@ export default function FAQ() {
         },
         {
             q: "What if a customer's phone doesn't work?",
-            a: "Every LaTap card has a QR code printed on it. If a phone is old, they can scan the QR code to do the same thing."
+            a: "Every ElizTap card has a QR code printed on it. If a phone is old, they can scan the QR code to do the same thing."
         },
         {
             q: "Is the data safe?",
@@ -27,7 +27,7 @@ export default function FAQ() {
         },
         {
             q: "Does it connect with other tools?",
-            a: "Yes. LaTap connects with many other apps you might use. Your customer data is sent there automatically."
+            a: "Yes. ElizTap connects with many other apps you might use. Your customer data is sent there automatically."
         }
     ];
 

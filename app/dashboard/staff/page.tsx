@@ -185,7 +185,7 @@ export default function StaffManagementPage() {
                                     <p className="text-xs text-text-secondary leading-relaxed font-medium">Full administrative access, billing, and settings control.</p>
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-sm font-black text-blue-600 uppercase tracking-tighter">Store Manager</p>
+                                    <p className="text-sm font-black text-blue-600 uppercase tracking-tighter">Manager</p>
                                     <p className="text-xs text-text-secondary leading-relaxed font-medium">Manage visitors, issue rewards, and view detailed analytics.</p>
                                 </div>
                                 <div className="space-y-1">
@@ -225,7 +225,7 @@ export default function StaffManagementPage() {
                                 <label className="block text-xs font-black uppercase tracking-widest text-text-secondary mb-2">Assign Role</label>
                                 <select name="role" className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all font-bold text-sm">
                                     <option value="Staff">Staff Member</option>
-                                    <option value="Manager">Store Manager</option>
+                                    <option value="Manager">Manager</option>
                                     <option value="Owner">Business Owner</option>
                                 </select>
                             </div>

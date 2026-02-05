@@ -59,17 +59,35 @@ export default function MultiDeviceTapPage() {
                     currentDeviceId: deviceId as string
                 });
 
-                // Check-in logic: If user is known, record visit and go to welcome back
-                const identity = userDataStore || storedIdentity;
+                // Check-in logic: Ensure a unique ID is assigned even for anonymous taps
+                let identity = userDataStore || storedIdentity;
+
+                if (!identity) {
+                    // Pre-generate a unique visitor ID for this session
+                    const anonymousId = `T-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+                    identity = {
+                        name: 'Anonymous Visitor',
+                        uniqueId: anonymousId
+                    };
+
+                    // Save to store so it persists through the form filling
+                    useCustomerFlowStore.getState().setUserData(identity);
+                }
+
                 if (identity) {
                     recordVisit();
                     recordExternalTap({
                         ...identity,
-                        phone: identity.phone || ''
+                        phone: (identity as any).phone || ''
                     });
-                    router.push('/user-step'); // user-step logic will catch currentStep=WELCOME_BACK
-                } else {
-                    router.push('/user-step');
+
+                    // If it was a known user, go to welcome back
+                    if (userDataStore || storedIdentity) {
+                        router.push('/user-step');
+                    } else {
+                        // For new anonymous taps, user-step will handle the journey
+                        router.push('/user-step');
+                    }
                 }
             } else {
                 setError(true);

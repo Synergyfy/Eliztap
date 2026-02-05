@@ -3,9 +3,17 @@
 import React, { useState } from 'react';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
+import { useRouter } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { dashboardApi } from '@/lib/api/dashboard';
+import { Check, Rocket, MessageSquare, Mail, Send, Calendar, Users, ArrowLeft, ArrowRight } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function NewCampaignPage() {
+    const router = useRouter();
+    const queryClient = useQueryClient();
     const [step, setStep] = useState(1);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         type: 'WhatsApp',
@@ -14,12 +22,40 @@ export default function NewCampaignPage() {
         schedule: 'now'
     });
 
+    const createCampaignMutation = useMutation({
+        mutationFn: dashboardApi.createCampaign,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            toast.success('Campaign launched successfully!');
+            router.push('/dashboard/campaigns');
+        },
+        onError: () => {
+            toast.error('Failed to create campaign');
+            setIsSubmitting(false);
+        }
+    });
+
     const steps = [
-        { number: 1, title: 'Details' },
-        { number: 2, title: 'Audience' },
-        { number: 3, title: 'Message' },
-        { number: 4, title: 'Schedule' }
+        { number: 1, title: 'Details', icon: MessageSquare },
+        { number: 2, title: 'Audience', icon: Users },
+        { number: 3, title: 'Message', icon: Mail },
+        { number: 4, title: 'Schedule', icon: Calendar }
     ];
+
+    const handleLaunch = () => {
+        if (!formData.name || !formData.message) {
+            toast.error('Please fill in all required fields');
+            return;
+        }
+        setIsSubmitting(true);
+        createCampaignMutation.mutate({
+            name: formData.name,
+            type: formData.type,
+            audience: formData.audience,
+            message: formData.message,
+            status: 'Active'
+        });
+    };
 
     return (
         <DashboardSidebar>
@@ -27,54 +63,76 @@ export default function NewCampaignPage() {
                 <PageHeader
                     title="Create New Campaign"
                     description="Configure your message and target audience"
+                    actions={
+                        <button
+                            onClick={() => router.back()}
+                            className="flex items-center gap-2 px-4 py-2 text-text-secondary hover:text-text-main font-bold transition-colors"
+                        >
+                            <ArrowLeft size={18} />
+                            Cancel
+                        </button>
+                    }
                 />
 
                 {/* Progress Steps */}
-                <div className="flex items-center justify-between mb-12 relative">
-                    <div className="absolute top-1/2 left-0 w-full h-0.5 bg-gray-100 -translate-y-1/2 -z-0"></div>
-                    {steps.map((s) => (
-                        <div key={s.number} className="relative z-10 flex flex-col items-center">
-                            <div className={`size-10 rounded-full flex items-center justify-center font-bold text-sm transition-all border-2 ${step >= s.number ? 'bg-primary text-white border-primary' : 'bg-white text-text-secondary border-gray-200'
-                                }`}>
-                                {step > s.number ? <span className="material-icons-round text-lg">check</span> : s.number}
+                <div className="flex items-center justify-between mb-12 relative px-4">
+                    <div className="absolute top-5 left-10 right-10 h-0.5 bg-gray-100 z-0"></div>
+                    {steps.map((s) => {
+                        const Icon = s.icon;
+                        const isActive = step >= s.number;
+                        const isCompleted = step > s.number;
+                        return (
+                            <div key={s.number} className="relative z-10 flex flex-col items-center">
+                                <div className={`size-10 rounded-full flex items-center justify-center font-bold text-sm transition-all border-2 ${isActive ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20' : 'bg-white text-text-secondary border-gray-200'
+                                    }`}>
+                                    {isCompleted ? <Check size={18} /> : s.number}
+                                </div>
+                                <span className={`absolute -bottom-7 text-[10px] font-black uppercase tracking-widest whitespace-nowrap ${isActive ? 'text-primary' : 'text-text-secondary'
+                                    }`}>
+                                    {s.title}
+                                </span>
                             </div>
-                            <span className={`absolute -bottom-7 text-[10px] font-black uppercase tracking-widest whitespace-nowrap ${step >= s.number ? 'text-primary' : 'text-text-secondary'
-                                }`}>
-                                {s.title}
-                            </span>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
 
-                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
                     <div className="p-8">
                         {step === 1 && (
-                            <div className="space-y-6">
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                                 <h3 className="text-xl font-display font-bold text-text-main">Campaign Details</h3>
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Campaign Name</label>
                                     <input
                                         type="text"
                                         placeholder="e.g. Weekend Coffee Special"
-                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl px-4 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                                        className="w-full h-14 bg-gray-50 border border-gray-100 rounded-2xl px-5 font-bold outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        autoFocus
                                     />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Channel</label>
                                     <div className="grid grid-cols-3 gap-4">
-                                        {['WhatsApp', 'SMS', 'Email'].map((type) => (
+                                        {[
+                                            { id: 'WhatsApp', icon: MessageSquare, sub: 'High Open Rate' },
+                                            { id: 'SMS', icon: Send, sub: 'Direct Reach' },
+                                            { id: 'Email', icon: Mail, sub: 'Rich Content' }
+                                        ].map((t) => (
                                             <button
-                                                key={type}
-                                                onClick={() => setFormData({ ...formData, type })}
-                                                className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${formData.type === type ? 'border-primary bg-primary/5' : 'border-gray-50 hover:border-gray-200'
+                                                key={t.id}
+                                                onClick={() => setFormData({ ...formData, type: t.id })}
+                                                className={`flex flex-col items-start gap-4 p-5 rounded-2xl border-2 transition-all text-left ${formData.type === t.id ? 'border-primary bg-primary/5 shadow-inner' : 'border-gray-50 hover:border-gray-200 bg-gray-50/50'
                                                     }`}
                                             >
-                                                <span className="material-icons-round text-2xl text-text-secondary">
-                                                    {type === 'WhatsApp' ? 'chat' : type === 'SMS' ? 'textsms' : 'email'}
-                                                </span>
-                                                <span className="text-xs font-bold text-text-main">{type}</span>
+                                                <div className={`p-2 rounded-xl ${formData.type === t.id ? 'bg-primary text-white' : 'bg-white text-text-secondary border border-gray-100'}`}>
+                                                    <t.icon size={20} />
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-bold text-text-main">{t.id}</p>
+                                                    <p className="text-[10px] text-text-secondary font-medium">{t.sub}</p>
+                                                </div>
                                             </button>
                                         ))}
                                     </div>
@@ -82,33 +140,68 @@ export default function NewCampaignPage() {
                             </div>
                         )}
 
+                        {step === 2 && (
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                <h3 className="text-xl font-display font-bold text-text-main">Select Audience</h3>
+                                <div className="grid grid-cols-1 gap-3">
+                                    {[
+                                        { id: 'all', title: 'All Visitors', desc: 'Send to everyone in your database' },
+                                        { id: 'new', title: 'New Visitors', desc: 'Target customers from the last 7 days' },
+                                        { id: 'returning', title: 'Returning Customers', desc: 'Target your most loyal fans' },
+                                        { id: 'vip', title: 'VIP Only', desc: 'Exclusive rewards for top spenders' }
+                                    ].map((a) => (
+                                        <button
+                                            key={a.id}
+                                            onClick={() => setFormData({ ...formData, audience: a.id })}
+                                            className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all text-left ${formData.audience === a.id ? 'border-primary bg-primary/5 shadow-inner' : 'border-gray-50 hover:border-gray-200'
+                                                }`}
+                                        >
+                                            <div className={`size-6 rounded-full border-2 flex items-center justify-center transition-all ${formData.audience === a.id ? 'border-primary bg-primary' : 'border-gray-200'
+                                                }`}>
+                                                {formData.audience === a.id && <Check size={14} className="text-white" />}
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-bold text-text-main">{a.title}</p>
+                                                <p className="text-xs text-text-secondary font-medium">{a.desc}</p>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         {step === 3 && (
-                            <div className="space-y-6">
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                                 <div className="flex items-center justify-between">
                                     <h3 className="text-xl font-display font-bold text-text-main">Compose Message</h3>
                                     <button className="text-primary text-xs font-bold flex items-center gap-1 hover:underline">
-                                        <span className="material-icons-round text-sm">description</span>
                                         Use Template
                                     </button>
                                 </div>
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-center px-1">
                                         <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Message Body</label>
-                                        <span className="text-[10px] font-bold text-text-secondary">{formData.message.length}/160</span>
+                                        <span className={`text-[10px] font-bold ${formData.message.length > 160 ? 'text-red-500' : 'text-text-secondary'}`}>
+                                            {formData.message.length}/160
+                                        </span>
                                     </div>
                                     <textarea
                                         rows={6}
                                         placeholder="Type your message here... Use {name} for personalization."
-                                        className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm resize-none"
+                                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-5 font-bold outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm resize-none"
                                         value={formData.message}
                                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                     />
                                 </div>
-                                <div className="bg-gray-50 rounded-xl p-4 border border-dashed border-gray-200">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary mb-2">Variables</p>
+                                <div className="bg-gray-50 rounded-2xl p-5 border border-dashed border-gray-200">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary mb-3">Personalization Tokens</p>
                                     <div className="flex flex-wrap gap-2">
                                         {['{name}', '{business}', '{date}', '{points}'].map((v) => (
-                                            <button key={v} className="px-2 py-1 bg-white border border-gray-200 rounded text-[10px] font-bold text-primary hover:border-primary transition-colors">
+                                            <button
+                                                key={v}
+                                                onClick={() => setFormData({ ...formData, message: formData.message + v })}
+                                                className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-bold text-primary hover:border-primary hover:bg-primary/5 transition-all"
+                                            >
                                                 {v}
                                             </button>
                                         ))}
@@ -117,11 +210,33 @@ export default function NewCampaignPage() {
                             </div>
                         )}
 
-                        {step !== 1 && step !== 3 && (
-                            <div className="py-12 flex flex-col items-center justify-center text-center">
-                                <span className="material-icons-round text-5xl text-gray-200 mb-4">construction</span>
-                                <h3 className="text-lg font-bold text-text-main">Step {step} Implementation</h3>
-                                <p className="text-sm text-text-secondary">This part of the form is coming soon in the next update.</p>
+                        {step === 4 && (
+                            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                <div className="text-center">
+                                    <div className="size-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-xl">
+                                        <Rocket size={40} />
+                                    </div>
+                                    <h3 className="text-2xl font-display font-bold text-text-main">Ready to Blast Off?</h3>
+                                    <p className="text-text-secondary text-sm">Review your campaign settings before launching</p>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary mb-1">Target</p>
+                                        <p className="text-sm font-bold text-text-main">{formData.audience.toUpperCase()}</p>
+                                    </div>
+                                    <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary mb-1">Channel</p>
+                                        <p className="text-sm font-bold text-text-main">{formData.type}</p>
+                                    </div>
+                                </div>
+
+                                <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-3">Message Preview</p>
+                                    <p className="text-base font-medium text-text-main leading-relaxed italic">
+                                        "{formData.message || '(No message content)'}"
+                                    </p>
+                                </div>
                             </div>
                         )}
                     </div>
@@ -130,15 +245,24 @@ export default function NewCampaignPage() {
                         <button
                             disabled={step === 1}
                             onClick={() => setStep(step - 1)}
-                            className="px-6 py-2.5 bg-white border border-gray-200 text-text-secondary font-bold rounded-xl hover:bg-gray-100 transition-all text-sm disabled:opacity-0"
+                            className="flex items-center gap-2 px-6 py-3 text-text-secondary font-bold hover:text-text-main transition-all text-sm disabled:opacity-0"
                         >
+                            <ArrowLeft size={18} />
                             Back
                         </button>
                         <button
-                            onClick={() => step < 4 ? setStep(step + 1) : console.log('Finalize')}
-                            className="px-8 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
+                            onClick={() => step < 4 ? setStep(step + 1) : handleLaunch()}
+                            disabled={isSubmitting || (step === 1 && !formData.name) || (step === 3 && !formData.message)}
+                            className="flex items-center gap-2 px-10 py-3 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all text-sm shadow-xl shadow-primary/20 active:scale-95 disabled:opacity-50"
                         >
-                            {step === 4 ? 'Launch Campaign' : 'Continue'}
+                            {isSubmitting ? (
+                                <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            ) : (
+                                <>
+                                    {step === 4 ? 'Launch Campaign' : 'Continue'}
+                                    <ArrowRight size={18} />
+                                </>
+                            )}
                         </button>
                     </div>
                 </div>

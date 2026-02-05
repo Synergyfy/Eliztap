@@ -11,7 +11,7 @@ export default function IntegrationsPage() {
         { name: 'Mailchimp', desc: 'Sync visitor emails to your marketing segments.', icon: 'email', status: 'Connect', color: 'yellow' },
         { name: 'Shopify', desc: 'Track online vs offline visitor behavior.', icon: 'shopping_bag', status: 'Connect', color: 'indigo' },
         { name: 'Twilio SMS', desc: 'Provider for all SMS-based visitor notifications.', icon: 'textsms', status: 'Connected', color: 'red' },
-        { name: 'Zapier', desc: 'Connect LaTap with 5000+ other web applications.', icon: 'bolt', status: 'Connect', color: 'orange' },
+        { name: 'Zapier', desc: 'Connect ElizTap with 5000+ other web applications.', icon: 'bolt', status: 'Connect', color: 'orange' },
     ];
 
     return (
@@ -19,7 +19,7 @@ export default function IntegrationsPage() {
             <div className="p-8">
                 <PageHeader
                     title="Integrations"
-                    description="Connect LaTap with your favorite tools and platforms"
+                    description="Connect ElizTap with your favorite tools and platforms"
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -38,8 +38,8 @@ export default function IntegrationsPage() {
                             <p className="text-sm text-text-secondary font-medium leading-relaxed flex-1">{app.desc}</p>
 
                             <button className={`mt-6 py-2.5 rounded-xl font-bold text-sm transition-all ${app.status === 'Connected'
-                                    ? 'bg-gray-50 text-text-main border border-gray-100 hover:bg-red-50 hover:text-red-600 hover:border-red-100'
-                                    : 'bg-primary text-white hover:bg-primary-hover shadow-md shadow-primary/20'
+                                ? 'bg-gray-50 text-text-main border border-gray-100 hover:bg-red-50 hover:text-red-600 hover:border-red-100'
+                                : 'bg-primary text-white hover:bg-primary-hover shadow-md shadow-primary/20'
                                 }`}>
                                 {app.status === 'Connected' ? 'Disconnect' : 'Setup Integration'}
                             </button>

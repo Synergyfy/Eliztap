@@ -54,7 +54,7 @@ export default function PrivacyPolicy() {
                         <section>
                             <h2 className="text-2xl font-bold text-text-main mb-4 font-display">5. Your Rights</h2>
                             <p className="text-text-secondary leading-relaxed  font-bold">
-                                Under GDPR and CCPA, you have the right to access, delete, or port your data. You can manage your data preferences directly through your LaTap dashboard or by contacting our support team.
+                                Under GDPR and CCPA, you have the right to access, delete, or port your data. You can manage your data preferences directly through your ElizTap dashboard or by contacting our support team.
                             </p>
                         </section>
                     </div>
@@ -62,7 +62,7 @@ export default function PrivacyPolicy() {
                     <div className="mt-20 p-8 rounded-3xl bg-primary/5 border border-primary/10">
                         <h4 className="font-bold text-text-main mb-2">GDPR Compliance</h4>
                         <p className="text-sm text-text-secondary font-medium mb-6">Our Data Processing Agreement (DPA) is available upon request for enterprise customers requiring additional documentation.</p>
-                        <button className="text-primary font-bold text-sm hover:underline">privacy@latap.io</button>
+                        <button className="text-primary font-bold text-sm hover:underline">privacy@eliztap.io</button>
                     </div>
                 </div>
             </main>
