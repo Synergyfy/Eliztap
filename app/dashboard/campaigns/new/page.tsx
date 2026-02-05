@@ -6,6 +6,7 @@ import PageHeader from '@/components/dashboard/PageHeader';
 
 export default function NewCampaignPage() {
     const [step, setStep] = useState(1);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         type: 'WhatsApp',
@@ -135,13 +136,60 @@ export default function NewCampaignPage() {
                             Back
                         </button>
                         <button
-                            onClick={() => step < 4 ? setStep(step + 1) : console.log('Finalize')}
+                            onClick={() => step < 4 ? setStep(step + 1) : setShowConfirmModal(true)}
                             className="px-8 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
                         >
                             {step === 4 ? 'Launch Campaign' : 'Continue'}
                         </button>
                     </div>
                 </div>
+
+                {/* Confirmation Modal */}
+                {showConfirmModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowConfirmModal(false)}></div>
+                        <div className="relative w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl animate-in fade-in zoom-in duration-200">
+                            <div className="text-center mb-8">
+                                <div className="size-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span className="material-icons-round text-3xl">rocket_launch</span>
+                                </div>
+                                <h2 className="text-2xl font-display font-bold text-text-main mb-2">Ready to Launch?</h2>
+                                <p className="text-sm text-text-secondary">
+                                    You are about to send this campaign to <strong className="text-text-main">{formData.audience}</strong> via <strong className="text-text-main">{formData.type}</strong>.
+                                </p>
+                            </div>
+
+                            <div className="bg-gray-50 rounded-xl p-4 mb-8 border border-gray-100">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <span className="material-icons-round text-sm text-gray-400">info</span>
+                                    <span className="text-xs font-bold text-text-secondary uppercase tracking-widest">Message Preview</span>
+                                </div>
+                                <p className="text-sm font-medium text-text-main italic">
+                                    "{formData.message || '(No message content)'}"
+                                </p>
+                            </div>
+
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setShowConfirmModal(false)}
+                                    className="flex-1 h-12 bg-gray-50 text-text-secondary font-bold rounded-xl hover:bg-gray-100 transition-all text-sm active:scale-95"
+                                >
+                                    Edit Campaign
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        console.log('Campaign Launched:', formData);
+                                        setShowConfirmModal(false);
+                                        // Add actual launch logic here or redirect
+                                    }}
+                                    className="flex-1 h-12 bg-green-500 text-white font-bold rounded-xl hover:bg-green-600 transition-all shadow-lg shadow-green-500/20 flex items-center justify-center gap-2 active:scale-95"
+                                >
+                                    Confirm & Send
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </DashboardSidebar>
     );

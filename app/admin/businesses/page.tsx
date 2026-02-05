@@ -6,6 +6,8 @@ import AdminSidebar from '@/components/admin/AdminSidebar';
 export default function AdminBusinessesPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [selectedBusiness, setSelectedBusiness] = useState<any>(null);
 
     const businesses = [
         { id: 1, name: 'Green Terrace Cafe', owner: 'John Smith', email: 'john@greenterrace.com', plan: 'Premium', devices: 5, visitors: 2847, status: 'active', joined: '2024-01-15' },
@@ -32,7 +34,10 @@ export default function AdminBusinessesPage() {
                         <h1 className="text-3xl font-display font-bold text-text-main mb-2">Businesses Management</h1>
                         <p className="text-text-secondary font-medium">Manage all registered businesses on the platform</p>
                     </div>
-                    <button className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-colors flex items-center gap-2">
+                    <button
+                        onClick={() => setIsAddModalOpen(true)}
+                        className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-colors flex items-center gap-2"
+                    >
                         <span className="material-icons-round">add</span>
                         Add Business
                     </button>
@@ -44,14 +49,14 @@ export default function AdminBusinessesPage() {
                         <div key={index} className="bg-white rounded-xl p-6 border border-gray-200">
                             <div className="flex items-center gap-4">
                                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.color === 'green' ? 'bg-green-50' :
-                                        stat.color === 'yellow' ? 'bg-yellow-50' :
-                                            stat.color === 'red' ? 'bg-red-50' :
-                                                'bg-primary/10'
+                                    stat.color === 'yellow' ? 'bg-yellow-50' :
+                                        stat.color === 'red' ? 'bg-red-50' :
+                                            'bg-primary/10'
                                     }`}>
                                     <span className={`material-icons-round text-xl ${stat.color === 'green' ? 'text-green-600' :
-                                            stat.color === 'yellow' ? 'text-yellow-600' :
-                                                stat.color === 'red' ? 'text-red-600' :
-                                                    'text-primary'
+                                        stat.color === 'yellow' ? 'text-yellow-600' :
+                                            stat.color === 'red' ? 'text-red-600' :
+                                                'text-primary'
                                         }`}>{stat.icon}</span>
                                 </div>
                                 <div>
@@ -145,9 +150,9 @@ export default function AdminBusinessesPage() {
                                         </td>
                                         <td className="py-4 px-6">
                                             <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${business.plan === 'Enterprise' ? 'bg-purple-50 text-purple-600' :
-                                                    business.plan === 'Premium' ? 'bg-blue-50 text-blue-600' :
-                                                        business.plan === 'Basic' ? 'bg-green-50 text-green-600' :
-                                                            'bg-gray-50 text-gray-600'
+                                                business.plan === 'Premium' ? 'bg-blue-50 text-blue-600' :
+                                                    business.plan === 'Basic' ? 'bg-green-50 text-green-600' :
+                                                        'bg-gray-50 text-gray-600'
                                                 }`}>
                                                 {business.plan}
                                             </span>
@@ -156,17 +161,40 @@ export default function AdminBusinessesPage() {
                                         <td className="py-4 px-6 font-bold text-sm text-text-main">{business.visitors.toLocaleString()}</td>
                                         <td className="py-4 px-6">
                                             <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${business.status === 'active' ? 'bg-green-50 text-green-600' :
-                                                    business.status === 'pending' ? 'bg-yellow-50 text-yellow-600' :
-                                                        'bg-red-50 text-red-600'
+                                                business.status === 'pending' ? 'bg-yellow-50 text-yellow-600' :
+                                                    'bg-red-50 text-red-600'
                                                 }`}>
                                                 {business.status.toUpperCase()}
                                             </span>
                                         </td>
                                         <td className="py-4 px-6 text-sm text-text-secondary font-medium">{business.joined}</td>
                                         <td className="py-4 px-6">
-                                            <button className="p-2 text-text-secondary hover:text-text-main hover:bg-gray-100 rounded-lg transition-colors">
-                                                <span className="material-icons-round text-lg">more_vert</span>
-                                            </button>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedBusiness(business);
+                                                        setIsAddModalOpen(true);
+                                                    }}
+                                                    className="p-2 text-text-secondary hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
+                                                    title="Edit"
+                                                >
+                                                    <span className="material-icons-round text-lg">edit</span>
+                                                </button>
+                                                <button
+                                                    onClick={() => alert(`Suspending ${business.name}...`)}
+                                                    className="p-2 text-text-secondary hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-all"
+                                                    title="Suspend"
+                                                >
+                                                    <span className="material-icons-round text-lg">block</span>
+                                                </button>
+                                                <button
+                                                    onClick={() => confirm(`Are you sure you want to delete ${business.name}?`) && alert('Deleted')}
+                                                    className="p-2 text-text-secondary hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                                                    title="Delete"
+                                                >
+                                                    <span className="material-icons-round text-lg">delete</span>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -188,6 +216,92 @@ export default function AdminBusinessesPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Add/Edit Business Modal */}
+            {isAddModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => { setIsAddModalOpen(false); setSelectedBusiness(null); }}></div>
+                    <div className="relative w-full max-w-lg bg-white rounded-3xl p-8 shadow-2xl animate-in fade-in zoom-in duration-200">
+                        <div className="flex items-center justify-between mb-8">
+                            <div>
+                                <h2 className="text-2xl font-display font-bold text-text-main">
+                                    {selectedBusiness ? 'Edit Business' : 'Register New Business'}
+                                </h2>
+                                <p className="text-sm text-text-secondary mt-1">
+                                    {selectedBusiness ? 'Update business credentials and status' : 'Onboard a new business to the platform'}
+                                </p>
+                            </div>
+                            <button onClick={() => { setIsAddModalOpen(false); setSelectedBusiness(null); }} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                                <span className="material-icons-round text-gray-400">close</span>
+                            </button>
+                        </div>
+
+                        <form onSubmit={(e) => { e.preventDefault(); setIsAddModalOpen(false); setSelectedBusiness(null); alert('Success!'); }} className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Name</label>
+                                    <input
+                                        defaultValue={selectedBusiness?.name}
+                                        required
+                                        className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all font-bold text-sm"
+                                        placeholder="e.g. Skyline Lounge"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Plan</label>
+                                    <select
+                                        defaultValue={selectedBusiness?.plan}
+                                        className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all font-bold text-sm"
+                                    >
+                                        <option value="Free">Free</option>
+                                        <option value="Basic">Basic</option>
+                                        <option value="Premium">Premium</option>
+                                        <option value="Enterprise">Enterprise</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Owner Full Name</label>
+                                <input
+                                    defaultValue={selectedBusiness?.owner}
+                                    required
+                                    className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all font-bold text-sm"
+                                    placeholder="e.g. Jane Doe"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Email Address</label>
+                                <input
+                                    defaultValue={selectedBusiness?.email}
+                                    type="email"
+                                    required
+                                    className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all font-bold text-sm"
+                                    placeholder="owner@business.com"
+                                />
+                            </div>
+
+                            <div className="pt-4 flex gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => { setIsAddModalOpen(false); setSelectedBusiness(null); }}
+                                    className="flex-1 h-14 bg-gray-50 text-text-secondary font-bold rounded-xl hover:bg-gray-100 transition-all text-sm active:scale-95"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-3 h-14 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 active:scale-95"
+                                >
+                                    <span className="material-icons-round">{selectedBusiness ? 'save' : 'add'}</span>
+                                    {selectedBusiness ? 'Update Business' : 'Register Business'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </AdminSidebar>
     );
 }

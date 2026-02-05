@@ -143,7 +143,7 @@ export const useCustomerFlowStore = create<CustomerFlowState>()(
         (set, get) => ({
     currentStep: 'SELECT_TYPE',
     serialNumber: 'LT-8829-X',
-    storeName: 'LaTap Venue',
+    storeName: 'ElizTap Venue',
     businessType: 'RESTAURANT',
     visitCount: 1,
     rewardVisitThreshold: 5,

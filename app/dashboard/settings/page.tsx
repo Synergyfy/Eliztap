@@ -11,6 +11,7 @@ export default function SettingsPage() {
         { title: 'Device Settings', desc: 'Configure NFC device defaults and behaviors', icon: 'nfc', href: '/dashboard/settings/devices' },
         { title: 'Team Management', desc: 'Invite staff and manage permissions', icon: 'people', href: '/dashboard/staff' },
         { title: 'Integrations', desc: 'Connect with POS and CRM tools', icon: 'extension', href: '/dashboard/settings/integrations' },
+        { title: 'Message Settings', desc: 'Customize welcome and success messages', icon: 'chat', href: '/dashboard/settings/messages' },
         { title: 'Data & Privacy', desc: 'Manage data retention and compliance', icon: 'security', href: '/dashboard/settings/privacy' },
     ];
 
@@ -19,7 +20,7 @@ export default function SettingsPage() {
             <div className="p-8">
                 <PageHeader
                     title="Settings"
-                    description="Configure and manage your LaTap account preferences"
+                    description="Configure and manage your ElizTap account preferences"
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

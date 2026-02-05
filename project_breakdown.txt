@@ -102,3 +102,25 @@ new task
 --showing a bussiness website
 
 --hardware pricing
+
+
+
+New task : 5/2/2026
+===========================
+
+okay addinbg pictures in the hero section
+
+--the dashboard will be real
+
+--animated video to show how it works and under 10 secs
+
+--now add a page to be able to edit the final Message and also for returning coustomers message for a bussiness and add weither there is rewards or not and also there should be a modal explaining the reward rules for a bussiness they can be able to update it in the settings
+
+--before sending campaign please make sure that there is a modal to see the msg either to edit or confirm the msg
+--change all campaign words in the bussiness dashboard to message eg. send campaign to send message
+--now in the page to set final message and returning msg we should have a preview so that they can see how it looks like
+--now the auth make theb image part 50/50 with the form.
+change store manager to just manager.
+--allow bussi8ness owner to be able to restrict more role based access 
+--change latap yo eliz tap please
+--

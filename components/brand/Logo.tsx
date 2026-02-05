@@ -27,7 +27,7 @@ export default function Logo({
                 nfc
             </span>
             {withText && (
-                <span className={`${fontSize} ${textClassName}`}>LaTap</span>
+                <span className={`${fontSize} ${textClassName}`}>ElizTap</span>
             )}
         </div>
     );

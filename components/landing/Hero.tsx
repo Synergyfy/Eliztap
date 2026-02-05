@@ -46,7 +46,7 @@ export default function Hero() {
                                 <div className="size-2.5 rounded-full bg-green-400"></div>
                             </div>
                             <div className="bg-white px-3 py-1 rounded-md text-[10px] text-gray-400 font-bold flex-1 text-center max-w-[240px] mx-auto border border-gray-100 italic-none">
-                                app.latap.io/dashboard
+                                app.eliztap.io/dashboard
                             </div>
                         </div>
 

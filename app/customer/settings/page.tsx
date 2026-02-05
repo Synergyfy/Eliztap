@@ -44,7 +44,7 @@ export default function CustomerSettingsPage() {
                             </div>
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-text-secondary">Email Address</label>
-                                <input type="email" defaultValue="customer@latap.com" className="w-full h-10 px-4 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
+                                <input type="email" defaultValue="customer@eliztap.com" className="w-full h-10 px-4 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
                             </div>
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-text-secondary">Phone Number</label>

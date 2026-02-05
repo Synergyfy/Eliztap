@@ -7,6 +7,8 @@ export default function AdminUsersPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterRole, setFilterRole] = useState('all');
     const [filterStatus, setFilterStatus] = useState('all');
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<any>(null);
 
     const users = [
         { id: 1, name: 'Daniel Admin', email: 'daniel@entryconnect.com', role: 'Admin', status: 'active', lastLogin: '2 mins ago', joined: '2023-11-01' },
@@ -35,7 +37,10 @@ export default function AdminUsersPage() {
                         <h1 className="text-3xl font-display font-bold text-text-main mb-2">User Management</h1>
                         <p className="text-text-secondary font-medium">Manage and monitor all platform users</p>
                     </div>
-                    <button className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-colors flex items-center gap-2">
+                    <button
+                        onClick={() => setIsAddModalOpen(true)}
+                        className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-colors flex items-center gap-2"
+                    >
                         <span className="material-icons-round">add</span>
                         Add User
                     </button>
@@ -165,9 +170,32 @@ export default function AdminUsersPage() {
                                         <td className="py-4 px-6 text-sm text-text-main font-medium">{user.lastLogin}</td>
                                         <td className="py-4 px-6 text-sm text-text-secondary font-medium">{user.joined}</td>
                                         <td className="py-4 px-6">
-                                            <button className="p-2 text-text-secondary hover:text-text-main hover:bg-gray-100 rounded-lg transition-colors">
-                                                <span className="material-icons-round text-lg">more_vert</span>
-                                            </button>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedUser(user);
+                                                        setIsAddModalOpen(true);
+                                                    }}
+                                                    className="p-2 text-text-secondary hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
+                                                    title="Edit User"
+                                                >
+                                                    <span className="material-icons-round text-lg">edit</span>
+                                                </button>
+                                                <button
+                                                    onClick={() => alert(`Password reset link sent to ${user.email}`)}
+                                                    className="p-2 text-text-secondary hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                                                    title="Reset Password"
+                                                >
+                                                    <span className="material-icons-round text-lg">lock_reset</span>
+                                                </button>
+                                                <button
+                                                    onClick={() => confirm(`Disable account for ${user.name}?`) && alert('Account Disabled')}
+                                                    className="p-2 text-text-secondary hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                                                    title="Disable Account"
+                                                >
+                                                    <span className="material-icons-round text-lg">no_accounts</span>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -189,6 +217,94 @@ export default function AdminUsersPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Add/Edit User Modal */}
+            {isAddModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => { setIsAddModalOpen(false); setSelectedUser(null); }}></div>
+                    <div className="relative w-full max-w-lg bg-white rounded-3xl p-8 shadow-2xl animate-in fade-in zoom-in duration-200">
+                        <div className="flex items-center justify-between mb-8">
+                            <div>
+                                <h2 className="text-2xl font-display font-bold text-text-main">
+                                    {selectedUser ? 'Edit User' : 'Create New User'}
+                                </h2>
+                                <p className="text-sm text-text-secondary mt-1">
+                                    {selectedUser ? 'Modify user permissions and details' : 'Manually onboard a new user to the platform'}
+                                </p>
+                            </div>
+                            <button onClick={() => { setIsAddModalOpen(false); setSelectedUser(null); }} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                                <span className="material-icons-round text-gray-400">close</span>
+                            </button>
+                        </div>
+
+                        <form onSubmit={(e) => { e.preventDefault(); setIsAddModalOpen(false); setSelectedUser(null); alert('User created/updated!'); }} className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Full Name</label>
+                                <input
+                                    defaultValue={selectedUser?.name}
+                                    required
+                                    className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all font-bold text-sm"
+                                    placeholder="e.g. John Doe"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Email Address</label>
+                                <input
+                                    defaultValue={selectedUser?.email}
+                                    type="email"
+                                    required
+                                    className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all font-bold text-sm"
+                                    placeholder="john@example.com"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Role</label>
+                                    <select
+                                        defaultValue={selectedUser?.role}
+                                        className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all font-bold text-sm"
+                                    >
+                                        <option value="Admin">Admin</option>
+                                        <option value="Business Owner">Business Owner</option>
+                                        <option value="Staff">Staff</option>
+                                        <option value="Customer">Customer</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Status</label>
+                                    <select
+                                        defaultValue={selectedUser?.status}
+                                        className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all font-bold text-sm"
+                                    >
+                                        <option value="active">Active</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="suspended">Suspended</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="pt-4 flex gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => { setIsAddModalOpen(false); setSelectedUser(null); }}
+                                    className="flex-1 h-14 bg-gray-50 text-text-secondary font-bold rounded-xl hover:bg-gray-100 transition-all text-sm active:scale-95"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-3 h-14 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 active:scale-95"
+                                >
+                                    <span className="material-icons-round">{selectedUser ? 'save' : 'person_add'}</span>
+                                    {selectedUser ? 'Update User' : 'Create User'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </AdminSidebar>
     );
 }

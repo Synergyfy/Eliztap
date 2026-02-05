@@ -93,7 +93,7 @@ export default function FeaturesPage() {
                         <div className="max-w-xl text-center md:text-left">
                             <h2 className="text-4xl font-display font-bold mb-6">Connect to your favorite tools.</h2>
                             <p className="text-lg opacity-70 mb-8">
-                                LaTap integrates seamlessly with over 5,000+ apps via Zapier and direct webhooks. Automate your workflow the second a customer taps.
+                                ElizTap integrates seamlessly with over 5,000+ apps via Zapier and direct webhooks. Automate your workflow the second a customer taps.
                             </p>
                             <div className="flex flex-wrap justify-center md:justify-start gap-4">
                                 <Link href="/get-started" className="bg-primary hover:bg-primary-hover text-white font-bold px-10 py-4 rounded-full transition-all">

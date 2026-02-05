@@ -96,7 +96,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
         },
         {
             id: 'campaigns',
-            label: 'Campaigns',
+            label: 'Messages',
             icon: Send,
             roles: ['owner', 'manager'],
             submenu: [
@@ -104,6 +104,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                 { label: 'Create New', href: '/dashboard/campaigns/new' },
                 { label: 'Scheduled', href: '/dashboard/campaigns/scheduled' },
                 { label: 'Templates', href: '/dashboard/campaigns/templates' },
+                { label: 'Settings', href: '/dashboard/settings/messages' },
             ]
         },
         {

@@ -21,7 +21,7 @@ interface AuthState {
 // Mock users for demonstration
 const MOCK_USERS: Record<string, any> = {
   owner: {
-    email: 'business@latap.com',
+    email: 'business@eliztap.com',
     password: 'business123',
     name: 'John Smith',
     role: 'owner' as UserRole,
@@ -29,7 +29,7 @@ const MOCK_USERS: Record<string, any> = {
     businessId: 'bistro_001'
   },
   manager: {
-    email: 'manager@latap.com',
+    email: 'manager@eliztap.com',
     password: 'manager123',
     name: 'Sarah Supervisor',
     role: 'manager' as UserRole,
@@ -37,7 +37,7 @@ const MOCK_USERS: Record<string, any> = {
     businessId: 'bistro_001'
   },
   staff: {
-    email: 'staff@latap.com',
+    email: 'staff@eliztap.com',
     password: 'staff123',
     name: 'Michael Cashier',
     role: 'staff' as UserRole,
@@ -45,13 +45,13 @@ const MOCK_USERS: Record<string, any> = {
     businessId: 'bistro_001'
   },
   admin: {
-    email: 'admin@latap.com',
+    email: 'admin@eliztap.com',
     password: 'admin123',
     name: 'Admin User',
     role: 'admin' as UserRole
   },
   customer: {
-    email: 'customer@latap.com',
+    email: 'customer@eliztap.com',
     password: 'customer123',
     name: 'Jane Customer',
     role: 'customer' as UserRole
@@ -66,11 +66,14 @@ export const useAuthStore = create<AuthState>()(
       
       login: async (email: string, password: string) => {
         // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        const normalizedEmail = email.toLowerCase().trim();
 
         // Find user by email and password
         const userKey = Object.keys(MOCK_USERS).find(key => 
-          MOCK_USERS[key].email === email && MOCK_USERS[key].password === password
+          MOCK_USERS[key].email.toLowerCase() === normalizedEmail && 
+          MOCK_USERS[key].password === password
         );
 
         if (userKey) {
@@ -79,7 +82,7 @@ export const useAuthStore = create<AuthState>()(
           return { success: true };
         }
 
-        return { success: false, error: 'Invalid email or password' };
+        return { success: false, error: 'The email or password you entered is incorrect. Please try again or use a demo account.' };
       },
 
       logout: () => {

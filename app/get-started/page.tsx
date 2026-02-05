@@ -36,7 +36,7 @@ export default function GetStarted() {
                 <div className="p-8 md:p-16 lg:p-24">
                     <Link href="/" className="flex items-center gap-2 mb-16">
                         <span className="material-icons-round text-primary text-2xl">nfc</span>
-                        <span className="font-display font-semibold text-xl tracking-tight text-text-main">LaTap</span>
+                        <span className="font-display font-semibold text-xl tracking-tight text-text-main">ElizTap</span>
                     </Link>
 
                     <div className="max-w-md w-full mx-auto lg:mx-0">
@@ -263,7 +263,7 @@ export default function GetStarted() {
                                 >
                                     <div>
                                         <h1 className="text-2xl font-display font-bold text-text-main mb-2 leading-tight tracking-tight">Main objective</h1>
-                                        <p className="text-[13px] text-text-secondary font-medium leading-relaxed">What would you like to achieve first with LaTap?</p>
+                                        <p className="text-[13px] text-text-secondary font-medium leading-relaxed">What would you like to achieve first with ElizTap?</p>
                                     </div>
 
                                     <div className="grid grid-cols-1 gap-3">
