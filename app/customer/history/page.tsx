@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import CustomerSidebar from '@/components/customer/CustomerSidebar';
-import { Search, Filter, Download, ExternalLink, Calendar, Clock, MapPin, Receipt, Star, MoreVertical, X } from 'lucide-react';
+import { Search, Filter, Download, ExternalLink, Calendar, Clock, MapPin, Receipt, Star, MoreVertical, X, Coffee, Smartphone, Dumbbell } from 'lucide-react';
 
 export default function CustomerHistoryPage() {
     const [searchQuery, setSearchQuery] = useState('');
