@@ -164,3 +164,149 @@ export const fetchProducts = async (
         totalCount
     };
 };
+
+export const fetchProductDetail = async (id: string) => {
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    // Mock Detail Data
+    const productDetails: Record<string, any> = {
+        'acs-acr1552u': {
+            id: 'acs-acr1552u',
+            sku: 'ACS-1552U-G1',
+            name: 'ACS ACR1552U NFC USB Reader',
+            brand: 'ACS',
+            price: 124999,
+            description: 'The ACS ACR1552U is a dual-interface smart card reader that can access both contact and contactless smart cards.',
+            longDescription: 'The ACS ACR1552U is a high-performance smart card reader designed for secure authentication and data transfer. It supports both ISO 14443 Type A and B cards, as well as MIFARE and FeliCa tags. With its CCID compliance, it is easy to integrate into various operating systems without the need for additional drivers.',
+            images: [
+                "https://lh3.googleusercontent.com/aida-public/AB6AXuDDeoGIbe96WBYeBtXjfjKNGuMBnUKo8owrQjFCfRXn5sOY75-fKbRoAFwhnf-MmV3PkVeVDquiiZuY6hSC2RaIht4m9kVtAKVIw7mXHuG_ghUTYpvFpGST06tdjc6vjFGqvXt715ctcwE0ENV9Dio7DjJ3dENX67OM18BDAb5Y4dwga1fACWSxnXhWVyHU3E3grs8eXgG85LZvQgxuvPfrSvFw0JevUzmXXCQ7Sn0O0xJ632mfEaX42KztUAwJL-bATOO1oTXo-Csw",
+                "https://lh3.googleusercontent.com/aida-public/AB6AXuClhb2SNUDTfTv_zqsIT6XNhSrFl_P1wPF0EmYibzGxElOj4IgBYOUkJWFGq-F-0dyckxS6st9qGO5rZqykoVDHudTBFrThBQPEiqC7aB8Y2GSNZgUxlXk4lkp1w8-m2P9LaQUK9zfVzvsY-XX4Z90lhhB-PvdYihC-Cuqp1oAzenNBOuFX6Fyvv19QZNuEC0zUNbqVANsmiYXiiSnxbDZB5UmHnIO5I7HlC7CXfBoMvtQTvy4a75KJWL5_2Q-5vvo9UEjZijj6WAoB",
+                "https://lh3.googleusercontent.com/aida-public/AB6AXuDLq0oL8TeUy14bdgcWDQ6hThA_wxvKcrGnCrIZhGwRH0hHyjUOFsx8FCYIYcwwDduc-P3Lb2JDj6O-WvGuIynJltqFgDnvQt6mOp_CnzsRlTy5eCw9iWqA-FZ0uj5K06GJ8-57615mEGq_l9NmKvsvWYSvgXGcdmG68SEObxbP4LmQRbhGkKyDDpqu6QFhvPBEQmBE6nvrxHGXNSLYRSwh1Zwe8V_ft_CSl_GmMDAlwUwt9dhJQoPN8b-P_CwlBGTl17VP9MECHr5U",
+                "https://lh3.googleusercontent.com/aida-public/AB6AXuDdB2rQ9j86VQqP-WApDQLRBt94FUGSaJgk8XIZFsDyLoXjqaHg2Ykh4Qt0Q67XQHF74WRN27Ns69IiKxzL6NnNeKgdpFqUDciXY6Q9YjLsm2kIGDZoWNS_JGCr-QiFXAkXHAbtGLvXhPdNEDm5SyIUxNpn_kN6D8MdmI3TEBegFcbNr5qUyqBJnlG4GDyYvDFjG-EIaIru5MwelRsZ6QiyKpTCm1TBHi3zswKvaL22J3BA4jG99yd1SEBxE4Q0okjHBaf1hWLVxEyr"
+            ],
+            mainImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuDDeoGIbe96WBYeBtXjfjKNGuMBnUKo8owrQjFCfRXn5sOY75-fKbRoAFwhnf-MmV3PkVeVDquiiZuY6hSC2RaIht4m9kVtAKVIw7mXHuG_ghUTYpvFpGST06tdjc6vjFGqvXt715ctcwE0ENV9Dio7DjJ3dENX67OM18BDAb5Y4dwga1fACWSxnXhWVyHU3E3grs8eXgG85LZvQgxuvPfrSvFw0JevUzmXXCQ7Sn0O0xJ632mfEaX42KztUAwJL-bATOO1oTXo-Csw",
+            tag: 'In Stock',
+            tagColor: 'bg-green-100 text-green-800',
+            specifications: {
+                'Interface': 'USB 2.0 Full Speed (Type A)',
+                'Operating Distance': 'Up to 50 mm (depending on tag type)',
+                'Supported Standards': 'ISO 14443 Type A & B, MIFARE, FeliCa',
+                'Supply Current': 'Max. 200 mA',
+                'Operating Temperature': '0°C to 50°C',
+                'Dimensions': '98.0 mm (L) x 65.0 mm (W) x 12.8 mm (H)'
+            },
+            documents: [
+                { name: 'ACR1552U Software Development Kit (SDK)', size: '12.4 MB', date: 'Updated 2 days ago', downloads: 421, type: 'sdk' },
+                { name: 'Technical Datasheet (PDF)', size: '1.2 MB', date: 'EN', downloads: 1200, type: 'pdf' }
+            ],
+            relatedProducts: [
+                { id: 'ntag215-pack', name: 'NTAG215 PVC Smart Cards', image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAjOLHjEImnuX2LOtQ9_35UJ5iBVDjYgoAdUkfVCIOKlzLzNbR8jzZuXMqBzr2zm7bTB60FByuzS4DfbPxOdC-XETnsg_xSz6HydW21C7a49GAGuikH8vL51ldD0GCCYAAAWeyYjrsST43T02ixab1YBLQ0SN7FPkmwUSZjyJwz5rbAfLT4RqccxCFX1gzrKZ55WEV-TfuHqVMMxN3TpGlj_Q1xdnQblfVWikTCC9YahMk0rdT2xgoAgGPqhqumczAzvpmU-SttVIU1", brand: 'NXP', price: 85500 },
+                { id: 'omnikey-5422', name: 'OMNIKEY 5422 Reader', image: "https://lh3.googleusercontent.com/aida-public/AB6AXuA13i7tJ7UvtV5AeSpw3wOHaYE8eOSOAHsJtyf9B8QtVXaQpAPS3C7Teyqjev3z6_-2UBAUUsl9_wQrPFQB4dsL21qcM803GIIhce48iGdAgKXjYlhpJBNo1PKjrd-FnkGqZzA9IKKpAIcee1B396E-WCSuonb2_wSUSBjZpX_9OT6hB2FsxRZYweRceLiA9MfmDMM0f3rXJHKAq-TzdbZ2XPvvKlIxen5gbQNQZlFxGq791xkCofDQmiLKdWXKTXx5bV39FHTL2Zxu", brand: 'HID Global', price: 189000 }
+            ],
+            features: [
+                'Ships in 24-48 Hours',
+                'Genuine Product'
+            ],
+            tieredPricing: [
+                { minQuantity: 1, maxQuantity: 10, price: 124999 },
+                { minQuantity: 11, maxQuantity: 100, price: 115000 },
+                { minQuantity: 101, maxQuantity: 500, price: 105000 },
+                { minQuantity: 501, price: 'quote' }
+            ]
+        },
+        'omnikey-5422': {
+            id: 'omnikey-5422',
+            sku: 'HID-5422-DUAL',
+            name: 'OMNIKEY 5422 Dual Interface Reader',
+            brand: 'HID Global',
+            price: 189000,
+            description: 'The OMNIKEY 5422 represents the ultimate combination of contact and contactless smart card reader technology.',
+            longDescription: 'The OMNIKEY® 5422 represents the ultimate combination of contact and contactless technology in a single device. The solution features a dual interface, PC-linked reader that reads/writes to both a 13.56 MHz contactless smart card and virtually any contact smart card, allowing users to experience the convenience, speed and security of contactless technology for applications, including logon to Windows®, networks, websites and applications for the storage of user names, passwords and personal information.',
+            images: [
+                "https://lh3.googleusercontent.com/aida-public/AB6AXuA13i7tJ7UvtV5AeSpw3wOHaYE8eOSOAHsJtyf9B8QtVXaQpAPS3C7Teyqjev3z6_-2UBAUUsl9_wQrPFQB4dsL21qcM803GIIhce48iGdAgKXjYlhpJBNo1PKjrd-FnkGqZzA9IKKpAIcee1B396E-WCSuonb2_wSUSBjZpX_9OT6hB2FsxRZYweRceLiA9MfmDMM0f3rXJHKAq-TzdbZ2XPvvKlIxen5gbQNQZlFxGq791xkCofDQmiLKdWXKTXx5bV39FHTL2Zxu"
+            ],
+            mainImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuA13i7tJ7UvtV5AeSpw3wOHaYE8eOSOAHsJtyf9B8QtVXaQpAPS3C7Teyqjev3z6_-2UBAUUsl9_wQrPFQB4dsL21qcM803GIIhce48iGdAgKXjYlhpJBNo1PKjrd-FnkGqZzA9IKKpAIcee1B396E-WCSuonb2_wSUSBjZpX_9OT6hB2FsxRZYweRceLiA9MfmDMM0f3rXJHKAq-TzdbZ2XPvvKlIxen5gbQNQZlFxGq791xkCofDQmiLKdWXKTXx5bV39FHTL2Zxu",
+            tag: 'Bulk Choice',
+            tagColor: 'bg-blue-100 text-blue-800',
+            specifications: {
+                'Host Interface': 'USB 2.0 (also compliant with USB 1.1)',
+                'Standard': 'ISO 7816 & ISO 14443 A/B, MIFARE, DESFire',
+                'Protocols': 'T=0, T=1, 2-wire: SLE 4432/42 (S=10); 3-wire: SLE 4418/28 (S=9); I2C (S=8)',
+                'Operating Temp': '0° - 55° C (32° - 131° F)',
+                'Driver Support': 'Windows, MacOS, Linux, Android'
+            },
+            documents: [
+                { name: 'HID OMNIKEY 5422 Guide', size: '2.4 MB', date: 'EN', downloads: 850, type: 'pdf' }
+            ],
+            relatedProducts: [],
+            features: ['Standard Shipping', 'HID Certified'],
+            tieredPricing: [
+                { minQuantity: 1, maxQuantity: 5, price: 189000 },
+                { minQuantity: 6, maxQuantity: 20, price: 175000 },
+                { minQuantity: 21, price: 'quote' }
+            ]
+        },
+        'ntag215-pack': {
+            id: 'ntag215-pack',
+            sku: 'NXP-NTAG215-100',
+            name: 'NTAG215 PVC Smart Cards (Pack of 100)',
+            brand: 'NXP',
+            price: 85500,
+            description: 'NTAG215 PVC cards for Amiibo, event tracking, and access control.',
+            longDescription: 'High-quality PVC cards with genuine NXP NTAG215 chip. Perfect for Amiibo identification, asset tracking, event management, and custom NFC solutions. These cards are blank white and suitable for thermal transfer or inkjet printing (with specialized trays). 504 bytes of usable memory with read/write capability.',
+            images: [
+                "https://lh3.googleusercontent.com/aida-public/AB6AXuAjOLHjEImnuX2LOtQ9_35UJ5iBVDjYgoAdUkfVCIOKlzLzNbR8jzZuXMqBzr2zm7bTB60FByuzS4DfbPxOdC-XETnsg_xSz6HydW21C7a49GAGuikH8vL51ldD0GCCYAAAWeyYjrsST43T02ixab1YBLQ0SN7FPkmwUSZjyJwz5rbAfLT4RqccxCFX1gzrKZ55WEV-TfuHqVMMxN3TpGlj_Q1xdnQblfVWikTCC9YahMk0rdT2xgoAgGPqhqumczAzvpmU-SttVIU1"
+            ],
+            mainImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuAjOLHjEImnuX2LOtQ9_35UJ5iBVDjYgoAdUkfVCIOKlzLzNbR8jzZuXMqBzr2zm7bTB60FByuzS4DfbPxOdC-XETnsg_xSz6HydW21C7a49GAGuikH8vL51ldD0GCCYAAAWeyYjrsST43T02ixab1YBLQ0SN7FPkmwUSZjyJwz5rbAfLT4RqccxCFX1gzrKZ55WEV-TfuHqVMMxN3TpGlj_Q1xdnQblfVWikTCC9YahMk0rdT2xgoAgGPqhqumczAzvpmU-SttVIU1",
+            tag: 'Multipack',
+            tagColor: 'bg-amber-100 text-amber-800',
+            specifications: {
+                'Chip Type': 'NXP NTAG215',
+                'Memory': '540 Bytes (504 Bytes usable)',
+                'Standard': 'ISO/IEC 14443A',
+                'Frequency': '13.56 MHz',
+                'Material': 'Polished PVC (White)'
+            },
+            documents: [
+                { name: 'NTAG21x Datasheet', size: '1.1 MB', date: 'Updated 2023', downloads: 3000, type: 'pdf' }
+            ],
+            relatedProducts: [],
+            features: ['Free Shipping on 5+ Packs'],
+            tieredPricing: [
+                { minQuantity: 1, maxQuantity: 4, price: 85500 },
+                { minQuantity: 5, maxQuantity: 10, price: 78000 },
+                { minQuantity: 11, price: 'quote' }
+            ]
+        }
+    };
+
+    if (productDetails[id]) return productDetails[id];
+
+    // Better Fallback
+    return {
+        id: id,
+        sku: `${id.toUpperCase()}-GEN`,
+        name: `Product ${id}`,
+        brand: 'EntryConnect',
+        price: 99999,
+        description: 'Universal NFC hardware for enterprise solutions.',
+        longDescription: 'Detailed information for this specific product is currently being updated. This product meets all industry standards for NFC connectivity and security. Please contact our support for specific technical data.',
+        images: ["https://placehold.co/600x600/png?text=Product+Image"],
+        mainImage: "https://placehold.co/600x600/png?text=Product+Image",
+        tag: 'Available',
+        tagColor: 'bg-blue-100 text-blue-800',
+        specifications: { 
+            'Type': 'NFC Solution',
+            'Frequency': '13.56 MHz',
+            'Standard': 'ISO 14443A/B'
+        },
+        documents: [],
+        relatedProducts: [],
+        features: ['Standard Warranty'],
+        tieredPricing: [
+            { minQuantity: 1, maxQuantity: 10, price: 99999 },
+            { minQuantity: 11, price: 'quote' }
+        ]
+    };
+};
+

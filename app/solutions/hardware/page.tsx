@@ -50,7 +50,7 @@ export default function HardwareSolutionPage() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
-                            <Link href="/solutions/hardware/marketplace" className="bg-primary hover:bg-primary-hover text-white font-bold px-12 py-5 rounded-full transition-all transform hover:scale-105 shadow-xl shadow-primary/25 text-sm uppercase tracking-widest cursor-pointer flex items-center gap-3">
+                            <Link href="/marketplace" className="bg-primary hover:bg-primary-hover text-white font-bold px-12 py-5 rounded-full transition-all transform hover:scale-105 shadow-xl shadow-primary/25 text-sm uppercase tracking-widest cursor-pointer flex items-center gap-3">
                                 Explore NFC Catalog
                                 <ArrowRight size={18} />
                             </Link>

@@ -6,12 +6,13 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useQuery } from '@tanstack/react-query';
 import {
-    Search, ShoppingCart, Grid, Filter, ChevronDown, X,
-    Heart, Star, Download, Send, CheckCircle2, SlidersHorizontal, ArrowRight,
-    Menu, LayoutGrid, List, ChevronLeft, ChevronRight, Loader2
+    Search, ShoppingCart, Grid, Heart, Star, Download, CheckCircle2, SlidersHorizontal, ArrowRight,
+    Menu, LayoutGrid, ChevronLeft, ChevronRight, X
 } from 'lucide-react';
 import { useMarketplaceStore } from '@/store/marketplaceStore';
+import { useCartStore } from '@/store/cartStore';
 import { fetchProducts } from '@/lib/api/marketplace';
+import { ProductCardSkeleton } from '@/components/marketplace/Skeletons';
 
 export default function MarketplacePage() {
     const router = useRouter();
@@ -22,6 +23,8 @@ export default function MarketplacePage() {
         setCategory, setPriceRange, toggleBrand, setPage, setSearchQuery, resetFilters
     } = useMarketplaceStore();
 
+    const { addItem, items } = useCartStore();
+
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
     const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
@@ -30,7 +33,7 @@ export default function MarketplacePage() {
     // React Query
     const { data, isLoading, isError } = useQuery({
         queryKey: ['products', currentPage, selectedCategory, priceRange, selectedBrands, searchQuery],
-        queryFn: () => fetchProducts(currentPage, 9, selectedCategory, priceRange, selectedBrands, searchQuery), // Fetch 9 items per page
+        queryFn: () => fetchProducts(currentPage, 9, selectedCategory, priceRange, selectedBrands, searchQuery),
         placeholderData: (previousData: any) => previousData
     });
 
@@ -43,6 +46,17 @@ export default function MarketplacePage() {
             setSelectedQuoteProduct(product);
             setIsQuoteModalOpen(true);
         } else if (product.action === 'cart') {
+            addItem({
+                id: Math.random().toString(36).substr(2, 9), // Temp ID gen
+                productId: product.id,
+                name: product.name,
+                brand: product.brand,
+                price: product.price,
+                originalPrice: product.originalPrice || undefined,
+                image: product.image,
+                inStock: true,
+                shippingInfo: 'Standard Delivery'
+            });
             toast.success(`Added ${product.name} to cart`);
         } else if (product.action === 'download') {
             toast.promise(
@@ -62,34 +76,46 @@ export default function MarketplacePage() {
         setIsSuccessModalOpen(true);
     };
 
-    const handleCardClick = (productId: string) => {
-        router.push(`/solutions/hardware/marketplace/product/${productId}`);
+    const handleCardClick = (id: string) => {
+        router.push(`/marketplace/product/${id}`);
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 font-sans text-text-main pb-20">
-
-            {/* Navigation Header */}
-            <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-text-main relative">
+            {/* Header */}
+            <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
                 <div className="max-w-[1600px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-8">
-                    <div className="flex items-center gap-3 shrink-0">
-                        <Link href="/" className='flex items-center gap-2'>
-                            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
-                                <Grid className="text-primary" size={24} />
+                    {/* Logo Area */}
+                    <div className="flex items-center gap-12">
+                        <Link href="/" className="flex items-center gap-2 group">
+                            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                                <Grid size={24} />
                             </div>
-                            <span className="font-display text-2xl font-bold tracking-tight text-primary">ElizTap <span className="text-gray-400 font-medium text-lg">Marketplace</span></span>
+                            <span className="font-display font-bold text-xl tracking-tight text-text-main">
+                                ElizTap<span className="text-primary">.Market</span>
+                            </span>
                         </Link>
+
+                        {/* Desktop Nav */}
+                        <nav className="hidden lg:flex items-center gap-8">
+                            {['New Arrivals', 'Best Sellers', 'Deals', 'Support'].map((item) => (
+                                <Link key={item} href="#" className="text-sm font-bold text-gray-500 hover:text-primary transition-colors">
+                                    {item}
+                                </Link>
+                            ))}
+                        </nav>
                     </div>
 
-                    <div className="flex-1 max-w-2xl hidden lg:block relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                    {/* Search Bar */}
+                    <div className="hidden lg:flex flex-1 max-w-xl relative group">
                         <input
                             type="text"
-                            placeholder="Search hardware, SDKs, tags, or readers..."
+                            placeholder="Check product name, MCU, or part number..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-11 pr-4 py-3 bg-gray-100 border-transparent focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/10 rounded-2xl transition-all text-sm outline-none font-medium"
+                            className="w-full h-12 pl-12 pr-4 bg-gray-50 hover:bg-gray-100 focus:bg-white border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none font-medium transition-all text-sm placeholder:text-gray-400"
                         />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" size={20} />
                     </div>
 
                     <div className="flex items-center gap-3 sm:gap-6">
@@ -101,10 +127,14 @@ export default function MarketplacePage() {
                             <button className="p-2 text-gray-500 hover:text-primary transition-colors hidden sm:block">
                                 <Heart size={22} />
                             </button>
-                            <button className="p-2 text-gray-500 hover:text-primary transition-colors relative">
+                            <Link href="/marketplace/cart" className="p-2 text-gray-500 hover:text-primary transition-colors relative">
                                 <ShoppingCart size={22} />
-                                <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border border-white">2</span>
-                            </button>
+                                {items.length > 0 && (
+                                    <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border border-white">
+                                        {items.length}
+                                    </span>
+                                )}
+                            </Link>
                         </div>
 
                         <div className="h-8 w-[1px] bg-gray-200 hidden sm:block"></div>
@@ -120,8 +150,8 @@ export default function MarketplacePage() {
                             <Menu size={24} />
                         </button>
                     </div>
-                </div>
-            </header>
+                </div >
+            </header >
 
             {/* Sub-Header Categories */}
             <div className="bg-white border-b border-gray-200 overflow-x-auto no-scrollbar shadow-sm sticky top-20 z-40">
@@ -146,7 +176,8 @@ export default function MarketplacePage() {
                 </div>
             </div>
 
-            <main className="max-w-[1600px] mx-auto px-4 md:px-8 py-8 md:py-12">
+
+            <main className="max-w-[1600px] mx-auto px-4 md:px-8 py-8 md:py-12 flex-1 w-full">
                 <div className="flex flex-col lg:flex-row gap-8 xl:gap-12">
 
                     {/* Filters Sidebar (Desktop) */}
@@ -272,11 +303,12 @@ export default function MarketplacePage() {
                             </div>
                         </div>
 
-                        {/* Loading State */}
+                        {/* Loading State Skeleton */}
                         {isLoading && (
-                            <div className="flex-1 flex flex-col items-center justify-center p-20">
-                                <Loader2 className="w-10 h-10 text-primary animate-spin mb-4" />
-                                <p className="text-gray-500 font-medium">Loading products...</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-12">
+                                {[...Array(6)].map((_, i) => (
+                                    <ProductCardSkeleton key={i} />
+                                ))}
                             </div>
                         )}
 
@@ -296,16 +328,16 @@ export default function MarketplacePage() {
 
                         {/* Products Grid */}
                         {!isLoading && !isError && products.length > 0 && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mb-12">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-12">
                                 {products.map((product) => (
                                     <div
                                         key={product.id}
                                         onClick={() => handleCardClick(product.id)}
-                                        className="group bg-white rounded-xl border border-gray-200 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 flex flex-col overflow-hidden relative cursor-pointer"
+                                        className="group bg-white rounded-xl border border-gray-200 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 flex flex-col overflow-hidden relative cursor-pointer"
                                     >
 
                                         {/* Image Area */}
-                                        <div className="relative aspect-[1.1] p-8 bg-gray-50 group-hover:bg-white transition-colors duration-500 flex items-center justify-center">
+                                        <div className="relative aspect-[1.2] p-8 bg-gray-50 group-hover:bg-white transition-colors duration-500 flex items-center justify-center border-b border-gray-50 group-hover:border-gray-100">
                                             <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
                                                 <span className={`self-start px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-sm ${product.tagColor}`}>
                                                     {product.tag}
@@ -321,13 +353,13 @@ export default function MarketplacePage() {
                                             <img
                                                 src={product.image}
                                                 alt={product.name}
-                                                className="w-full h-full object-contain filter group-hover:brightness-105 transition-all duration-500 transform group-hover:scale-110"
+                                                className="w-full h-full object-contain filter group-hover:brightness-105 transition-all duration-500 transform group-hover:scale-105"
                                             />
                                         </div>
 
                                         {/* Content */}
-                                        <div className="p-5 flex-1 flex flex-col">
-                                            <div className="mb-3 flex items-center justify-between">
+                                        <div className="p-6 flex-1 flex flex-col">
+                                            <div className="mb-4 flex items-center justify-between">
                                                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1">
                                                     {product.brand}
                                                 </span>
@@ -337,17 +369,17 @@ export default function MarketplacePage() {
                                                 </div>
                                             </div>
 
-                                            <h3 className="font-display font-bold text-lg text-text-main leading-snug mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                                            <h3 className="font-display font-bold text-xl text-text-main leading-snug mb-3 group-hover:text-primary transition-colors line-clamp-2">
                                                 {product.name}
                                             </h3>
-                                            <p className="text-sm text-text-secondary line-clamp-2 mb-6 leading-relaxed">{product.desc}</p>
+                                            <p className="text-sm text-text-secondary line-clamp-2 mb-8 leading-relaxed font-medium">{product.desc}</p>
 
-                                            <div className="mt-auto pt-5 border-t border-gray-100 flex items-end justify-between">
+                                            <div className="mt-auto flex items-center justify-between gap-4">
                                                 <div className="flex flex-col">
                                                     {product.originalPrice && (
                                                         <span className="text-xs text-gray-400 line-through font-medium mb-0.5">₦{product.originalPrice.toLocaleString()}</span>
                                                     )}
-                                                    <span className="block text-xl font-bold text-text-main leading-none">
+                                                    <span className="block text-2xl font-bold text-text-main leading-none">
                                                         ₦{product.price.toLocaleString()}
                                                     </span>
                                                 </div>
@@ -355,18 +387,18 @@ export default function MarketplacePage() {
                                                 <button
                                                     onClick={(e) => handleAction(e, product)}
                                                     className={`
-                                                        h-10 px-4 rounded-lg text-sm font-bold flex items-center gap-2 transition-all active:scale-95 shadow-sm
+                                                        h-11 px-6 rounded-xl text-sm font-bold flex items-center gap-2 transition-all active:scale-95 shadow-sm ml-auto
                                                         ${product.action === 'quote'
-                                                            ? 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                                                            ? 'bg-transparent text-primary hover:text-primary-hover hover:underline shadow-none px-0'
                                                             : product.action === 'download'
-                                                                ? 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'
-                                                                : 'bg-text-main text-white hover:bg-black'
+                                                                ? 'bg-primary/10 text-primary hover:bg-primary/20'
+                                                                : 'bg-primary text-white hover:bg-primary-hover shadow-lg shadow-primary/20'
                                                         }
                                                     `}
                                                 >
-                                                    {product.action === 'quote' && <span className="flex items-center gap-2">Quote <ArrowRight size={16} /></span>}
-                                                    {product.action === 'download' && <span className="flex items-center gap-2">Get <Download size={16} /></span>}
-                                                    {product.action === 'cart' && <span className="flex items-center gap-2">Add <ShoppingCart size={16} /></span>}
+                                                    {product.action === 'quote' && <span className="flex items-center gap-1">Request Quote <ArrowRight size={16} /></span>}
+                                                    {product.action === 'download' && <span className="flex items-center gap-2">Get <Download size={18} /></span>}
+                                                    {product.action === 'cart' && <span className="flex items-center gap-2">Add <ShoppingCart size={18} /></span>}
                                                 </button>
                                             </div>
                                         </div>
@@ -403,8 +435,8 @@ export default function MarketplacePage() {
                                             key={page}
                                             onClick={() => setPage(page)}
                                             className={`w-10 h-10 rounded-lg text-sm font-bold transition-all ${currentPage === page
-                                                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                                                    : 'text-gray-600 hover:bg-gray-50 border border-transparent hover:border-gray-200'
+                                                ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                                                : 'text-gray-600 hover:bg-gray-50 border border-transparent hover:border-gray-200'
                                                 }`}
                                         >
                                             {page}
@@ -426,58 +458,70 @@ export default function MarketplacePage() {
                 </div>
             </main>
 
+            <footer className="bg-white border-t border-gray-200 py-8 mt-auto">
+                <div className="max-w-[1600px] mx-auto px-4 md:px-8 text-center">
+                    <p className="text-sm font-medium text-gray-500">
+                        ElizTap Marketplace © {new Date().getFullYear()}
+                    </p>
+                </div>
+            </footer>
+
             {/* Modals */}
-            {isQuoteModalOpen && selectedQuoteProduct && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsQuoteModalOpen(false)}></div>
-                    <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
-                        <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-                            <div>
-                                <h3 className="font-display font-bold text-xl text-text-main">Request Quote</h3>
-                                <p className="text-sm text-text-secondary">Bulk pricing for {selectedQuoteProduct.name}</p>
-                            </div>
-                            <button onClick={() => setIsQuoteModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500">
-                                <X size={20} />
-                            </button>
-                        </div>
-                        <form onSubmit={handleQuoteSubmit} className="p-6 space-y-4">
-                            <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Quantity Needed</label>
-                                <input type="number" placeholder="e.g. 50" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
-                            </div>
-                            <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Business Name</label>
-                                <input type="text" placeholder="Company Ltd." className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
-                            </div>
-                            <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Additional Notes</label>
-                                <textarea rows={3} placeholder="Any specific requirements?" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"></textarea>
-                            </div>
-                            <div className="pt-2">
-                                <button type="submit" className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
-                                    Submit Request
+            {
+                isQuoteModalOpen && selectedQuoteProduct && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsQuoteModalOpen(false)}></div>
+                        <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
+                            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+                                <div>
+                                    <h3 className="font-display font-bold text-xl text-text-main">Request Quote</h3>
+                                    <p className="text-sm text-text-secondary">Bulk pricing for {selectedQuoteProduct.name}</p>
+                                </div>
+                                <button onClick={() => setIsQuoteModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500">
+                                    <X size={20} />
                                 </button>
                             </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-
-            {isSuccessModalOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsSuccessModalOpen(false)}></div>
-                    <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200 text-center p-8">
-                        <div className="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <CheckCircle2 size={32} />
+                            <form onSubmit={handleQuoteSubmit} className="p-6 space-y-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Quantity Needed</label>
+                                    <input type="number" placeholder="e.g. 50" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Business Name</label>
+                                    <input type="text" placeholder="Company Ltd." className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Additional Notes</label>
+                                    <textarea rows={3} placeholder="Any specific requirements?" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"></textarea>
+                                </div>
+                                <div className="pt-2">
+                                    <button type="submit" className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
+                                        Submit Request
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                        <h3 className="font-display font-bold text-2xl text-text-main mb-2">Request Sent!</h3>
-                        <p className="text-sm text-text-secondary mb-8">We've received your quote request. A member of our sales team will contact you shortly.</p>
-                        <button onClick={() => setIsSuccessModalOpen(false)} className="w-full py-3 bg-gray-100 hover:bg-gray-200 text-text-main font-bold rounded-xl transition-colors">
-                            Continue Browsing
-                        </button>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+
+            {
+                isSuccessModalOpen && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsSuccessModalOpen(false)}></div>
+                        <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200 text-center p-8">
+                            <div className="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <CheckCircle2 size={32} />
+                            </div>
+                            <h3 className="font-display font-bold text-2xl text-text-main mb-2">Request Sent!</h3>
+                            <p className="text-sm text-text-secondary mb-8">We've received your quote request. A member of our sales team will contact you shortly.</p>
+                            <button onClick={() => setIsSuccessModalOpen(false)} className="w-full py-3 bg-gray-100 hover:bg-gray-200 text-text-main font-bold rounded-xl transition-colors">
+                                Continue Browsing
+                            </button>
+                        </div>
+                    </div>
+                )
+            }
+        </div >
     );
 }
