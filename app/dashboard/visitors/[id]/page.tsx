@@ -186,7 +186,7 @@ export default function VisitorProfilePage({ params }: { params: { id: string } 
                     onClose={() => setIsMsgOpen(false)}
                     recipientName={visitor.name}
                     recipientPhone={visitor.phone}              
-                    type="visitor"
+                    type="welcome"
                 />
 
                 <AddNoteModal
