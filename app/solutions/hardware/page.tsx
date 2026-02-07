@@ -10,6 +10,10 @@ import {
     HardDrive, Cog, Box, ShieldAlert, CheckCircle2
 } from 'lucide-react';
 
+import Nfc1 from "@/assets/nfc/Card NFC Plate White Spec branded.avif"
+import Nfc2 from "@/assets/nfc/Chip_tag_NFC215.avif"
+import Nfc3 from "@/assets/nfc/Reading position.avif"
+
 export default function HardwareSolutionPage() {
     return (
         <div className="min-h-screen bg-white font-sans text-text-main">
@@ -193,21 +197,21 @@ export default function HardwareSolutionPage() {
                                 {
                                     heading: 'Merchant Plates',
                                     desc: 'Fixed identification point for receptionists, bars, and exit halls. Durable and professional.',
-                                    img: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&q=80&w=800',
+                                    img: Nfc3.src,
                                     tags: ['Self-Adhesive', 'Branded', 'Industrial PVC'],
                                     color: 'bg-blue-600'
                                 },
                                 {
                                     heading: 'Identity Cards',
                                     desc: 'Credit-card sized NFC tags for staff or VIP priority members. Fits in any wallet.',
-                                    img: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=800',
+                                    img: Nfc1.src,
                                     tags: ['Double-Sided', 'Durable', 'Personalized'],
                                     color: 'bg-purple-600'
                                 },
                                 {
                                     heading: 'Smart Stickers',
                                     desc: 'Low-profile tags for menus, table tents, and product packaging. Flexible and discrete.',
-                                    img: 'https://images.unsplash.com/photo-1572021335469-31706a17aaef?auto=format&fit=crop&q=80&w=800',
+                                    img: Nfc2.src,
                                     tags: ['Flexible', 'Discrete', 'Clear Gloss'],
                                     color: 'bg-emerald-600'
                                 }
