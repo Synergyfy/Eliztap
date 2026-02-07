@@ -304,13 +304,8 @@ export default function SoftwareSolutionPage() {
                 </section>
 
                 {/* THE FINAL CALL TO ACTION */}
-                <section className="py-24 px-4 bg-white">
+                <section className="py-24 px-4 bg-blue-200">
                     <div className="max-w-5xl mx-auto bg-text-main rounded-[4rem] p-12 md:p-24 text-center text-white space-y-12 relative overflow-hidden shadow-2xl">
-                        {/* Landing Page Style Detail */}
-                        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" style={{
-                            backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
-                            backgroundSize: '40px 40px'
-                        }}></div>
 
                         <div className="space-y-6 relative z-10">
                             <h2 className="text-4xl md:text-8xl font-display font-bold leading-tight">Digitize your <br /> venue today.</h2>
