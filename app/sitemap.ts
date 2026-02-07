@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
  
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://la-tap.vercel.app/'
+  const baseUrl = 'https://eliztap.io'
   
   const pages = [
     '',
@@ -10,8 +10,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/features',
     '/faq',
     '/solutions',
+    '/solutions/hardware',
+    '/solutions/software',
+    '/solutions/hardware/marketplace',
     '/testimonials',
-    '/contact',
     '/login',
     '/get-started',
     '/privacy',

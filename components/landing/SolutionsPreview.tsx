@@ -16,61 +16,61 @@ export default function SolutionsPreview() {
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto font-sans">
-                    {/* Hardware Card - Cream/Light Theme */}
-                    <div className="group relative h-[450px] rounded-xl bg-[#FFF8F0] p-10 flex flex-col justify-between transition-all duration-500 hover:shadow-xl hover:-translate-y-1 border border-[#F5EADF]">
+                <div className="grid md:grid-cols-2 gap-12 max-w-7xl mx-auto font-sans">
+                    {/* Hardware Card - Clean Light Theme */}
+                    <div className="group relative h-[450px] rounded-[2.5rem] bg-white p-12 flex flex-col justify-between transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 border border-gray-100 shadow-lg">
                         <div className="flex items-start justify-between">
                             <div className="flex flex-col gap-6">
                                 {/* Hand-drawn style icon placeholder */}
-                                <div className="text-gray-800">
-                                    <Smartphone size={42} strokeWidth={1.5} className="transform -rotate-6 group-hover:rotate-0 transition-transform duration-500" />
+                                <div className="text-primary">
+                                    <Smartphone size={48} strokeWidth={1.5} className="transform -rotate-6 group-hover:rotate-0 transition-transform duration-500" />
                                 </div>
                             </div>
                         </div>
 
                         <div className="relative z-10 flex items-end justify-between">
                             <div className="max-w-[70%]">
-                                <h3 className="text-3xl font-display font-bold text-gray-900 leading-tight mb-2">
+                                <h3 className="text-4xl font-display font-bold text-text-main leading-none mb-4">
                                     Enterprise <br /> Hardware
                                 </h3>
-                                <p className="text-gray-600 text-sm font-medium leading-relaxed">
+                                <p className="text-text-secondary text-base font-medium leading-relaxed">
                                     Industrial-grade NFC plates & cards. Waterproof, durable, and instantly ready.
                                 </p>
                             </div>
 
-                            <Link href="/solutions/hardware" className="size-14 rounded-full bg-gray-900 text-white flex items-center justify-center hover:bg-gray-800 hover:scale-110 transition-all shadow-lg cursor-pointer">
-                                <ArrowRight size={20} />
+                            <Link href="/solutions/hardware" className="size-16 rounded-full bg-text-main text-white flex items-center justify-center hover:bg-black hover:scale-110 transition-all shadow-xl cursor-pointer">
+                                <ArrowRight size={24} />
                             </Link>
                         </div>
                     </div>
 
-                    {/* Software Card - Dark Blue Theme */}
-                    <div className="group relative h-[450px] rounded-xl bg-[#1E1B4B] p-10 flex flex-col justify-between transition-all duration-500 hover:shadow-xl hover:-translate-y-1 border border-[#2D2A5E]">
+                    {/* Software Card - Premium Dark Theme */}
+                    <div className="group relative h-[450px] rounded-[2.5rem] bg-gray-900 p-12 flex flex-col justify-between transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 border border-gray-800 overflow-hidden">
                         {/* Subtle doodle effect background */}
                         <div className="absolute top-10 right-10 opacity-10">
-                            <LayoutDashboard size={100} strokeWidth={0.5} className="text-white transform rotate-12" />
+                            <LayoutDashboard size={120} strokeWidth={0.5} className="text-white transform rotate-12" />
                         </div>
 
                         <div className="flex items-start justify-between relative z-10">
                             <div className="flex flex-col gap-6">
                                 <div className="text-white">
-                                    <LayoutDashboard size={42} strokeWidth={1.5} className="transform rotate-3 group-hover:rotate-0 transition-transform duration-500" />
+                                    <LayoutDashboard size={48} strokeWidth={1.5} className="transform rotate-3 group-hover:rotate-0 transition-transform duration-500" />
                                 </div>
                             </div>
                         </div>
 
                         <div className="relative z-10 flex items-end justify-between">
                             <div className="max-w-[70%]">
-                                <h3 className="text-3xl font-display font-bold text-white leading-tight mb-2">
+                                <h3 className="text-4xl font-display font-bold text-white leading-none mb-4">
                                     Merchant <br /> Software
                                 </h3>
-                                <p className="text-blue-200 text-sm font-medium leading-relaxed">
+                                <p className="text-gray-400 text-base font-medium leading-relaxed">
                                     Cloud dashboard to track visits, automate rewards, and engage customers.
                                 </p>
                             </div>
 
-                            <Link href="/solutions/software" className="size-14 rounded-full bg-blue-500 text-white flex items-center justify-center hover:bg-blue-400 hover:scale-110 transition-all shadow-lg shadow-blue-900/50 cursor-pointer">
-                                <ArrowRight size={20} />
+                            <Link href="/solutions/software" className="size-16 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-hover hover:scale-110 transition-all shadow-xl shadow-primary/30 cursor-pointer">
+                                <ArrowRight size={24} />
                             </Link>
                         </div>
                     </div>

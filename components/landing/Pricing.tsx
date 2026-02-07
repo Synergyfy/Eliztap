@@ -48,19 +48,19 @@ export default function Pricing() {
             features: ['Custom Domain', 'Branded Hardware', 'Admin Dashboard', 'Reseller Rights'],
             cta: "Partner With Us",
             highlight: false,
-            style: "col-span-1 md:col-span-2 mt-12 bg-gray-900 border-gray-800 text-white"
+            style: "col-span-1 md:col-span-2 lg:col-span-4 lg:w-1/2 lg:mx-auto mt-12 bg-gray-900 border-gray-800 text-white"
         }
     ];
 
     return (
         <section id="pricing" className="py-24 bg-gray-50 overflow-hidden relative">
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="text-center max-w-3xl mx-auto mb-16">
                     <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 text-text-main">Smart plans for every scale</h2>
                     <p className="text-lg text-text-secondary font-medium">Clear pricing with no hidden fees. All plans include secure NFC technology.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {plans.map((plan, index) => (
                         <div
                             key={index}

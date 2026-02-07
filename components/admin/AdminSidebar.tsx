@@ -9,7 +9,7 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { Notification } from '@/lib/store/mockDashboardStore';
 import {
     Home, Store, Users, Nfc, CreditCard, BarChart, MessageSquare,
-    Settings, ChevronDown, Shield, LogOut, LayoutGrid, Search, Bell, HelpCircle
+    Settings, ChevronDown, Shield, LogOut, LayoutGrid, Search, Bell, HelpCircle, Package
 } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 
@@ -99,10 +99,13 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
             href: '/admin/subscriptions',
         },
         {
-            id: 'hardware',
-            label: 'Hardware & White-Label',
-            icon: Nfc,
-            href: '/admin/hardware',
+            id: 'products',
+            label: 'Products',
+            icon: Package,
+            submenu: [
+                { label: 'All Products', href: '/admin/products' },
+                { label: 'Add New Product', href: '/admin/products/create' },
+            ]
         },
         {
             id: 'analytics',

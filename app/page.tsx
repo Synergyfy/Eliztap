@@ -11,6 +11,12 @@ import AutomationCTA from '@/components/landing/AutomationCTA';
 import Testimonials from '@/components/landing/Testimonials';
 import FAQ from '@/components/landing/FAQ';
 import Footer from '@/components/layout/Footer';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'ElizTap - Meaningful Connections, Instant Results',
+  description: 'The all-in-one NFC platform for modern businesses. Capture data, engage customers, and drive loyalty with a single tap.',
+};
 
 export default function LandingPage() {
   return (
