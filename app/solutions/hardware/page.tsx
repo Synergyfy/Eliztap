@@ -275,7 +275,7 @@ export default function HardwareSolutionPage() {
                         </div>
 
                         <div className="relative group">
-                            <div className="absolute inset-0 bg-primary/5 rounded-[4rem] blur-[80px] -z-10 group-hover:bg-primary/10 transition-colors"></div>
+                            <div className="absolute inset-0 bg-primary/5 rounded-3xl blur-[80px] -z-10 group-hover:bg-primary/10 transition-colors"></div>
                             <div className="bg-white border border-gray-100 p-8 rounded-[3.5rem] shadow-2xl space-y-8">
                                 <div className="p-10 bg-gray-50 rounded-[2.5rem] border border-gray-100 space-y-6">
                                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">System Pulse Check</p>
@@ -314,7 +314,7 @@ export default function HardwareSolutionPage() {
 
                 {/* FINAL CALL TO ACTION */}
                 <section className="py-24 px-4 bg-blue-200">
-                    <div className="max-w-5xl mx-auto bg-text-main rounded-[4rem] p-12 md:p-24 text-center text-white space-y-10 relative overflow-hidden shadow-2xl">
+                    <div className="max-w-5xl mx-auto bg-text-main rounded-3xl p-12 md:p-24 text-center text-white space-y-10 relative overflow-hidden shadow-2xl">
                         <div className="space-y-6 relative z-10">
                             <h2 className="text-4xl md:text-7xl font-display font-bold leading-tight">Let's tap into <br /> your future.</h2>
                             <p className="text-xl text-white/60 font-medium max-w-2xl mx-auto leading-relaxed">

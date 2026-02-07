@@ -71,32 +71,60 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       isAuthenticated: false,
       
-      login: async (email: string, password: string) => {
+      login: async (email: string, pass: string) => {
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 800));
 
         const normalizedEmail = email.toLowerCase().trim();
+        const normalizedPass = pass.trim();
 
-        // Find user by email and password
-        const userKey = Object.keys(MOCK_USERS).find(key => 
+        // 1. Check Pre-defined Mock Users
+        const mockUserKey = Object.keys(MOCK_USERS).find(key => 
           MOCK_USERS[key].email.toLowerCase() === normalizedEmail && 
-          MOCK_USERS[key].password === password
+          MOCK_USERS[key].password === normalizedPass
         );
 
-        if (userKey) {
-          const { password: _, ...user } = MOCK_USERS[userKey];
-          set({ user, isAuthenticated: true });
-          return { success: true };
+        if (mockUserKey) {
+          const { password: _, ...user } = MOCK_USERS[mockUserKey];
+          // Ensure role is set correctly based on the key if not explicit
+          const finalUser = { 
+            ...user, 
+            role: user.role || mockUserKey as UserRole 
+          };
+           set({ user: finalUser, isAuthenticated: true });
+           return { success: true };
         }
 
-        return { success: false, error: 'The email or password you entered is incorrect. Please try again or use a demo account.' };
+        // 2. Check "Registered" Users (stored in localStorage via persist)
+        // Note: In a real app, this would be a backend call. 
+        // Since we are mocking, we can check if there's a stored user that matches.
+        // However, Zustand persist only stores the *current* state. 
+        // To simulate a "database" of signed up users during a session, we'd need another store or just allow any login that matches a recent signup.
+        // For now, let's keep it simple: if it's not a mock user, perform a "fake" check or fail.
+        
+        // If we want to allow the user who JUST signed up to log in back:
+        // We can't really do that easily without a separate 'users' store. 
+        // But the user said "signup showing 404", which usually implies a routing issue or unhandled promise.
+        
+        // Let's add a generic fallback for testing if email/pass matches a pattern (optional, but good for "fake" generic logins)
+        // For now, strictly enforce Mock Users or return failure.
+        
+        return { success: false, error: 'Invalid email or password. Try the demo accounts!' };
       },
 
-      signup: async (userData: User) => {
+      signup: async (userData: any) => {
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 800));
         
-        set({ user: userData, isAuthenticated: true });
+        // In a real app, you'd post to an API. 
+        // Here we just set the user as logged in immediately.
+        const newUser = {
+            ...userData,
+            id: userData.id || `USER-${Math.random().toString(36).substr(2, 9)}`,
+            role: userData.role || 'owner'
+        };
+
+        set({ user: newUser, isAuthenticated: true });
         return { success: true };
       },
 

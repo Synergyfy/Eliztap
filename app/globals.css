@@ -24,23 +24,47 @@
 @layer utilities {
     .glass-morphism {
         background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
-    .text-gradient {
-        background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
+    .dark .glass-morphism {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .asymmetric-frame {
         border-top-left-radius: 4rem;
         border-bottom-right-radius: 4rem;
-        border-top-right-radius: 1rem;
-        border-bottom-left-radius: 1rem;
+    }
+
+    .blue-text-gradient {
+        background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .animate-check {
+        stroke-dasharray: 100;
+        stroke-dashoffset: 100;
+        animation: drawCheck 0.8s ease-out forwards;
+    }
+
+    @keyframes drawCheck {
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
 }
 

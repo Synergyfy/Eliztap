@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 // import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 
+// Force rebuild
+
 // const inter = Inter({
 //     subsets: ["latin"],
 //     variable: "--font-body",

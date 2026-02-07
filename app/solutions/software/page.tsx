@@ -110,14 +110,14 @@ export default function SoftwareSolutionPage() {
                                                 { label: 'Points Distributed', value: '42.5K', color: 'text-purple-600' },
                                                 { label: 'Campaign Conversion', value: '68%', color: 'text-blue-600' }
                                             ].map((stat, i) => (
-                                                <div key={i} className="p-8 rounded-[2rem] border border-gray-50 bg-white shadow-sm space-y-4">
+                                                <div key={i} className="p-8 rounded-4xl border border-gray-50 bg-white shadow-sm space-y-4">
                                                     <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary">{stat.label}</p>
                                                     <p className={`text-3xl font-display font-bold ${stat.color}`}>{stat.value}</p>
                                                 </div>
                                             ))}
                                         </div>
 
-                                        <div className="bg-gray-50 rounded-[2rem] border border-gray-100 p-8 space-y-6">
+                                        <div className="bg-gray-50 rounded-4xl border border-gray-100 p-8 space-y-6">
                                             <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">
                                                 <span>System Load</span>
                                                 <span className="text-primary">Healthy</span>
@@ -139,7 +139,7 @@ export default function SoftwareSolutionPage() {
                         <div className="text-center max-w-3xl mx-auto space-y-6">
                             <span className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Unified Merchant Workflow</span>
                             <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tight text-text-main leading-tight">A single tap triggers a <br /> digital explosion.</h2>
-                            <p className="text-lg text-text-secondary font-medium font-medium">Under the hood, our engine performs complex identification and automation cycles in less than 800ms.</p>
+                            <p className="text-lg text-text-secondary font-medium">Under the hood, our engine performs complex identification and automation cycles in less than 800ms.</p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
@@ -166,8 +166,8 @@ export default function SoftwareSolutionPage() {
                                     time: '420ms'
                                 }
                             ].map((step, i) => (
-                                <div key={i} className="bg-white p-12 rounded-[3.5rem] border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 group text-center space-y-8">
-                                    <div className="size-20 bg-primary/5 text-primary rounded-[2rem] flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+                                <div key={i} className="bg-white p-12 rounded-4xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 group text-center space-y-8">
+                                    <div className="size-20 bg-primary/5 text-primary rounded-4xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
                                         <step.icon size={36} />
                                     </div>
                                     <div className="space-y-4">
@@ -214,7 +214,7 @@ export default function SoftwareSolutionPage() {
                                 </div>
                             </div>
                             <div className="relative">
-                                <div className="absolute inset-0 bg-primary/5 rounded-[4rem] blur-[80px] -z-10 rotate-12"></div>
+                                <div className="absolute inset-0 bg-primary/5 rounded-3xl blur-[80px] -z-10 rotate-12"></div>
                                 <div className="bg-white p-12 rounded-[3.5rem] shadow-2xl border border-gray-100 space-y-8">
                                     <div className="p-10 bg-gray-50 rounded-[2.5rem] border border-gray-100 space-y-6">
                                         <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Message Queuing Service</p>
@@ -305,7 +305,7 @@ export default function SoftwareSolutionPage() {
 
                 {/* THE FINAL CALL TO ACTION */}
                 <section className="py-24 px-4 bg-blue-200">
-                    <div className="max-w-5xl mx-auto bg-text-main rounded-[4rem] p-12 md:p-24 text-center text-white space-y-12 relative overflow-hidden shadow-2xl">
+                    <div className="max-w-5xl mx-auto bg-text-main rounded-3xl p-12 md:p-24 text-center text-white space-y-12 relative overflow-hidden shadow-2xl">
 
                         <div className="space-y-6 relative z-10">
                             <h2 className="text-4xl md:text-8xl font-display font-bold leading-tight">Digitize your <br /> venue today.</h2>
