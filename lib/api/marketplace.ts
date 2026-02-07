@@ -207,6 +207,15 @@ export const fetchProductDetail = async (id: string) => {
                 'Ships in 24-48 Hours',
                 'Genuine Product'
             ],
+            video: {
+                url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' // Mock video
+            },
+            howToSteps: [
+                { title: 'Connect to Device', description: 'Plug the ACR1552U into any USB-C port on your computer or compatible device.' },
+                { title: 'Wait for Initialization', description: 'The LED light will flash green indicating the device is ready to use.' },
+                { title: 'Position NFC Tag', description: 'Place your NFC card or phone within 50mm of the reader head.' },
+                { title: 'Success Signal', description: 'A short beep will confirm the successful reading of the tag data.' }
+            ],
             tieredPricing: [
                 { minQuantity: 1, maxQuantity: 10, price: 124999 },
                 { minQuantity: 11, maxQuantity: 100, price: 115000 },
