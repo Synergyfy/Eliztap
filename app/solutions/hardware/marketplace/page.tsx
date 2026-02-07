@@ -2,76 +2,58 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import { useQuery } from '@tanstack/react-query';
+import {
+    Search, ShoppingCart, Grid, Filter, ChevronDown, X,
+    Heart, Star, Download, Send, CheckCircle2, SlidersHorizontal, ArrowRight,
+    Menu, LayoutGrid, List, ChevronLeft, ChevronRight, Loader2
+} from 'lucide-react';
+import { useMarketplaceStore } from '@/store/marketplaceStore';
+import { fetchProducts } from '@/lib/api/marketplace';
 
 export default function MarketplacePage() {
     const router = useRouter();
-    const [selectedCategory, setSelectedCategory] = useState('All Products');
-    const [priceRange, setPriceRange] = useState([0, 500000]); // Naira
+
+    // Zustand Store
+    const {
+        selectedCategory, priceRange, selectedBrands, currentPage, searchQuery,
+        setCategory, setPriceRange, toggleBrand, setPage, setSearchQuery, resetFilters
+    } = useMarketplaceStore();
+
+    const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
     const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const [selectedQuoteProduct, setSelectedQuoteProduct] = useState<any>(null);
 
-    // Mock Data based on the user's request
-    const products = [
-        {
-            id: 'acs-acr1552u',
-            name: 'ACS ACR1552U USB-C NFC Reader IV',
-            brand: 'ACS',
-            rating: 4.9,
-            price: 124999,
-            originalPrice: 149000,
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB6J_11qPV0OmQwFJoKJtTMpD_qjs1SsBP9UsQg0ecJWY2IONWb79e03v7EMbPHEBzTJtdwTiWa4uHBlwQpbnU0EI9XkmDEOrQF_F57RfXBMpzCz3WITiymIK5fKWEIyOxSSyurDKwi32cxVO-m90-snIAYuoCD8Yr181lIcfNaCRwZr0bXXLyxdrvlnrxIO6jof5lw-BXhuVlPaRUFxFKCg5okpbY0Vrtjw1r2KKRGWGcmaZz_OUHZQ7qJnz8J7LCbuEvtvZWaxQWL",
-            desc: 'Dual-interface Smart Card Reader with CCID Support',
-            tag: 'In Stock',
-            tagColor: 'bg-emerald-500',
-            action: 'cart'
-        },
-        {
-            id: 'omnikey-5422',
-            name: 'OMNIKEY 5422 Dual Interface Reader',
-            brand: 'HID Global',
-            rating: 4.8,
-            price: 189000,
-            originalPrice: null,
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuA13i7tJ7UvtV5AeSpw3wOHaYE8eOSOAHsJtyf9B8QtVXaQpAPS3C7Teyqjev3z6_-2UBAUUsl9_wQrPFQB4dsL21qcM803GIIhce48iGdAgKXjYlhpJBNo1PKjrd-FnkGqZzA9IKKpAIcee1B396E-WCSuonb2_wSUSBjZpX_9OT6hB2FsxRZYweRceLiA9MfmDMM0f3rXJHKAq-TzdbZ2XPvvKlIxen5gbQNQZlFxGq791xkCofDQmiLKdWXKTXx5bV39FHTL2Zxu",
-            desc: 'Contactless 13.56 MHz and Contact Smart Card',
-            tag: 'Bulk Choice',
-            tagColor: 'bg-blue-500',
-            action: 'quote'
-        },
-        {
-            id: 'sdk-bundle',
-            name: 'Universal NFC Developer SDK',
-            brand: 'EntryConnect',
-            rating: 5.0,
-            price: 499000,
-            originalPrice: null,
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB9fUTe24WCXHHYE4D4j0PVwg79HTdwdPmXG64DA9YOPJgE3IueN-3HHmLPcpgz0mA8Zv-HKS9rL6Wkpp0FRhDePtzWdJ8_vVpFbqT8grR6SyWyuQJlAYEZMHdIjcJAkZASE4iH8WHSJS0bqM0mvzNzPuctGZfYF0QsdbMOcQ6NuiCqpWrfcnaU-XlodX_ZGJcMfXXdD-uW2yjKMdzwsrPxqDjvTp8eIYbZWNSV2IIKpeWykSDBLl3dNFlzK8D46MQVO4EpHHXmsIsE",
-            desc: 'Python, C++, Java & WebHID API wrappers',
-            tag: 'Software',
-            tagColor: 'bg-indigo-500',
-            action: 'download'
-        },
-        {
-            id: 'ntag215-pack',
-            name: 'NTAG215 PVC Smart Cards (Pack of 100)',
-            brand: 'NXP',
-            rating: 4.7,
-            price: 85500,
-            originalPrice: null,
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAjOLHjEImnuX2LOtQ9_35UJ5iBVDjYgoAdUkfVCIOKlzLzNbR8jzZuXMqBzr2zm7bTB60FByuzS4DfbPxOdC-XETnsg_xSz6HydW21C7a49GAGuikH8vL51ldD0GCCYAAAWeyYjrsST43T02ixab1YBLQ0SN7FPkmwUSZjyJwz5rbAfLT4RqccxCFX1gzrKZ55WEV-TfuHqVMMxN3TpGlj_Q1xdnQblfVWikTCC9YahMk0rdT2xgoAgGPqhqumczAzvpmU-SttVIU1",
-            desc: '504 Bytes Memory, Compatible with Amiibo',
-            tag: 'Multipack',
-            tagColor: 'bg-amber-500',
-            action: 'cart'
-        }
-    ];
+    // React Query
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ['products', currentPage, selectedCategory, priceRange, selectedBrands, searchQuery],
+        queryFn: () => fetchProducts(currentPage, 9, selectedCategory, priceRange, selectedBrands, searchQuery), // Fetch 9 items per page
+        placeholderData: (previousData: any) => previousData
+    });
 
-    const openQuoteModal = (product: any) => {
-        setSelectedQuoteProduct(product);
-        setIsQuoteModalOpen(true);
+    const products = data?.products || [];
+    const totalPages = data?.totalPages || 1;
+
+    const handleAction = (e: React.MouseEvent, product: any) => {
+        e.stopPropagation(); // Prevent card click navigation
+        if (product.action === 'quote') {
+            setSelectedQuoteProduct(product);
+            setIsQuoteModalOpen(true);
+        } else if (product.action === 'cart') {
+            toast.success(`Added ${product.name} to cart`);
+        } else if (product.action === 'download') {
+            toast.promise(
+                new Promise((resolve) => setTimeout(resolve, 2000)),
+                {
+                    loading: 'Preparing download...',
+                    success: 'Download started!',
+                    error: 'Download failed',
+                }
+            );
+        }
     };
 
     const handleQuoteSubmit = (e: React.FormEvent) => {
@@ -80,362 +62,422 @@ export default function MarketplacePage() {
         setIsSuccessModalOpen(true);
     };
 
+    const handleCardClick = (productId: string) => {
+        router.push(`/solutions/hardware/marketplace/product/${productId}`);
+    };
+
     return (
-        <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200 font-sans relative">
+        <div className="min-h-screen bg-gray-50 font-sans text-text-main pb-20">
 
-            {/* Quote Form Modal */}
-            {isQuoteModalOpen && selectedQuoteProduct && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onClick={() => setIsQuoteModalOpen(false)}></div>
-                    <div className="relative w-full max-w-2xl asymmetric-frame glass-morphism shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
-                        <div className="p-8 md:p-12">
-                            <div className="flex justify-between items-start mb-8">
-                                <div>
-                                    <h2 className="text-3xl font-display font-bold blue-text-gradient">Request a Bulk Quote</h2>
-                                    <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">Professional enterprise pricing for large volume hardware orders.</p>
-                                </div>
-                                <button onClick={() => setIsQuoteModalOpen(false)} className="p-2 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 rounded-full transition-colors">
-                                    <span className="material-icons-outlined text-slate-500">close</span>
-                                </button>
+            {/* Navigation Header */}
+            <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+                <div className="max-w-[1600px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-8">
+                    <div className="flex items-center gap-3 shrink-0">
+                        <Link href="/" className='flex items-center gap-2'>
+                            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                                <Grid className="text-primary" size={24} />
                             </div>
-                            <form className="space-y-6" onSubmit={handleQuoteSubmit}>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="col-span-full">
-                                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Selected Product</label>
-                                        <div className="w-full px-4 py-3 bg-slate-100/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-300 font-medium cursor-not-allowed">
-                                            {selectedQuoteProduct.name}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Estimated Quantity</label>
-                                        <input className="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/50 outline-none transition-all placeholder:text-slate-400" placeholder="e.g. 500+" type="number" required />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Timeline</label>
-                                        <select className="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/50 outline-none transition-all">
-                                            <option value="">Select urgency</option>
-                                            <option value="immediate">Immediate</option>
-                                            <option value="1-3-months">1-3 Months</option>
-                                            <option value="researching">Just Researching</option>
-                                        </select>
-                                    </div>
-                                    <div className="col-span-full">
-                                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Additional Requirements</label>
-                                        <textarea className="w-full px-4 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/50 outline-none transition-all resize-none placeholder:text-slate-400" placeholder="Mention any specific customization, shipping needs, or technical requirements..." rows={4}></textarea>
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between pt-4">
-                                    <div className="flex items-center gap-2 text-xs text-slate-400">
-                                        <span className="material-icons-outlined text-sm">verified_user</span>
-                                        <span>Direct manufacturer pricing guaranteed</span>
-                                    </div>
-                                    <button className="px-8 py-3 bg-primary hover:bg-blue-700 text-white font-bold rounded-full transition-all shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]" type="submit">
-                                        Submit Request
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Success Modal */}
-            {isSuccessModalOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onClick={() => setIsSuccessModalOpen(false)}></div>
-                    <div className="relative w-full max-w-xl asymmetric-frame glass-morphism shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
-                        <div className="p-8 md:p-12 text-center">
-                            <button onClick={() => setIsSuccessModalOpen(false)} className="absolute top-6 right-6 p-2 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 rounded-full transition-colors">
-                                <span className="material-icons-outlined text-slate-500">close</span>
-                            </button>
-                            <div className="flex flex-col items-center">
-                                <div className="w-24 h-24 mb-8 relative flex items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-500/10 border-4 border-emerald-500/20">
-                                    <svg className="w-12 h-12 text-emerald-500" fill="none" stroke="currentColor" strokeWidth="4" viewBox="0 0 24 24">
-                                        <path className="animate-check" d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round"></path>
-                                    </svg>
-                                </div>
-                                <h2 className="text-4xl font-display font-bold blue-text-gradient mb-4">Quote Request Sent!</h2>
-                                <p className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed max-w-md mx-auto mb-6">
-                                    Thank you for your interest. A specialist from our hardware team will reach out with your custom pricing within 24 hours.
-                                </p>
-                                <div className="inline-flex items-center px-4 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-full mb-10">
-                                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Request ID: #EC-99214</span>
-                                </div>
-                                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md">
-                                    <button onClick={() => setIsSuccessModalOpen(false)} className="w-full sm:flex-1 px-8 py-3.5 bg-primary hover:bg-blue-700 text-white font-bold rounded-full transition-all shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]">
-                                        Back to Marketplace
-                                    </button>
-                                    <button className="w-full sm:flex-1 px-8 py-3.5 border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-                                        View Quote Status
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Custom Header for Marketplace */}
-            <header className="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-                <div className="max-w-[1440px] mx-auto px-6 h-16 flex items-center justify-between gap-8">
-                    <div className="flex items-center gap-2 shrink-0">
-                        <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white">
-                            <span className="material-icons-outlined">nfc</span>
-                        </div>
-                        <span className="font-display text-xl font-bold tracking-tight">EntryConnect</span>
-                    </div>
-                    <div className="flex-1 max-w-2xl relative hidden md:block">
-                        <span className="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
-                        <input className="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg focus:ring-2 focus:ring-primary/50 transition-all outline-none" placeholder="Search NFC Readers, Tags, SDKs..." type="text" />
-                    </div>
-                    <nav className="flex items-center gap-6">
-                        <Link href="/solutions" className="text-sm font-medium hover:text-primary transition-colors hidden lg:block">Solutions</Link>
-                        <Link href="/docs" className="text-sm font-medium hover:text-primary transition-colors hidden lg:block">Documentation</Link>
-                        <Link href="/cart" className="p-2 relative hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
-                            <span className="material-icons-outlined text-slate-600 dark:text-slate-400">shopping_cart</span>
-                            <span className="absolute top-1 right-1 w-4 h-4 bg-primary text-[10px] text-white rounded-full flex items-center justify-center font-bold">3</span>
+                            <span className="font-display text-2xl font-bold tracking-tight text-primary">ElizTap <span className="text-gray-400 font-medium text-lg">Marketplace</span></span>
                         </Link>
-                        <div className="h-8 w-[1px] bg-slate-200 dark:bg-slate-700 hidden lg:block"></div>
-                        <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
-                            <img alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr-fLkrQlQ9bDPuSYITKd2hKD5eJgRBDCEULJxDswMwxtukmrIcrh3O2AuEGwi6MbIS6y81L1L9Wn_yySwTKtIwTIA5pNNg-HiHqlUgfoQpCaPLXYl58vOul4ZMcZ4jgnj-PV4zueqHgXA9rd-myuENkljifAvQvIKG6fQB2aif-DqaNCZjvHy69dUjwB5vSB3vvT7YMYYTYoy9Wto-fHSjERC8pEGsNJCvmVGJoWHv9-O7V69ZswvnUW9AzqB57IOcFtCdYvvuF3x" />
+                    </div>
+
+                    <div className="flex-1 max-w-2xl hidden lg:block relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                        <input
+                            type="text"
+                            placeholder="Search hardware, SDKs, tags, or readers..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-11 pr-4 py-3 bg-gray-100 border-transparent focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/10 rounded-2xl transition-all text-sm outline-none font-medium"
+                        />
+                    </div>
+
+                    <div className="flex items-center gap-3 sm:gap-6">
+                        <button className="lg:hidden p-2 text-gray-500" onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}>
+                            <Search size={22} />
+                        </button>
+
+                        <div className="flex items-center gap-4">
+                            <button className="p-2 text-gray-500 hover:text-primary transition-colors hidden sm:block">
+                                <Heart size={22} />
+                            </button>
+                            <button className="p-2 text-gray-500 hover:text-primary transition-colors relative">
+                                <ShoppingCart size={22} />
+                                <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border border-white">2</span>
+                            </button>
                         </div>
-                    </nav>
+
+                        <div className="h-8 w-[1px] bg-gray-200 hidden sm:block"></div>
+
+                        <button className="hidden sm:flex items-center gap-3 hover:bg-gray-50 p-1.5 pr-3 rounded-full border border-transparent hover:border-gray-200 transition-all">
+                            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 border border-gray-200 overflow-hidden flex items-center justify-center">
+                                <span className="font-bold text-gray-500">JP</span>
+                            </div>
+                            <span className="text-sm font-bold text-gray-700">Account</span>
+                        </button>
+
+                        <button className="lg:hidden p-2 text-gray-700" onClick={() => setIsMobileFilterOpen(true)}>
+                            <Menu size={24} />
+                        </button>
+                    </div>
                 </div>
             </header>
 
-            {/* Sub-nav Category Strip */}
-            <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-16 z-40">
-                <div className="max-w-[1440px] mx-auto px-6 h-12 flex items-center gap-8 overflow-x-auto no-scrollbar">
-                    <button className="flex items-center gap-2 text-sm font-semibold text-primary border-b-2 border-primary h-full px-1">
-                        <span className="material-icons-outlined text-sm">grid_view</span> All Products
+            {/* Sub-Header Categories */}
+            <div className="bg-white border-b border-gray-200 overflow-x-auto no-scrollbar shadow-sm sticky top-20 z-40">
+                <div className="max-w-[1600px] mx-auto px-4 md:px-8 h-14 flex items-center gap-8 min-w-max">
+                    <button
+                        onClick={() => setCategory('All Products')}
+                        className={`h-full border-b-[3px] px-1 font-bold flex items-center gap-2 transition-all ${selectedCategory === 'All Products' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-800'
+                            }`}
+                    >
+                        <LayoutGrid size={18} /> All Products
                     </button>
-                    {['NFC Readers', 'Smart Cards', 'NFC Tags & Labels', 'Development Kits', 'Mobile NFC'].map((cat) => (
-                        <a key={cat} href="#" className="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary whitespace-nowrap transition-colors">{cat}</a>
+                    {['NFC Readers', 'Smart Cards', 'Development Kits'].map((cat) => (
+                        <button
+                            key={cat}
+                            onClick={() => setCategory(cat)}
+                            className={`h-full border-b-[3px] px-1 font-bold flex items-center gap-2 transition-all ${selectedCategory === cat ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-800'
+                                }`}
+                        >
+                            {cat}
+                        </button>
                     ))}
-                    <div className="ml-auto flex items-center gap-4 hidden md:flex">
-                        <span className="text-xs text-slate-400 uppercase tracking-widest font-bold">Wholesale Support</span>
-                        <a className="text-sm font-semibold text-primary" href="#">Sell on EntryConnect</a>
-                    </div>
                 </div>
             </div>
 
-            <main className="max-w-[1440px] mx-auto px-6 py-8 flex gap-8">
-                {/* Sidebar Filters */}
-                <aside className="w-64 shrink-0 hidden md:block">
-                    <div className="sticky top-32 space-y-8">
-                        <div>
-                            <h3 className="font-display font-bold text-lg mb-4 flex items-center gap-2">
-                                <span className="material-icons-outlined text-slate-400">filter_list</span> Filter
-                            </h3>
-                            <div className="space-y-6">
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-3">Hardware Type</label>
-                                    <div className="space-y-2">
-                                        {['NFC Readers', 'USB Encoders', 'NFC/RFID Tags'].map((type, i) => (
-                                            <label key={i} className="flex items-center gap-2 cursor-pointer group">
-                                                <input defaultChecked={i === 0} className="rounded border-slate-300 dark:border-slate-600 text-primary focus:ring-primary bg-transparent" type="checkbox" />
-                                                <span className="text-sm text-slate-600 dark:text-slate-400 group-hover:text-primary">{type}</span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-3">Price Range (₦)</label>
-                                    <div className="flex items-center gap-2">
-                                        <input className="w-full text-sm rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 outline-none" placeholder="Min" type="number" />
-                                        <span className="text-slate-400">-</span>
-                                        <input className="w-full text-sm rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 outline-none" placeholder="Max" type="number" />
-                                    </div>
-                                    <div className="mt-4">
-                                        <input className="w-full accent-primary" type="range" />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-3">Connection Interface</label>
-                                    <div className="space-y-2">
-                                        {['USB-A', 'USB-C', 'Bluetooth / Wireless', 'Serial / RS232'].map((type, i) => (
-                                            <label key={i} className="flex items-center gap-2 cursor-pointer group">
-                                                <input className="rounded border-slate-300 dark:border-slate-600 text-primary focus:ring-primary bg-transparent" type="checkbox" />
-                                                <span className="text-sm text-slate-600 dark:text-slate-400 group-hover:text-primary">{type}</span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-3">Brands</label>
-                                    <div className="space-y-2">
-                                        {['ACS', 'HID Global', 'Identiv', 'Socket Mobile', 'EntryConnect Generic'].map((brand, i) => (
-                                            <label key={i} className="flex items-center gap-2 cursor-pointer group">
-                                                <input className="rounded border-slate-300 dark:border-slate-600 text-primary focus:ring-primary bg-transparent" type="checkbox" />
-                                                <span className="text-sm text-slate-600 dark:text-slate-400 group-hover:text-primary">{brand}</span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                            <button className="w-full mt-8 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
-                                Apply Filters
-                            </button>
-                        </div>
-                    </div>
-                </aside>
+            <main className="max-w-[1600px] mx-auto px-4 md:px-8 py-8 md:py-12">
+                <div className="flex flex-col lg:flex-row gap-8 xl:gap-12">
 
-                {/* Product Grid */}
-                <div className="flex-1">
-                    <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
-                        <div>
-                            <nav className="flex text-xs text-slate-400 mb-2 gap-1">
-                                <Link href="#" className="hover:text-primary">Marketplace</Link>
-                                <span>/</span>
-                                <span className="text-slate-600 dark:text-slate-300">NFC Hardware</span>
-                            </nav>
-                            <h1 className="text-2xl font-display font-bold">Hardware Results <span className="text-slate-400 font-normal text-lg ml-2">({products.length} items)</span></h1>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <span className="text-sm text-slate-500 whitespace-nowrap">Sort by:</span>
-                            <select className="text-sm bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 outline-none focus:ring-primary focus:ring-1 cursor-pointer">
-                                <option>Most Popular</option>
-                                <option>Price: Low to High</option>
-                                <option>Price: High to Low</option>
-                                <option>Newest Arrivals</option>
-                            </select>
-                        </div>
-                    </div>
+                    {/* Filters Sidebar (Desktop) */}
+                    <aside className="hidden lg:block w-72 flex-shrink-0">
+                        <div className="sticky top-40 space-y-10">
+                            <div>
+                                <h3 className="flex items-center gap-2 font-display font-bold text-lg mb-6 text-text-main">
+                                    <SlidersHorizontal size={20} className="text-gray-400" />
+                                    Filters
+                                </h3>
 
-                    <div className="flex flex-wrap gap-2 mb-8">
-                        <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full">
-                            USB Readers <button className="material-icons-outlined text-xs hover:text-primary-hover">close</button>
-                        </span>
-                        <button className="text-xs text-slate-400 hover:text-red-500 font-medium transition-colors">Clear All</button>
-                    </div>
+                                <div className="space-y-8">
+                                    {/* Category Filter */}
+                                    <div className="space-y-4">
+                                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Category</p>
+                                        <div className="space-y-1">
+                                            {['All Products', 'NFC Readers', 'Smart Cards', 'Development Kits', 'Modules', 'Accessory'].map((item, i) => (
+                                                <label key={i} className="flex items-center gap-3 cursor-pointer group py-1">
+                                                    <input
+                                                        type="radio"
+                                                        name="category"
+                                                        className="hidden"
+                                                        checked={selectedCategory === item}
+                                                        onChange={() => setCategory(item)}
+                                                    />
+                                                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${selectedCategory === item ? 'border-primary' : 'border-gray-300 group-hover:border-primary'}`}>
+                                                        {selectedCategory === item && <div className="w-2 h-2 rounded-full bg-primary"></div>}
+                                                    </div>
+                                                    <span className={`text-sm transition-colors ${selectedCategory === item ? 'text-primary font-bold' : 'text-gray-600 font-medium group-hover:text-primary'}`}>{item}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {products.map((product) => (
-                            <div key={product.id} className="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 flex flex-col">
-                                <div className="relative aspect-square bg-slate-50 dark:bg-slate-800 p-8 flex items-center justify-center overflow-hidden">
-                                    {/* Product Image Link */}
-                                    <Link href={`/solutions/hardware/marketplace/product/${product.id}`} className="block w-full h-full">
-                                        <img
-                                            alt={product.name}
-                                            className="object-contain w-full h-full transition-transform duration-500 group-hover:scale-110"
-                                            src={product.image}
+                                    {/* Price Range */}
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Price Limit</p>
+                                            <span className="text-xs font-bold text-primary">₦{(priceRange[1]).toLocaleString()}</span>
+                                        </div>
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max="1000000"
+                                            step="5000"
+                                            value={priceRange[1]}
+                                            onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
+                                            className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary hover:accent-primary-hover"
                                         />
-                                    </Link>
-                                    <div className="absolute top-3 left-3 flex flex-col gap-2">
-                                        <span className={`${product.tagColor} text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider`}>{product.tag}</span>
                                     </div>
-                                    <button className="absolute top-3 right-3 w-8 h-8 bg-white/80 dark:bg-slate-700/80 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:text-primary z-10">
-                                        <span className="material-icons-outlined text-lg">favorite_border</span>
+
+                                    {/* Brand */}
+                                    <div className="space-y-4">
+                                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Brands</p>
+                                        <div className="space-y-2">
+                                            {['ACS', 'HID Global', 'NXP', 'EntryConnect', 'StrongLink'].map((brand, i) => (
+                                                <label key={i} className="flex items-center gap-3 cursor-pointer group hover:bg-gray-50 p-2 -mx-2 rounded-lg transition-colors">
+                                                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${selectedBrands.includes(brand) ? 'bg-primary border-primary' : 'bg-white border-gray-300'}`}>
+                                                        {selectedBrands.includes(brand) && <CheckCircle2 size={12} className="text-white" />}
+                                                    </div>
+                                                    <input
+                                                        type="checkbox"
+                                                        className="hidden"
+                                                        checked={selectedBrands.includes(brand)}
+                                                        onChange={() => toggleBrand(brand)}
+                                                    />
+                                                    <span className="text-sm text-gray-600 font-medium group-hover:text-gray-900">{brand}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <button onClick={resetFilters} className="w-full py-2.5 border border-gray-300 rounded-xl text-sm font-bold text-gray-600 hover:border-gray-400 hover:text-text-main transition-colors">
+                                        Reset Filters
                                     </button>
                                 </div>
-                                <div className="p-5 flex-1 flex flex-col">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <span className="text-xs font-bold text-primary uppercase tracking-wider">{product.brand}</span>
-                                        <div className="flex items-center text-amber-400">
-                                            <span className="material-icons-outlined text-xs">star</span>
-                                            <span className="text-xs font-bold text-slate-600 dark:text-slate-400 ml-1">{product.rating}</span>
+                            </div>
+                        </div>
+                    </aside>
+
+                    {/* Mobile Filter Drawer */}
+                    {isMobileFilterOpen && (
+                        <div className="fixed inset-0 z-[60] lg:hidden">
+                            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMobileFilterOpen(false)}></div>
+                            <div className="absolute inset-y-0 right-0 w-80 bg-white shadow-2xl p-6 overflow-y-auto animate-in slide-in-from-right duration-200">
+                                <div className="flex items-center justify-between mb-8">
+                                    <h3 className="font-display font-bold text-xl">Filters</h3>
+                                    <button onClick={() => setIsMobileFilterOpen(false)} className="p-2 hover:bg-gray-100 rounded-full">
+                                        <X size={24} />
+                                    </button>
+                                </div>
+                                <div className="space-y-8">
+                                    <div className="space-y-4">
+                                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Category</p>
+                                        <div className="space-y-2">
+                                            {['All Products', 'NFC Readers', 'Smart Cards', 'Development Kits'].map((item) => (
+                                                <button key={item} onClick={() => { setCategory(item); setIsMobileFilterOpen(false); }} className={`block w-full text-left py-2 px-3 rounded-lg text-sm font-medium ${selectedCategory === item ? 'bg-primary/10 text-primary' : 'text-gray-600'}`}>
+                                                    {item}
+                                                </button>
+                                            ))}
                                         </div>
-                                    </div>
-                                    <Link href={`/solutions/hardware/marketplace/product/${product.id}`} className="font-display font-semibold text-slate-800 dark:text-slate-100 mb-1 group-hover:text-primary transition-colors line-clamp-2 cursor-pointer">
-                                        {product.name}
-                                    </Link>
-                                    <p className="text-xs text-slate-400 mb-4">{product.desc}</p>
-                                    <div className="mt-auto flex items-end justify-between">
-                                        <div>
-                                            <span className="text-2xl font-display font-bold">₦{product.price.toLocaleString()}</span>
-                                            {product.originalPrice && (
-                                                <span className="block text-[10px] text-slate-400 line-through">₦{product.originalPrice.toLocaleString()}</span>
-                                            )}
-                                        </div>
-                                        {/* Action Button: Cart, Quote, or Download */}
-                                        {product.action === 'quote' ? (
-                                            <button
-                                                onClick={() => openQuoteModal(product)}
-                                                className="px-4 h-10 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-xs font-bold"
-                                            >
-                                                Get Quote
-                                            </button>
-                                        ) : product.action === 'download' ? (
-                                            <button className="w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
-                                                <span className="material-icons-outlined">file_download</span>
-                                            </button>
-                                        ) : (
-                                            <button className="w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
-                                                <span className="material-icons-outlined">shopping_cart</span>
-                                            </button>
-                                        )}
                                     </div>
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    )}
 
-                    <div className="mt-12 flex items-center justify-center gap-2">
-                        <button className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                            <span className="material-icons-outlined text-sm">chevron_left</span>
-                        </button>
-                        <button className="w-10 h-10 rounded-lg flex items-center justify-center bg-primary text-white font-bold text-sm">1</button>
-                        <button className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium text-sm">2</button>
-                        <button className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium text-sm text-slate-400">...</button>
-                        <button className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                            <span className="material-icons-outlined text-sm">chevron_right</span>
-                        </button>
+                    {/* Product Grid Area */}
+                    <div className="flex-1 flex flex-col min-h-[600px]">
+
+                        <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
+                            <div>
+                                <h2 className="font-display font-bold text-3xl text-text-main mb-1">{selectedCategory}</h2>
+                                <p className="text-text-secondary">Showing {products.length} results</p>
+                            </div>
+                            <div className="hidden sm:flex items-center gap-3">
+                                <span className="text-sm text-gray-500 font-medium">Sort by:</span>
+                                <select className="bg-white border border-gray-200 text-sm font-bold text-text-main rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer shadow-sm hover:border-gray-300 transition-colors">
+                                    <option>Popularity</option>
+                                    <option>Price: Low to High</option>
+                                    <option>Newest</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Loading State */}
+                        {isLoading && (
+                            <div className="flex-1 flex flex-col items-center justify-center p-20">
+                                <Loader2 className="w-10 h-10 text-primary animate-spin mb-4" />
+                                <p className="text-gray-500 font-medium">Loading products...</p>
+                            </div>
+                        )}
+
+                        {/* Error State */}
+                        {isError && (
+                            <div className="flex-1 flex flex-col items-center justify-center p-20 text-center">
+                                <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4">
+                                    <X size={32} />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">Failed to load products</h3>
+                                <p className="text-gray-500 mb-6">Something went wrong while fetching the marketplace data.</p>
+                                <button onClick={() => window.location.reload()} className="px-6 py-2 bg-primary text-white rounded-lg font-bold hover:bg-primary-hover transition-colors">
+                                    Try Again
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Products Grid */}
+                        {!isLoading && !isError && products.length > 0 && (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mb-12">
+                                {products.map((product) => (
+                                    <div
+                                        key={product.id}
+                                        onClick={() => handleCardClick(product.id)}
+                                        className="group bg-white rounded-xl border border-gray-200 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 flex flex-col overflow-hidden relative cursor-pointer"
+                                    >
+
+                                        {/* Image Area */}
+                                        <div className="relative aspect-[1.1] p-8 bg-gray-50 group-hover:bg-white transition-colors duration-500 flex items-center justify-center">
+                                            <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+                                                <span className={`self-start px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-sm ${product.tagColor}`}>
+                                                    {product.tag}
+                                                </span>
+                                            </div>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); /* Add to wishlist logic */ }}
+                                                className="absolute top-4 right-4 p-2.5 bg-white rounded-full shadow-md text-gray-400 hover:text-red-500 hover:scale-110 active:scale-90 transition-all z-10 opacity-0 group-hover:opacity-100"
+                                            >
+                                                <Heart size={18} fill={product.id === '1' ? "currentColor" : "none"} />
+                                            </button>
+
+                                            <img
+                                                src={product.image}
+                                                alt={product.name}
+                                                className="w-full h-full object-contain filter group-hover:brightness-105 transition-all duration-500 transform group-hover:scale-110"
+                                            />
+                                        </div>
+
+                                        {/* Content */}
+                                        <div className="p-5 flex-1 flex flex-col">
+                                            <div className="mb-3 flex items-center justify-between">
+                                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1">
+                                                    {product.brand}
+                                                </span>
+                                                <div className="flex items-center gap-1.5 bg-amber-50 px-2 py-1 rounded-md">
+                                                    <Star size={12} className="text-amber-400 fill-amber-400" />
+                                                    <span className="text-xs font-bold text-amber-700">{product.rating}</span>
+                                                </div>
+                                            </div>
+
+                                            <h3 className="font-display font-bold text-lg text-text-main leading-snug mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                                                {product.name}
+                                            </h3>
+                                            <p className="text-sm text-text-secondary line-clamp-2 mb-6 leading-relaxed">{product.desc}</p>
+
+                                            <div className="mt-auto pt-5 border-t border-gray-100 flex items-end justify-between">
+                                                <div className="flex flex-col">
+                                                    {product.originalPrice && (
+                                                        <span className="text-xs text-gray-400 line-through font-medium mb-0.5">₦{product.originalPrice.toLocaleString()}</span>
+                                                    )}
+                                                    <span className="block text-xl font-bold text-text-main leading-none">
+                                                        ₦{product.price.toLocaleString()}
+                                                    </span>
+                                                </div>
+
+                                                <button
+                                                    onClick={(e) => handleAction(e, product)}
+                                                    className={`
+                                                        h-10 px-4 rounded-lg text-sm font-bold flex items-center gap-2 transition-all active:scale-95 shadow-sm
+                                                        ${product.action === 'quote'
+                                                            ? 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                                                            : product.action === 'download'
+                                                                ? 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'
+                                                                : 'bg-text-main text-white hover:bg-black'
+                                                        }
+                                                    `}
+                                                >
+                                                    {product.action === 'quote' && <span className="flex items-center gap-2">Quote <ArrowRight size={16} /></span>}
+                                                    {product.action === 'download' && <span className="flex items-center gap-2">Get <Download size={16} /></span>}
+                                                    {product.action === 'cart' && <span className="flex items-center gap-2">Add <ShoppingCart size={16} /></span>}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {!isLoading && !isError && products.length === 0 && (
+                            <div className="py-20 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+                                <p className="text-text-secondary font-medium">No products match your filters.</p>
+                                <button onClick={resetFilters} className="mt-4 text-primary font-bold hover:underline">Clear Filters</button>
+                            </div>
+                        )}
+
+                        {/* Pagination */}
+                        {!isLoading && !isError && products.length > 0 && (
+                            <div className="mt-auto border-t border-gray-200 pt-8 flex items-center justify-between">
+                                <span className="text-sm text-gray-500 font-medium hidden sm:block">
+                                    Page {currentPage} of {totalPages}
+                                </span>
+
+                                <div className="flex items-center gap-2 mx-auto sm:mx-0">
+                                    <button
+                                        onClick={() => setPage(Math.max(1, currentPage - 1))}
+                                        disabled={currentPage === 1}
+                                        className="p-2 rounded-lg border border-gray-200 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all"
+                                    >
+                                        <ChevronLeft size={20} />
+                                    </button>
+
+                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                                        <button
+                                            key={page}
+                                            onClick={() => setPage(page)}
+                                            className={`w-10 h-10 rounded-lg text-sm font-bold transition-all ${currentPage === page
+                                                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                                                    : 'text-gray-600 hover:bg-gray-50 border border-transparent hover:border-gray-200'
+                                                }`}
+                                        >
+                                            {page}
+                                        </button>
+                                    ))}
+
+                                    <button
+                                        onClick={() => setPage(Math.min(totalPages, currentPage + 1))}
+                                        disabled={currentPage === totalPages}
+                                        className="p-2 rounded-lg border border-gray-200 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition-all"
+                                    >
+                                        <ChevronRight size={20} />
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
                     </div>
                 </div>
             </main>
 
-            {/* Footer */}
-            <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-20 py-12">
-                <div className="max-w-[1440px] mx-auto px-6">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-                        <div className="col-span-1 md:col-span-1">
-                            <div className="flex items-center gap-2 mb-6">
-                                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
-                                    <span className="material-icons-outlined text-sm">nfc</span>
-                                </div>
-                                <span className="font-display text-lg font-bold">EntryConnect</span>
+            {/* Modals */}
+            {isQuoteModalOpen && selectedQuoteProduct && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsQuoteModalOpen(false)}></div>
+                    <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
+                        <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+                            <div>
+                                <h3 className="font-display font-bold text-xl text-text-main">Request Quote</h3>
+                                <p className="text-sm text-text-secondary">Bulk pricing for {selectedQuoteProduct.name}</p>
                             </div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Leading global marketplace for professional NFC hardware, smart cards, and enterprise access solutions.
-                            </p>
+                            <button onClick={() => setIsQuoteModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500">
+                                <X size={20} />
+                            </button>
                         </div>
-                        <div>
-                            <h4 className="font-bold mb-6 text-sm">Shop</h4>
-                            <ul className="space-y-4 text-sm text-slate-500 dark:text-slate-400">
-                                <li><a className="hover:text-primary transition-colors" href="#">All Collections</a></li>
-                                <li><a className="hover:text-primary transition-colors" href="#">Featured Devices</a></li>
-                                <li><a className="hover:text-primary transition-colors" href="#">Enterprise Sales</a></li>
-                                <li><a className="hover:text-primary transition-colors" href="#">Discounts</a></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-bold mb-6 text-sm">Support</h4>
-                            <ul className="space-y-4 text-sm text-slate-500 dark:text-slate-400">
-                                <li><a className="hover:text-primary transition-colors" href="#">Shipping & Delivery</a></li>
-                                <li><a className="hover:text-primary transition-colors" href="#">Returns Policy</a></li>
-                                <li><a className="hover:text-primary transition-colors" href="#">Hardware Warranty</a></li>
-                                <li><a className="hover:text-primary transition-colors" href="#">Contact Us</a></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-bold mb-6 text-sm">Resources</h4>
-                            <ul className="space-y-4 text-sm text-slate-500 dark:text-slate-400">
-                                <li><a className="hover:text-primary transition-colors" href="#">API Documentation</a></li>
-                                <li><a className="hover:text-primary transition-colors" href="#">SDK Downloads</a></li>
-                                <li><a className="hover:text-primary transition-colors" href="#">Blog</a></li>
-                                <li><a className="hover:text-primary transition-colors" href="#">Affiliate Program</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-                        <p className="text-xs text-slate-400">© 2024 EntryConnect Marketplace. All rights reserved.</p>
-                        <div className="flex gap-6">
-                            <a className="text-xs text-slate-400 hover:text-primary" href="#">Privacy Policy</a>
-                            <a className="text-xs text-slate-400 hover:text-primary" href="#">Terms of Service</a>
-                        </div>
+                        <form onSubmit={handleQuoteSubmit} className="p-6 space-y-4">
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Quantity Needed</label>
+                                <input type="number" placeholder="e.g. 50" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Business Name</label>
+                                <input type="text" placeholder="Company Ltd." className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium" required />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Additional Notes</label>
+                                <textarea rows={3} placeholder="Any specific requirements?" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"></textarea>
+                            </div>
+                            <div className="pt-2">
+                                <button type="submit" className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
+                                    Submit Request
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </footer>
+            )}
+
+            {isSuccessModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsSuccessModalOpen(false)}></div>
+                    <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200 text-center p-8">
+                        <div className="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <CheckCircle2 size={32} />
+                        </div>
+                        <h3 className="font-display font-bold text-2xl text-text-main mb-2">Request Sent!</h3>
+                        <p className="text-sm text-text-secondary mb-8">We've received your quote request. A member of our sales team will contact you shortly.</p>
+                        <button onClick={() => setIsSuccessModalOpen(false)} className="w-full py-3 bg-gray-100 hover:bg-gray-200 text-text-main font-bold rounded-xl transition-colors">
+                            Continue Browsing
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
