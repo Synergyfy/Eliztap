@@ -53,6 +53,7 @@ export default function AdminBusinessesPage() {
             plan: formData.get('plan') as string,
             owner: formData.get('owner') as string,
             email: formData.get('email') as string,
+            phone:formData.get('phone') as string,
             status: selectedBusiness?.status || 'active',
             joined: selectedBusiness?.joined || new Date().toISOString().split('T')[0],
             devices: selectedBusiness?.devices || 0,

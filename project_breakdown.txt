@@ -154,3 +154,7 @@ NFC identification is 4x faster than QR code scanning. It eliminates the need fo
 --we will have booking section 1.booking multiple 
 
 --add to cart,see,add quote,
+
+--Let's tap into
+your future. - this section background should be like a soft blue like the card with the cta in the main landing page and please make sure you use  there are no to rounded cards anywhere in this application go ahead and also use our dashboard sidebar as a refrnce to create the market place with the product card and major desc about the product  Let's tap into
+your future. 

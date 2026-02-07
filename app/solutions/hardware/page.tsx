@@ -191,39 +191,49 @@ export default function HardwareSolutionPage() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {[
                                 {
-                                    icon: Box,
-                                    title: 'Merchant Plates',
-                                    desc: 'Fixed identification point for receptionists, bars, and exit halls.',
+                                    heading: 'Merchant Plates',
+                                    desc: 'Fixed identification point for receptionists, bars, and exit halls. Durable and professional.',
+                                    img: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&q=80&w=800',
                                     tags: ['Self-Adhesive', 'Branded', 'Industrial PVC'],
-                                    color: 'bg-blue-500'
+                                    color: 'bg-blue-600'
                                 },
                                 {
-                                    icon: Layers,
-                                    title: 'Identity Cards',
-                                    desc: 'Credit-card sized NFC tags for staff or VIP priority members.',
+                                    heading: 'Identity Cards',
+                                    desc: 'Credit-card sized NFC tags for staff or VIP priority members. Fits in any wallet.',
+                                    img: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=800',
                                     tags: ['Double-Sided', 'Durable', 'Personalized'],
-                                    color: 'bg-purple-500'
+                                    color: 'bg-purple-600'
                                 },
                                 {
-                                    icon: Smartphone,
-                                    title: 'Smart Stickers',
-                                    desc: 'Low-profile tags for menus, table tents, and product packaging.',
+                                    heading: 'Smart Stickers',
+                                    desc: 'Low-profile tags for menus, table tents, and product packaging. Flexible and discrete.',
+                                    img: 'https://images.unsplash.com/photo-1572021335469-31706a17aaef?auto=format&fit=crop&q=80&w=800',
                                     tags: ['Flexible', 'Discrete', 'Clear Gloss'],
-                                    color: 'bg-emerald-500'
+                                    color: 'bg-emerald-600'
                                 }
                             ].map((item, i) => (
-                                <div key={i} className="bg-white p-12 rounded-[3.5rem] border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 group flex flex-col">
-                                    <div className={`size-16 rounded-2xl ${item.color} text-white flex items-center justify-center mb-10 shadow-lg group-hover:scale-110 transition-transform`}>
-                                        <item.icon size={30} />
+                                <div key={i} className="group flex flex-col h-full rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                                    <div className="h-64 overflow-hidden relative">
+                                        <div className="absolute inset-0 bg-black/10 z-10 group-hover:bg-transparent transition-colors"></div>
+                                        <img src={item.img} alt={item.heading} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
                                     </div>
-                                    <div className="space-y-4 flex-1">
-                                        <h4 className="text-2xl font-display font-bold">{item.title}</h4>
-                                        <p className="text-sm text-text-secondary leading-relaxed font-medium">{item.desc}</p>
-                                    </div>
-                                    <div className="pt-8 flex flex-wrap gap-2">
-                                        {item.tags.map(tag => (
-                                            <span key={tag} className="px-3 py-1 bg-gray-50 text-[10px] font-black uppercase tracking-widest text-text-secondary rounded-lg border border-gray-100">{tag}</span>
-                                        ))}
+                                    <div className={`flex-1 p-10 ${item.color} flex flex-col text-white`}>
+                                        <div className="mb-auto">
+                                            <h3 className="text-2xl md:text-3xl font-bold font-display leading-[1.1] mb-4">
+                                                {item.heading}
+                                            </h3>
+                                            <p className="text-white/80 font-medium leading-relaxed mb-8 text-sm">
+                                                {item.desc}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex flex-wrap gap-2 mt-4">
+                                            {item.tags.map(tag => (
+                                                <span key={tag} className="px-3 py-1 bg-white/10 backdrop-blur-md text-[10px] font-black uppercase tracking-widest text-white/90 rounded-lg border border-white/20">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                             ))}
