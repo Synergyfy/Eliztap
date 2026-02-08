@@ -3,7 +3,6 @@
 import React, { useRef, useState } from 'react';
 import { useProductFormStore } from '@/store/useProductFormStore';
 import { Upload, X, Plus, Info, Image as ImageIcon, Trash2, GripVertical, ArrowRight, Video, Link as LinkIcon, Play } from 'lucide-react';
-import { Switch } from '@/components/ui/switch';
 
 export default function StepMedia() {
     const { formData, updateFormData, nextStep, prevStep } = useProductFormStore();
