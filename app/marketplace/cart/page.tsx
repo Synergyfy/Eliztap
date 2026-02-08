@@ -240,7 +240,7 @@ export default function CartPage() {
                                         <label className="text-xs font-bold text-gray-500 uppercase">Full Name</label>
                                         <input
                                             type="text"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-sm outline-none focus:ring-2 focus:ring-black/5 transaction-all font-medium"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-sm outline-none focus:ring-2 focus:ring-primary/10 transaction-all font-medium"
                                             placeholder="John Doe"
                                             value={address.fullName}
                                             onChange={(e) => setAddress({ ...address, fullName: e.target.value })}
@@ -250,7 +250,7 @@ export default function CartPage() {
                                         <label className="text-xs font-bold text-gray-500 uppercase">Email Address</label>
                                         <input
                                             type="email"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-sm outline-none focus:ring-2 focus:ring-black/5 transaction-all font-medium"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-sm outline-none focus:ring-2 focus:ring-primary/10 transaction-all font-medium"
                                             placeholder="john@example.com"
                                             value={address.email}
                                             onChange={(e) => setAddress({ ...address, email: e.target.value })}
@@ -260,7 +260,7 @@ export default function CartPage() {
                                         <label className="text-xs font-bold text-gray-500 uppercase">Street Address</label>
                                         <input
                                             type="text"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-sm outline-none focus:ring-2 focus:ring-black/5 transaction-all font-medium"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-sm outline-none focus:ring-2 focus:ring-primary/10 transaction-all font-medium"
                                             placeholder="123 Main St"
                                             value={address.street}
                                             onChange={(e) => setAddress({ ...address, street: e.target.value })}
@@ -270,7 +270,7 @@ export default function CartPage() {
                                         <label className="text-xs font-bold text-gray-500 uppercase">City</label>
                                         <input
                                             type="text"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-sm outline-none focus:ring-2 focus:ring-black/5 transaction-all font-medium"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-sm outline-none focus:ring-2 focus:ring-primary/10 transaction-all font-medium"
                                             placeholder="Lagos"
                                             value={address.city}
                                             onChange={(e) => setAddress({ ...address, city: e.target.value })}
@@ -280,7 +280,7 @@ export default function CartPage() {
                                         <label className="text-xs font-bold text-gray-500 uppercase">Phone Number</label>
                                         <input
                                             type="tel"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-sm outline-none focus:ring-2 focus:ring-black/5 transaction-all font-medium"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-sm outline-none focus:ring-2 focus:ring-primary/10 transaction-all font-medium"
                                             placeholder="+234..."
                                             value={address.phone}
                                             onChange={(e) => setAddress({ ...address, phone: e.target.value })}
