@@ -7,7 +7,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useCartStore } from '@/store/cartStore';
 import {
     Search, ShoppingCart, Grid, Heart, Star, Download, CheckCircle2, SlidersHorizontal, ArrowRight,
-    Home, ChevronRight, Play, FileText, CheckCircle, ShieldCheck, Truck, Headset
+    Home, ChevronRight, Play, FileText, CheckCircle, ShieldCheck, Truck, Headset,
+    Share2, Scale, Flag, MessageSquare, StarHalf, Layout
 } from 'lucide-react';
 import { fetchProductDetail } from '@/lib/api/marketplace';
 import { ProductDetailSkeleton } from '@/components/marketplace/Skeletons';
@@ -81,7 +82,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 <div className="max-w-[1400px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-8">
                     <div className="flex items-center gap-12">
                         <Link href="/" className="flex items-center gap-2 group">
-                            <div className="w-10 h-10 bg-primary/10 rounded-sm flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                            <div className="w-10 h-10 bg-primary/10 rounded-none flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
                                 <Grid size={24} />
                             </div>
                             <span className="font-display font-bold text-xl tracking-tight text-slate-900">
@@ -101,12 +102,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         <Link href="/marketplace/cart" className="p-2 text-slate-500 hover:text-primary transition-colors relative">
                             <ShoppingCart size={22} />
                             {items.length > 0 && (
-                                <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border border-white">
+                                <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-none border border-white">
                                     {items.length}
                                 </span>
                             )}
                         </Link>
-                        <div className="w-9 h-9 rounded-sm bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-xs">
+                        <div className="w-9 h-9 rounded-none bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-xs">
                             JP
                         </div>
                     </div>
@@ -126,7 +127,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     {/* Left Column: Images */}
                     <div className="lg:col-span-7 space-y-6">
-                        <div className="aspect-square bg-white rounded-sm border border-slate-200 overflow-hidden relative group shadow-sm">
+                        <div className="aspect-square bg-white rounded-none border border-slate-200 overflow-hidden relative group shadow-sm">
                             <div className="h-full w-full" ref={emblaRef}>
                                 <div className="flex h-full">
                                     {product.images.map((img: string, i: number) => (
@@ -141,7 +142,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 </div>
                             </div>
                             <div className="absolute top-6 left-6 z-10">
-                                <span className={`px-3 py-1 rounded-sm text-xs font-bold uppercase tracking-wider ${product.tagColor}`}>
+                                <span className={`px-3 py-1 rounded-none text-xs font-bold uppercase tracking-wider ${product.tagColor}`}>
                                     {product.tag}
                                 </span>
                             </div>
@@ -151,7 +152,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 <button
                                     key={i}
                                     onClick={() => scrollToImage(i)}
-                                    className={`aspect-square rounded-sm border-2 overflow-hidden bg-white hover:opacity-100 transition-all ${selectedImage === i ? 'border-primary opacity-100 shadow-lg shadow-primary/10' : 'border-slate-200 opacity-60 hover:border-slate-300'}`}
+                                    className={`aspect-square rounded-none border-2 overflow-hidden bg-white hover:opacity-100 transition-all ${selectedImage === i ? 'border-primary opacity-100 shadow-lg shadow-primary/10' : 'border-slate-200 opacity-60 hover:border-slate-300'}`}
                                 >
                                     <img src={img} alt={`View ${i + 1}`} className="w-full h-full object-contain p-2" />
                                 </button>
@@ -162,17 +163,36 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     {/* Right Column: Product Details */}
                     <div className="lg:col-span-5 space-y-8">
                         <div>
-                            <span className="inline-block px-2.5 py-0.5 rounded-sm text-xs font-semibold bg-green-100 text-green-800 mb-4">
-                                In Stock
-                            </span>
+                            <div className="flex items-center gap-4 mb-4">
+                                <span className="inline-block px-2.5 py-0.5 rounded-none text-xs font-semibold bg-green-100 text-green-800">
+                                    In Stock
+                                </span>
+                                <div className="flex items-center gap-1 group cursor-pointer" onClick={() => setActiveTab('details')}>
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star key={i} size={14} className={i < Math.floor(product.rating || 4.5) ? "text-primary fill-primary" : "text-slate-300"} />
+                                    ))}
+                                    <span className="text-xs font-bold text-slate-500 ml-1">({product.reviews || 24} Reviews)</span>
+                                </div>
+                            </div>
                             <h1 className="text-4xl font-display font-bold text-slate-900 mb-2 leading-tight">{product.name}</h1>
-                            <p className="text-slate-500 font-medium font-mono text-sm">SKU: {product.sku}</p>
+                            <div className="flex items-center gap-6">
+                                <p className="text-slate-500 font-medium font-mono text-sm">SKU: {product.sku}</p>
+                                <div className="h-4 w-px bg-slate-200"></div>
+                                <button className="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+                                    <Scale size={14} /> Add to Compare
+                                </button>
+                                <button className="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+                                    <Share2 size={14} /> Share
+                                </button>
+                            </div>
                         </div>
 
                         {/* Tiered Pricing Table */}
                         <div className="space-y-4">
-                            <h3 className="text-lg font-bold text-slate-900">Tiered Pricing</h3>
-                            <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-sm">
+                            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                                <Layout size={18} className="text-slate-400" /> Tiered Pricing
+                            </h3>
+                            <div className="bg-white border border-slate-200 rounded-none overflow-hidden shadow-sm">
                                 <table className="w-full text-left text-sm">
                                     <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider">
                                         <tr>
@@ -200,7 +220,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         </div>
 
                         {/* Price Breakdown */}
-                        <div className="bg-slate-50 p-6 rounded-sm border border-slate-200 space-y-3">
+                        <div className="bg-slate-50 p-6 rounded-none border border-slate-200 space-y-3">
                             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Breakdown Quote</h3>
                             <div className="flex justify-between text-sm">
                                 <span className="text-slate-500">Selected Quantity</span>
@@ -228,7 +248,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                         <div className="flex flex-col gap-4 pt-4">
                             <div className="flex items-center gap-4">
-                                <div className="flex items-center border border-slate-300 rounded-sm h-14 bg-white">
+                                <div className="flex items-center border border-slate-300 rounded-none h-14 bg-white">
                                     <button
                                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
                                         className="px-4 text-slate-500 hover:text-primary transition-colors text-lg"
@@ -246,22 +266,22 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 </div>
                                 <button
                                     onClick={handleAddToCart}
-                                    className="flex-1 bg-primary hover:bg-primary/90 text-white font-bold h-14 rounded-sm shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
+                                    className="flex-1 bg-primary hover:bg-primary/90 text-white font-bold h-14 rounded-none shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
                                 >
                                     <ShoppingCart size={20} />
                                     Add to Cart
                                 </button>
                                 <button
                                     onClick={() => router.push('/marketplace/cart')}
-                                    className="px-6 border-2 border-primary text-primary hover:bg-primary/5 font-bold h-14 rounded-sm transition-all flex items-center justify-center active:scale-[0.98]"
+                                    className="px-6 border-2 border-primary text-primary hover:bg-primary/5 font-bold h-14 rounded-none transition-all flex items-center justify-center active:scale-[0.98]"
                                 >
                                     Checkout
                                 </button>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <button
-                                    onClick={() => router.push('/contact?type=quote')}
-                                    className="w-full bg-slate-900 text-white font-bold py-4 rounded-sm hover:opacity-90 transition-all active:scale-[0.98]"
+                                    onClick={() => { /* setSelectedQuoteProduct(product); setIsQuoteModalOpen(true); */ setActiveTab('quote'); }}
+                                    className="w-full bg-slate-900 text-white font-bold py-4 rounded-none hover:opacity-90 transition-all active:scale-[0.98]"
                                 >
                                     Bulk Quote
                                 </button>
@@ -274,15 +294,30 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         price: unitPrice || product.price,
                                         image: product.images[0]
                                     })}
-                                    className={`w-full border font-bold py-4 rounded-sm transition-all flex items-center justify-center gap-2 active:scale-[0.98] ${isInWishlist(product.id) ? 'bg-red-50 border-red-200 text-red-600' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+                                    className={`w-full border font-bold py-4 rounded-none transition-all flex items-center justify-center gap-2 active:scale-[0.98] ${isInWishlist(product.id) ? 'bg-red-50 border-red-200 text-red-600' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}
                                 >
                                     <Heart size={18} fill={isInWishlist(product.id) ? "currentColor" : "none"} />
                                     Wishlist
                                 </button>
                             </div>
+
+                            {/* Additional Required Action Buttons */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <button className="w-full bg-white border border-slate-200 text-slate-600 font-bold py-3 px-4 rounded-none hover:bg-slate-50 transition-all flex items-center justify-center gap-2 text-sm">
+                                    <StarHalf size={16} /> Rate Product
+                                </button>
+                                <button className="w-full bg-white border border-slate-200 text-slate-600 font-bold py-3 px-4 rounded-none hover:bg-slate-50 transition-all flex items-center justify-center gap-2 text-sm">
+                                    <MessageSquare size={16} /> Write Review
+                                </button>
+                            </div>
+                            <div className="flex justify-start">
+                                <button className="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors flex items-center gap-1 py-2">
+                                    <Flag size={14} /> Report Issue
+                                </button>
+                            </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 text-xs font-semibold text-slate-500">
+                        <div className="grid grid-cols-2 gap-4 text-xs font-semibold text-slate-500 pt-4">
                             <div className="flex items-center gap-2">
                                 <Truck size={16} className="text-primary" /> Ships in 24-48 Hours
                             </div>
@@ -309,7 +344,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     onClick={() => setActiveTab('downloads')}
                                     className={`border-b-2 py-4 text-sm font-bold transition-all flex items-center gap-2 ${activeTab === 'downloads' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
                                 >
-                                    Downloads <span className="bg-slate-100 px-2 py-0.5 rounded-sm text-[10px]">{product.documents?.length || 0}</span>
+                                    Downloads <span className="bg-slate-100 px-2 py-0.5 rounded-none text-[10px]">{product.documents?.length || 0}</span>
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('details')}
@@ -347,7 +382,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             {activeTab === 'specs' && (
                                 <section className="space-y-6 animate-in fade-in duration-300">
                                     <h3 className="text-2xl font-bold text-slate-900">Technical Specifications</h3>
-                                    <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-sm">
+                                    <div className="bg-white border border-slate-200 rounded-none overflow-hidden shadow-sm">
                                         <table className="w-full text-sm text-left">
                                             <tbody className="divide-y divide-slate-100">
                                                 {Object.entries(product.specifications || {}).map(([key, value]) => (
@@ -367,9 +402,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     <h3 className="text-2xl font-bold text-slate-900">SDKs & Documentation</h3>
                                     <div className="grid gap-4">
                                         {product.documents?.map((doc: any, i: number) => (
-                                            <div key={i} className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-sm hover:border-primary transition-all cursor-pointer group shadow-sm">
+                                            <div key={i} className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-none hover:border-primary transition-all cursor-pointer group shadow-sm">
                                                 <div className="flex items-center gap-4">
-                                                    <div className={`p-3 rounded-sm ${doc.type === 'sdk' ? 'bg-primary/10 text-primary' : 'bg-slate-100 text-slate-600'}`}>
+                                                    <div className={`p-3 rounded-none ${doc.type === 'sdk' ? 'bg-primary/10 text-primary' : 'bg-slate-100 text-slate-600'}`}>
                                                         {doc.type === 'sdk' ? <Grid size={24} /> : <FileText size={24} />}
                                                     </div>
                                                     <div>
@@ -401,7 +436,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             {activeTab === 'video' && product.video && (
                                 <section className="space-y-6 animate-in fade-in duration-300">
                                     <h3 className="text-2xl font-bold text-slate-900">Product Action video</h3>
-                                    <div className="aspect-video rounded-sm overflow-hidden bg-black shadow-2xl">
+                                    <div className="aspect-video rounded-none overflow-hidden bg-black shadow-2xl">
                                         <iframe
                                             src={product.video.url || ''}
                                             className="w-full h-full"
@@ -420,10 +455,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         <div className="absolute left-[19px] top-6 bottom-6 w-0.5 bg-slate-100"></div>
                                         {product.howToSteps.map((step: any, idx: number) => (
                                             <div key={idx} className="flex gap-6 relative">
-                                                <div className="size-10 rounded-sm bg-primary text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-primary/20 shrink-0 z-10">
+                                                <div className="size-10 rounded-none bg-primary text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-primary/20 shrink-0 z-10">
                                                     {idx + 1}
                                                 </div>
-                                                <div className="bg-white p-6 rounded-sm border border-slate-100 shadow-sm flex-1">
+                                                <div className="bg-white p-6 rounded-none border border-slate-100 shadow-sm flex-1">
                                                     <h4 className="font-bold text-lg text-slate-900 mb-2">{step.title}</h4>
                                                     <p className="text-slate-500 leading-relaxed">{step.description}</p>
                                                 </div>
@@ -436,36 +471,36 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             {activeTab === 'quote' && (
                                 <section className="space-y-6 animate-in fade-in duration-300">
                                     <h3 className="text-2xl font-bold text-slate-900">Request Bulk Quote</h3>
-                                    <div className="bg-white p-8 rounded-sm border border-slate-200 shadow-sm">
+                                    <div className="bg-white p-8 rounded-none border border-slate-200 shadow-sm">
                                         <form className="space-y-6">
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div>
                                                     <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Full Name</label>
-                                                    <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-sm focus:ring-2 focus:ring-primary/20 outline-none font-medium" placeholder="John Doe" />
+                                                    <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium" placeholder="John Doe" />
                                                 </div>
                                                 <div>
                                                     <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Work Email</label>
-                                                    <input type="email" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-sm focus:ring-2 focus:ring-primary/20 outline-none font-medium" placeholder="john@company.com" />
+                                                    <input type="email" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium" placeholder="john@company.com" />
                                                 </div>
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div>
                                                     <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Company Name</label>
-                                                    <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-sm focus:ring-2 focus:ring-primary/20 outline-none font-medium" placeholder="Acme Inc." />
+                                                    <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium" placeholder="Acme Inc." />
                                                 </div>
                                                 <div>
                                                     <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Expected Quantity</label>
-                                                    <input type="number" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-sm focus:ring-2 focus:ring-primary/20 outline-none font-medium" placeholder="100" />
+                                                    <input type="number" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium" placeholder="100" />
                                                 </div>
                                             </div>
                                             <div>
                                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Message / Requirements</label>
-                                                <textarea rows={4} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-sm focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none" placeholder="Tell us about your project..."></textarea>
+                                                <textarea rows={4} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none" placeholder="Tell us about your project..."></textarea>
                                             </div>
                                             <button
                                                 type="button"
                                                 onClick={() => toast.success("Quote request sent successfully!")}
-                                                className="w-full py-4 bg-primary text-white font-bold rounded-sm hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all active:scale-[0.99]"
+                                                className="w-full py-4 bg-primary text-white font-bold rounded-none hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all active:scale-[0.99]"
                                             >
                                                 Submit Quote Request
                                             </button>
@@ -478,12 +513,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                     {/* Sidebar */}
                     <div className="lg:col-span-4 space-y-8">
-                        <div className="bg-white rounded-sm p-6 border border-slate-200 sticky top-28">
+                        <div className="bg-white rounded-none p-6 border border-slate-200 sticky top-28">
                             <h3 className="text-lg font-bold text-slate-900 mb-6">Compatible Hardware</h3>
                             <div className="space-y-6">
                                 {product.relatedProducts?.map((related: any) => (
                                     <Link key={related.id} href={`/marketplace/product/${related.id}`} className="flex gap-4 group">
-                                        <div className="w-20 h-20 bg-white border border-slate-200 rounded-sm overflow-hidden shrink-0 flex items-center justify-center p-2 group-hover:scale-95 transition-transform">
+                                        <div className="w-20 h-20 bg-white border border-slate-200 rounded-none overflow-hidden shrink-0 flex items-center justify-center p-2 group-hover:scale-95 transition-transform">
                                             <img src={related.image} alt={related.name} className="max-w-full max-h-full object-contain" />
                                         </div>
                                         <div className="flex-1">
@@ -494,17 +529,17 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     </Link>
                                 ))}
                             </div>
-                            <button className="w-full mt-8 py-3 border border-slate-200 rounded-sm text-sm font-bold hover:bg-white transition-all text-slate-600">
+                            <button className="w-full mt-8 py-3 border border-slate-200 rounded-none text-sm font-bold hover:bg-white transition-all text-slate-600">
                                 View All Compatibility
                             </button>
 
-                            <div className="mt-8 bg-linear-to-br from-primary to-primary-dark rounded-sm p-6 text-white shadow-xl shadow-primary/20">
+                            <div className="mt-8 bg-linear-to-br from-primary to-primary-dark rounded-none p-6 text-white shadow-xl shadow-primary/20">
                                 <Headset className="mb-4" size={32} />
                                 <h3 className="text-lg font-bold mb-2">Need a custom solution?</h3>
                                 <p className="text-sm text-blue-100 mb-6">Our hardware specialists can help you integrate NFC technology into your existing systems.</p>
                                 <button
                                     onClick={() => router.push('/contact')}
-                                    className="bg-white text-primary px-4 py-3 rounded-sm font-bold text-sm w-full hover:bg-blue-50 transition-colors shadow-lg"
+                                    className="bg-white text-primary px-4 py-3 rounded-none font-bold text-sm w-full hover:bg-blue-50 transition-colors shadow-lg"
                                 >
                                     Book a Consultation
                                 </button>
@@ -520,7 +555,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                         <div className="col-span-2">
                             <div className="flex items-center gap-2 mb-6">
-                                <div className="bg-primary p-2 rounded-sm text-white">
+                                <div className="bg-primary p-2 rounded-none text-white">
                                     <Grid size={24} />
                                 </div>
                                 <span className="text-xl font-bold tracking-tight text-slate-900">ElizTap</span>
