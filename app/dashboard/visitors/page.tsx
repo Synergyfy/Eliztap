@@ -9,7 +9,7 @@ import EmptyState from '@/components/dashboard/EmptyState';
 import { useQuery } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { Visitor } from '@/lib/store/mockDashboardStore';
-import { Users, UserPlus, Repeat, Star, Search, Download, MoreVertical, Send, Gift } from 'lucide-react';
+import { Users, UserPlus, Repeat, Star, Search, Download, MoreVertical, Send, Gift, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import SendMessageModal from '@/components/dashboard/SendMessageModal';
 import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
