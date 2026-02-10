@@ -15,7 +15,6 @@ import useEmblaCarousel from 'embla-carousel-react';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useQuoteStore } from '@/store/quoteStore';
-import { useCartStore } from '@/store/cartStore';
 import { calculateQuotePrice } from '@/lib/utils/calculateQuotePrice';
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -29,9 +28,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
     const { user } = useAuthStore();
     const addQuote = useQuoteStore((state) => state.addQuote);
-    const addItem = useCartStore((state) => state.addItem);
     const [selectedImage, setSelectedImage] = useState(0);
-    const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState<'specs' | 'quote' | 'reviews'>('specs');
     const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 
@@ -63,14 +60,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     const [newReview, setNewReview] = React.useState({ rating: 5, comment: '' });
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
-    // Price Calculation
-    const currentTier = product?.tieredPricing?.find((tier: any) =>
-        quantity >= tier.minQuantity && (!tier.maxQuantity || quantity <= tier.maxQuantity)
-    ) || product?.tieredPricing?.[0];
 
-    const unitPrice = currentTier?.price === 'quote' ? 0 : currentTier?.price || product?.price;
-    const totalPrice = unitPrice * quantity;
-    const savings = (product?.price * quantity) - totalPrice;
 
     React.useEffect(() => {
         if (emblaApi) {
@@ -116,19 +106,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
 
 
-    const handleAddToCart = () => {
-        addItem({
-            id: product.id,
-            productId: product.id,
-            name: product.name,
-            brand: product.brand,
-            price: unitPrice,
-            image: product.mainImage || product.images?.[0] || '',
-            inStock: true,
-            shippingInfo: 'Ships in 24-48 hours'
-        });
-        toast.success(`Added ${product.name} to cart!`);
-    };
+
 
     const handleQuoteSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -330,59 +308,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             </button>
                         </div>
 
-                        {/* Price Breakdown */}
-                        <div className="bg-slate-50 p-6 rounded-none border border-slate-200 space-y-3">
-                            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Breakdown Quote</h3>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-slate-500">Selected Quantity</span>
-                                <span className="font-bold text-slate-900">{quantity} Units</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-slate-500">Unit Price</span>
-                                <span className="font-bold text-slate-900">
-                                    {currentTier?.price === 'quote' ? 'Request Quote' : `₦${unitPrice.toLocaleString()}`}
-                                </span>
-                            </div>
-                            {savings > 0 && (
-                                <div className="flex justify-between text-sm text-green-600">
-                                    <span>Bulk Discount Applied</span>
-                                    <span className="font-bold">-₦{savings.toLocaleString()}</span>
-                                </div>
-                            )}
-                            <div className="pt-3 border-t border-slate-200 flex justify-between items-baseline">
-                                <span className="text-base font-bold text-slate-900">Estimated Total</span>
-                                <span className="text-2xl font-black text-primary">
-                                    {currentTier?.price === 'quote' ? 'TBA' : `₦${totalPrice.toLocaleString()}`}
-                                </span>
-                            </div>
-                        </div>
 
-                        <div className="flex flex-col gap-4 pt-4">
-                            <div className="flex items-center gap-4">
-                                <div className="flex items-center border border-slate-300 rounded-none h-14 bg-white flex-1 max-w-[140px]">
-                                    <button
-                                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                        className="px-4 text-slate-500 hover:text-primary transition-colors text-lg"
-                                    >-</button>
-                                    <input
-                                        className="w-12 text-center bg-transparent border-none focus:ring-0 text-lg font-bold text-slate-900"
-                                        type="number"
-                                        value={quantity}
-                                        onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                                    />
-                                    <button
-                                        onClick={() => setQuantity(quantity + 1)}
-                                        className="px-4 text-slate-500 hover:text-primary transition-colors text-lg"
-                                    >+</button>
-                                </div>
-                                <button
-                                    onClick={handleAddToCart}
-                                    className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold h-14 rounded-none shadow-lg shadow-slate-900/10 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
-                                >
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
+
+
 
                         <div className="grid grid-cols-2 gap-4 text-xs font-semibold text-slate-500 pt-4">
                             <div className="flex items-center gap-2">
