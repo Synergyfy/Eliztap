@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import {
-    Search, Grid, Star,ArrowRight,
+    Search, Grid, Star, ArrowRight,
     Home, ChevronRight, ShieldCheck, Truck, Headset,
     Share2, X
 } from 'lucide-react';
@@ -114,7 +114,21 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         }
     };
 
-    
+
+
+    const handleAddToCart = () => {
+        addItem({
+            id: product.id,
+            productId: product.id,
+            name: product.name,
+            brand: product.brand,
+            price: unitPrice,
+            image: product.mainImage || product.images?.[0] || '',
+            inStock: true,
+            shippingInfo: 'Ships in 24-48 hours'
+        });
+        toast.success(`Added ${product.name} to cart!`);
+    };
 
     const handleQuoteSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -362,10 +376,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     >+</button>
                                 </div>
                                 <button
-                                    onClick={() => setActiveTab('quote')}
-                                    className="flex-1 bg-primary hover:bg-primary/90 text-white font-bold h-14 rounded-none shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
+                                    onClick={handleAddToCart}
+                                    className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold h-14 rounded-none shadow-lg shadow-slate-900/10 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
                                 >
-                                    Instant Quote
+                                    Add to Cart
                                 </button>
                             </div>
                         </div>

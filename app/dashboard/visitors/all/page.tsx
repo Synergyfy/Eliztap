@@ -15,7 +15,7 @@ import SendMessageModal from '@/components/dashboard/SendMessageModal';
 import DeleteConfirmationModal from '@/components/dashboard/DeleteConfirmationModal';
 import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
 import PreviewRewardModal from '@/components/dashboard/PreviewRewardModal';
-import { Users, UserPlus, Repeat, Star, Download, Search, Edit, Trash2, MoreVertical, Send, MessageSquare } from 'lucide-react';
+import { Users, UserPlus, Repeat, Star, Download, Search, Edit, Trash2, MoreVertical, Send, MessageSquare, Gift } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AllVisitorsPage() {
