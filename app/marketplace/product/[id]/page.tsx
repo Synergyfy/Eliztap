@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
     Search, Grid, Star, ArrowRight,
     Home, ChevronRight, ShieldCheck, Truck, Headset,
-    Share2, X
+    Share2, X, CheckCircle2
 } from 'lucide-react';
 import { fetchProductDetail } from '@/lib/api/marketplace';
 import { ProductDetailSkeleton } from '@/components/marketplace/Skeletons';
@@ -54,10 +54,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         }
     }, [user]);
     const [reviews, setReviews] = React.useState([
-        { id: 1, user: 'Samuel O.', rating: 5, date: '2 days ago', comment: 'Excellent quality, exactly what we needed for our office access system.' },
-        { id: 2, user: 'Chioma A.', rating: 4, date: '1 week ago', comment: 'Good value for money. Setup was straightforward.' },
+        { id: 1, user: 'Samuel O.', rating: 5, date: '2 days ago', comment: 'Excellent quality, exactly what we needed for our office access system.', approved: true },
+        { id: 2, user: 'Chioma A.', rating: 4, date: '1 week ago', comment: 'Good value for money. Setup was straightforward.', approved: true },
     ]);
     const [newReview, setNewReview] = React.useState({ rating: 5, comment: '' });
+    const [showReviewSuccess, setShowReviewSuccess] = React.useState(false);
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
 
@@ -289,6 +290,23 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             </div>
                         </div>
 
+                        {/* Pricing Tiers */}
+                        <div className="bg-slate-50 p-6 rounded-none border border-slate-200 space-y-4">
+                            <h4 className="text-sm font-bold text-slate-600 uppercase tracking-wider">Volume Pricing</h4>
+                            <div className="space-y-2">
+                                {product.tieredPricing?.map((tier: any, index: number) => (
+                                    <div key={index} className="flex items-center justify-between py-2 border-b border-slate-200 last:border-0">
+                                        <span className="text-sm font-medium text-slate-600">
+                                            {tier.minQuantity} - {tier.maxQuantity || '∞'} units
+                                        </span>
+                                        <span className="text-lg font-bold text-slate-900">
+                                            {typeof tier.price === 'number' ? `₦${tier.price.toLocaleString()}` : 'Contact for quote'}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
                         {/* Minimum Order Display */}
                         <div className="bg-primary/5 p-6 rounded-none border border-primary/10 space-y-4 shadow-sm">
                             <div className="flex items-center justify-between">
@@ -305,6 +323,22 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             >
                                 Request Bulk Quote
                                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                            </button>
+                        </div>
+
+                        {/* Low MOQ Quote */}
+                        <div className="bg-amber-50 p-6 rounded-none border border-amber-200 space-y-3">
+                            <h4 className="text-sm font-bold text-amber-900 uppercase tracking-wider">Need Less Than {product.tieredPricing?.[0]?.minQuantity || 1} Units?</h4>
+                            <p className="text-sm text-amber-800 font-medium">Contact us for special pricing on smaller quantities</p>
+                            <div className="flex items-center gap-2 text-sm font-bold text-amber-900">
+                                <span className="material-icons-round text-lg">phone</span>
+                                <a href="tel:+2348012345678" className="hover:underline">+234 801 234 5678</a>
+                            </div>
+                            <button
+                                onClick={() => setIsQuoteModalOpen(true)}
+                                className="w-full py-3 bg-amber-600 text-white font-bold rounded-none hover:bg-amber-700 transition-all flex items-center justify-center gap-2"
+                            >
+                                Request Low MOQ Quote
                             </button>
                         </div>
 
@@ -475,9 +509,32 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                             {activeTab === 'reviews' && (
                                 <section className="animate-in fade-in duration-300 space-y-8">
-                                    <h3 className="text-2xl font-bold text-slate-900">Customer Reviews</h3>
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-2xl font-bold text-slate-900">Customer Reviews</h3>
+                                        <span className="text-sm text-slate-500 font-medium">
+                                            {reviews.filter(r => r.approved).length} Approved Reviews
+                                        </span>
+                                    </div>
+
+                                    {/* Review Success Message */}
+                                    {showReviewSuccess && (
+                                        <div className="bg-green-50 border border-green-200 p-4 rounded-none">
+                                            <div className="flex items-start gap-3">
+                                                <CheckCircle2 size={20} className="text-green-600 mt-0.5" />
+                                                <div>
+                                                    <h4 className="font-bold text-green-900 mb-1">Review Submitted!</h4>
+                                                    <p className="text-sm text-green-800">Your review has been submitted and is pending admin approval. It will be visible once approved.</p>
+                                                </div>
+                                                <button onClick={() => setShowReviewSuccess(false)} className="ml-auto text-green-600 hover:text-green-800">
+                                                    <X size={18} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Approved Reviews */}
                                     <div className="space-y-6">
-                                        {reviews.map((review) => (
+                                        {reviews.filter(r => r.approved).map((review) => (
                                             <div key={review.id} className="p-6 border border-slate-100 bg-slate-50/50">
                                                 <div className="flex justify-between items-center mb-4">
                                                     <div className="flex items-center gap-1">
@@ -491,6 +548,68 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                 <p className="text-xs font-bold text-slate-900">— {review.user}</p>
                                             </div>
                                         ))}
+                                    </div>
+
+                                    {/* Add Review Form */}
+                                    <div className="bg-white border border-slate-200 p-6 rounded-none">
+                                        <h4 className="text-lg font-bold text-slate-900 mb-4">Write a Review</h4>
+                                        <form onSubmit={(e) => {
+                                            e.preventDefault();
+                                            if (!newReview.comment.trim()) {
+                                                toast.error('Please write a review comment');
+                                                return;
+                                            }
+                                            // Add review as pending (approved: false)
+                                            const pendingReview = {
+                                                id: reviews.length + 1,
+                                                user: user?.name || 'Anonymous',
+                                                rating: newReview.rating,
+                                                date: 'Just now',
+                                                comment: newReview.comment,
+                                                approved: false // Pending admin approval
+                                            };
+                                            setReviews([...reviews, pendingReview]);
+                                            setNewReview({ rating: 5, comment: '' });
+                                            setShowReviewSuccess(true);
+                                            // Auto-hide success message after 5 seconds
+                                            setTimeout(() => setShowReviewSuccess(false), 5000);
+                                        }} className="space-y-4">
+                                            <div>
+                                                <label className="block text-sm font-bold text-slate-600 mb-2">Rating</label>
+                                                <div className="flex gap-2">
+                                                    {[1, 2, 3, 4, 5].map((rating) => (
+                                                        <button
+                                                            key={rating}
+                                                            type="button"
+                                                            onClick={() => setNewReview({ ...newReview, rating })}
+                                                            className="p-2 hover:bg-slate-50 transition-colors"
+                                                        >
+                                                            <Star
+                                                                size={24}
+                                                                className={rating <= newReview.rating ? "text-primary fill-primary" : "text-slate-300"}
+                                                            />
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-bold text-slate-600 mb-2">Your Review</label>
+                                                <textarea
+                                                    rows={4}
+                                                    value={newReview.comment}
+                                                    onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                                                    placeholder="Share your experience with this product..."
+                                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"
+                                                    required
+                                                />
+                                            </div>
+                                            <button
+                                                type="submit"
+                                                className="w-full py-3 bg-primary text-white font-bold rounded-none hover:bg-primary-hover transition-all"
+                                            >
+                                                Submit Review (Pending Approval)
+                                            </button>
+                                        </form>
                                     </div>
                                 </section>
                             )}
