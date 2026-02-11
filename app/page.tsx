@@ -3,6 +3,7 @@ import Navbar from '@/components/layout/Navbar';
 import Hero from '@/components/landing/Hero';
 import SpeedComparison from '@/components/landing/SpeedComparison';
 import SolutionsPreview from '@/components/landing/SolutionsPreview';
+import HardwarePricing from '@/components/landing/HardwarePricing';
 import Process from '@/components/landing/Process';
 import Features from '@/components/landing/Features';
 import Pricing from '@/components/landing/Pricing';
@@ -27,6 +28,7 @@ export default function LandingPage() {
       <Process />
       <Features />
       <SolutionsPreview />
+      <HardwarePricing />
       <Pricing />
       <MobileExperience />
       <Testimonials />

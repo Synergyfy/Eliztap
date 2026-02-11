@@ -53,7 +53,7 @@ const DEFAULT_PLANS: PricingPlan[] = [
     },
     {
         id: 'enterprise',
-        name: 'Enterprise',
+        name: 'Custom Pricing',
         price: 'Custom',
         period: '',
         description: 'Bespoke solutions for large-scale industrial deployments.',
