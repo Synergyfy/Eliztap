@@ -37,10 +37,10 @@ const allProducts: Product[] = [
         brand: 'NXP',
         category: 'Smart Cards',
         rating: 4.7,
-        price: 85500,
-        originalPrice: null,
+        price: 50000,
+        originalPrice: 65000,
         image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAjOLHjEImnuX2LOtQ9_35UJ5iBVDjYgoAdUkfVCIOKlzLzNbR8jzZuXMqBzr2zm7bTB60FByuzS4DfbPxOdC-XETnsg_xSz6HydW21C7a49GAGuikH8vL51ldD0GCCYAAAWeyYjrsST43T02ixab1YBLQ0SN7FPkmwUSZjyJwz5rbAfLT4RqccxCFX1gzrKZ55WEV-TfuHqVMMxN3TpGlj_Q1xdnQblfVWikTCC9YahMk0rdT2xgoAgGPqhqumczAzvpmU-SttVIU1",
-        desc: '504 Bytes Memory, Compatible with Amiibo',
+        desc: '504 Bytes Memory, Compatible with Amiibo (₦500/unit)',
         tag: 'In Stock',
         tagColor: 'bg-emerald-500',
         action: 'quote'
@@ -61,14 +61,14 @@ const allProducts: Product[] = [
     },
     {
         id: 'nfc-wristband',
-        name: 'Silicone NFC Wristband (Event Pack)',
+        name: 'Silicone NFC Wristband (Pack of 50)',
         brand: 'ElizTap',
         category: 'Accessory',
         rating: 4.6,
-        price: 45000,
-        originalPrice: 60000,
+        price: 40000,
+        originalPrice: 50000,
         image: "https://sc04.alicdn.com/kf/H835260171a3949989506684724495537t.jpg",
-        desc: 'Waterproof wristbands for event access control.',
+        desc: 'Waterproof wristbands for event access (₦800/unit).',
         tag: 'In Stock',
         tagColor: 'bg-emerald-500',
         action: 'quote'
@@ -79,10 +79,10 @@ const allProducts: Product[] = [
         brand: 'NXP',
         category: 'Smart Cards',
         rating: 4.8,
-        price: 65000,
-        originalPrice: null,
+        price: 30000,
+        originalPrice: 40000,
         image: "https://m.media-amazon.com/images/I/61kQqnyv7BL._AC_SX679_.jpg",
-        desc: 'Durable epoxy finish, 888 bytes memory.',
+        desc: 'Durable epoxy finish, 888 bytes memory (₦600/unit).',
         tag: 'In Stock',
         tagColor: 'bg-emerald-500',
         action: 'quote'
@@ -107,8 +107,8 @@ const allProducts: Product[] = [
         brand: 'ElizTap',
         category: 'Smart Cards',
         rating: 4.9,
-        price: 25000,
-        originalPrice: null,
+        price: 15000,
+        originalPrice: 25000,
         image: "https://m.media-amazon.com/images/I/61kQqnyv7BL._AC_SX679_.jpg", // Placeholder
         desc: 'Matte black metal finish with laser engraving.',
         tag: 'In Stock',
@@ -269,8 +269,8 @@ export const fetchProductDetail = async (id: string) => {
             relatedProducts: [],
             features: ['Free Shipping on 5+ Packs'],
             tieredPricing: [
-                { minQuantity: 1, maxQuantity: 4, price: 85500 },
-                { minQuantity: 5, maxQuantity: 10, price: 78000 },
+                { minQuantity: 1, maxQuantity: 4, price: 50000 },
+                { minQuantity: 5, maxQuantity: 10, price: 45000 },
                 { minQuantity: 11, price: 'quote' }
             ]
         }
