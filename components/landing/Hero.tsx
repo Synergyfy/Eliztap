@@ -39,7 +39,7 @@ export default function Hero() {
 
                     {/* Right Column: Video Showcase */}
                     <div className="relative animate-in fade-in slide-in-from-right-8 duration-1000 delay-200 lg:pl-10">
-                        <div className="relative w-full aspect-video bg-gray-900 rounded-[2rem] overflow-hidden shadow-2xl border border-gray-100">
+                        <div className="relative w-full aspect-video bg-gray-900 rounded-4xl overflow-hidden shadow-2xl border border-gray-100">
                             <video
                                 autoPlay
                                 loop
@@ -49,7 +49,7 @@ export default function Hero() {
                             >
                                 <source src="/assets/videos/ElizTap_Video.mp4" type="video/mp4" />
                             </video>
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
+                            <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
                         </div>
 
                         {/* 5000+ Ratings Badge overlaying video - Removed Stars as requested */}
@@ -64,7 +64,7 @@ export default function Hero() {
                 <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-500">
                     <div className="relative group">
                         <div className="absolute -inset-1 bg-linear-to-r from-primary/20 to-blue-400/20 rounded-[2.5rem] blur-2xl opacity-20 animate-pulse"></div>
-                        <div className="relative bg-white rounded-[2rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden border border-gray-100">
+                        <div className="relative bg-white rounded-4xl shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden border border-gray-100">
                             {/* Browser Header */}
                             <div className="bg-gray-50/80 border-b border-gray-100 px-6 py-4 flex items-center gap-4">
                                 <div className="flex gap-2">

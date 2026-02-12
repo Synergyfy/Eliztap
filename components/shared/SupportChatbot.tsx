@@ -140,10 +140,10 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
                 >
                     <div className="relative">
                         {/* Animated gradient pulse */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary to-blue-400 opacity-75 animate-pulse blur-md"></div>
+                        <div className="absolute inset-0 rounded-full bg-linear-to-r from-primary to-blue-400 opacity-75 animate-pulse blur-md"></div>
 
                         {/* Main button */}
-                        <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-primary to-blue-500 shadow-2xl flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-active:scale-95">
+                        <div className="relative w-16 h-16 rounded-full bg-linear-to-br from-primary to-blue-500 shadow-2xl flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-active:scale-95">
                             <MessageCircle className="text-white" size={28} />
 
                             {/* Notification badge */}
@@ -153,7 +153,7 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
                         </div>
 
                         {/* Leaking gradient effect */}
-                        <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-gradient-to-br from-primary to-blue-400 rounded-full opacity-60 animate-ping"></div>
+                        <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-linear-to-br from-primary to-blue-400 rounded-full opacity-60 animate-ping"></div>
                     </div>
                 </button>
             )}
@@ -162,8 +162,8 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
             {isOpen && (
                 <div
                     className={`fixed z-50 bg-white shadow-2xl transition-all duration-300 ${isFullScreen
-                            ? 'inset-0 rounded-none'
-                            : 'bottom-6 right-6 w-[400px] h-[600px] rounded-2xl'
+                        ? 'inset-0 rounded-none'
+                        : 'bottom-6 right-6 w-[400px] h-[600px] rounded-2xl'
                         }`}
                     style={{
                         maxWidth: isFullScreen ? '100%' : '400px',
@@ -171,10 +171,10 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
                     }}
                 >
                     {/* Header */}
-                    <div className="relative h-20 bg-gradient-to-br from-primary to-blue-500 rounded-t-2xl px-6 flex items-center justify-between overflow-hidden">
+                    <div className="relative h-20 bg-linear-to-br from-primary to-blue-500 rounded-t-2xl px-6 flex items-center justify-between overflow-hidden">
                         {/* Animated background pattern */}
                         <div className="absolute inset-0 opacity-10">
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent animate-shimmer"></div>
+                            <div className="absolute inset-0 bg-linear-to-r from-transparent via-white to-transparent animate-shimmer"></div>
                         </div>
 
                         <div className="relative flex items-center gap-3">
@@ -227,17 +227,17 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
                             >
                                 <div
                                     className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.sender === 'user'
-                                            ? 'bg-primary text-white rounded-br-none'
-                                            : message.sender === 'agent'
-                                                ? 'bg-green-500 text-white rounded-bl-none'
-                                                : 'bg-white border border-gray-200 text-text-main rounded-bl-none'
+                                        ? 'bg-primary text-white rounded-br-none'
+                                        : message.sender === 'agent'
+                                            ? 'bg-green-500 text-white rounded-bl-none'
+                                            : 'bg-white border border-gray-200 text-text-main rounded-bl-none'
                                         }`}
                                 >
                                     <p className="text-sm font-medium leading-relaxed">{message.text}</p>
                                     <p
                                         className={`text-xs mt-1 ${message.sender === 'user' || message.sender === 'agent'
-                                                ? 'text-white/70'
-                                                : 'text-gray-400'
+                                            ? 'text-white/70'
+                                            : 'text-gray-400'
                                             }`}
                                     >
                                         {message.timestamp.toLocaleTimeString([], {
@@ -298,7 +298,7 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
                             <button
                                 onClick={handleSendMessage}
                                 disabled={!inputValue.trim()}
-                                className="p-3 bg-gradient-to-br from-primary to-blue-500 text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+                                className="p-3 bg-linear-to-br from-primary to-blue-500 text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
                                 aria-label="Send message"
                             >
                                 <Send size={20} />

@@ -55,10 +55,13 @@ export default function AdminBusinessesPage() {
             owner: formData.get('owner') as string,
             email: formData.get('email') as string,
             phone: formData.get('phone') as string,
+            address: formData.get('address') as string,
             status: selectedBusiness?.status || 'active',
             joined: selectedBusiness?.joined || new Date().toISOString().split('T')[0],
             devices: selectedBusiness?.devices || 0,
-            visitors: selectedBusiness?.visitors || 0
+            visitors: selectedBusiness?.visitors || 0,
+            lastActivity: selectedBusiness?.lastActivity || 'Just now',
+            nextBilling: selectedBusiness?.nextBilling || (formData.get('plan') === 'Free' ? 'N/A' : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
         };
 
         if (selectedBusiness) {
@@ -462,6 +465,17 @@ export default function AdminBusinessesPage() {
                             required
                             className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm"
                             placeholder="Full legal name"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Business Physical Address</label>
+                        <input
+                            name="address"
+                            defaultValue={selectedBusiness?.address}
+                            required
+                            className="w-full h-12 px-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/5 focus:bg-white transition-all font-bold text-sm"
+                            placeholder="Street, City, State"
                         />
                     </div>
 
