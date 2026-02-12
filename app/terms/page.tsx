@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'Terms of Service',
-    description: 'Read the Terms of Service for EntryConnect. Understand your rights and responsibilities when using our NFC-based visitor capture and management software.',
+    description: 'Read the Terms of Service for ElizTap. Understand your rights and responsibilities when using our NFC-based visitor capture and management software.',
 };
 
 export default function TermsOfService() {

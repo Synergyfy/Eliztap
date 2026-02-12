@@ -35,7 +35,7 @@ const mockProducts: Product[] = [
     {
         id: 'sdk-bundle',
         name: 'Universal NFC Developer SDK',
-        brand: 'EntryConnect',
+        brand: 'ElizTap',
         category: 'Development Kits',
         rating: 5.0,
         price: 499000,

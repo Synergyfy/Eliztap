@@ -203,7 +203,7 @@ export default function CustomerSettingsPage() {
                                     <h3 className="text-xl font-display font-bold">Data Purge Protocol</h3>
                                 </div>
                                 <p className="text-sm text-red-700/80 mb-8 font-medium leading-relaxed max-w-xl text-balance">
-                                    Initiating an account deletion will permanently erase your check-in history, earned points, and active vouchers from the EntryConnect decentralized ledger. This action is irreversible.
+                                    Initiating an account deletion will permanently erase your check-in history, earned points, and active vouchers from the ElizTap decentralized ledger. This action is irreversible.
                                 </p>
                                 <button className="h-14 px-8 border-2 border-red-200 text-red-600 font-black uppercase tracking-widest text-[10px] rounded-lg hover:bg-red-600 hover:text-white hover:border-red-600 transition-all active:scale-95 shadow-lg shadow-red-200/50">
                                     Request Account Termination

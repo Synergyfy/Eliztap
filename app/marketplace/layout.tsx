@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'NFC Marketplace | Buy Custom Branded Tags & Cards',
-    description: 'Shop premium NFC hardware. Custom-printed identity cards, smart stickers, and metal plates pre-configured for your EntryConnect dashboard.',
+    description: 'Shop premium NFC hardware. Custom-printed identity cards, smart stickers, and metal plates pre-configured for your ElizTap dashboard.',
 };
 
 export default function MarketplaceLayout({

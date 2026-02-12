@@ -282,6 +282,14 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                         </div>
                     </div>
                     <div className="flex items-center gap-4 relative">
+                        {/* Plan Badge */}
+                        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/10 rounded-full">
+                            <div className="size-1.5 rounded-full bg-primary animate-pulse"></div>
+                            <span className="text-[10px] font-black text-primary uppercase tracking-widest">
+                                {user?.plan || 'Standard'} Plan
+                            </span>
+                        </div>
+
                         {/* Notification Button */}
                         <button
                             onClick={() => setShowNotifications(!showNotifications)}

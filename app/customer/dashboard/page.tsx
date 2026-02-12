@@ -79,7 +79,7 @@ export default function CustomerDashboardPage() {
                                 {user?.name?.split(' ')[0] || 'Customer'}!
                             </h1>
                             <p className="text-blue-50 text-base md:text-lg max-w-lg mb-8 font-medium leading-relaxed opacity-90">
-                                Visit participating venues and tap your phone at the EntryConnect terminal to earn rewards instantly.
+                                Visit participating venues and tap your phone at the ElizTap terminal to earn rewards instantly.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                                 <button
@@ -253,7 +253,7 @@ export default function CustomerDashboardPage() {
                         <span className="text-2xl font-black text-primary uppercase">{user?.name?.substring(0, 2) || 'JD'}</span>
                     </div>
                     <h2 className="text-2xl font-display font-bold text-slate-900">{user?.name || 'Customer'}</h2>
-                    <p className="text-sm text-slate-500 font-medium mt-1">EntryConnect Member since 2024</p>
+                    <p className="text-sm text-slate-500 font-medium mt-1">ElizTap Member since 2024</p>
                 </div>
 
                 <div className="bg-slate-50 rounded-lg p-8 mb-8 border border-slate-100 text-center relative group">

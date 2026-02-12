@@ -22,7 +22,7 @@ export default function SettingsPage() {
             <div className="p-8">
                 <PageHeader
                     title="Settings"
-                    description="Configure and manage your EntryConnect account preferences"
+                    description="Configure and manage your ElizTap account preferences"
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

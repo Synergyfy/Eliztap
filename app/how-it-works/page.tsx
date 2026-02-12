@@ -6,7 +6,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'How It Works',
-    description: 'Learn how EntryConnect uses NFC technology to bridge the gap between physical visitors and digital data capture.',
+    description: 'Learn how ElizTap uses NFC technology to bridge the gap between physical visitors and digital data capture.',
 };
 
 export default function HowItWorks() {
