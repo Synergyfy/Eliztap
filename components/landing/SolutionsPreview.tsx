@@ -23,7 +23,7 @@ export default function SolutionsPreview() {
                             <div className="flex flex-col gap-6">
                                 {/* Hand-drawn style icon placeholder */}
                                 <div className="text-primary">
-                                    <Smartphone size={40} md:size={48} strokeWidth={1.5} className="transform -rotate-6 group-hover:rotate-0 transition-transform duration-500" />
+                                    <Smartphone strokeWidth={1.5} className="w-10 h-10 md:w-12 md:h-12 transform -rotate-6 group-hover:rotate-0 transition-transform duration-500" />
                                 </div>
                             </div>
                         </div>
@@ -39,7 +39,7 @@ export default function SolutionsPreview() {
                             </div>
 
                             <Link href="/solutions/hardware" className="size-14 md:size-16 rounded-full bg-text-main text-white flex items-center justify-center hover:bg-black hover:scale-110 transition-all shadow-xl cursor-pointer shrink-0">
-                                <ArrowRight size={20} md:size={24} />
+                                <ArrowRight className="w-5 h-5 md:w-6 md:h-6" />
                             </Link>
                         </div>
                     </div>
@@ -48,13 +48,13 @@ export default function SolutionsPreview() {
                     <div className="group relative min-h-[400px] rounded-[2.5rem] bg-gray-900 p-8 md:p-12 flex flex-col justify-between transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 border border-gray-800 overflow-hidden">
                         {/* Subtle doodle effect background */}
                         <div className="absolute top-10 right-10 opacity-10">
-                            <LayoutDashboard size={80} md:size={120} strokeWidth={0.5} className="text-white transform rotate-12" />
+                            <LayoutDashboard strokeWidth={0.5} className="text-white transform rotate-12 w-20 h-20 md:w-[120px] md:h-[120px]" />
                         </div>
 
                         <div className="flex items-start justify-between relative z-10">
                             <div className="flex flex-col gap-6">
                                 <div className="text-white">
-                                    <LayoutDashboard size={40} md:size={48} strokeWidth={1.5} className="transform rotate-3 group-hover:rotate-0 transition-transform duration-500" />
+                                    <LayoutDashboard strokeWidth={1.5} className="w-10 h-10 md:w-12 md:h-12 transform rotate-3 group-hover:rotate-0 transition-transform duration-500" />
                                 </div>
                             </div>
                         </div>
@@ -70,7 +70,7 @@ export default function SolutionsPreview() {
                             </div>
 
                             <Link href="/solutions/software" className="size-14 md:size-16 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-hover hover:scale-110 transition-all shadow-xl shadow-primary/30 cursor-pointer shrink-0">
-                                <ArrowRight size={20} md:size={24} />
+                                <ArrowRight className="w-5 h-5 md:w-6 md:h-6" />
                             </Link>
                         </div>
                     </div>
