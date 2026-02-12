@@ -281,6 +281,7 @@ export default function MarketplacePage() {
                                                 <Star size={12} className="text-primary fill-primary" />
                                                 <span className="text-xs font-bold text-primary">{product.rating}</span>
                                             </div>
+                                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">SKU: {product.id.toUpperCase().split('-')[0]}</span>
                                         </div>
 
                                         <h3 className="font-display font-bold text-xl text-text-main leading-snug mb-3 group-hover:text-primary transition-colors line-clamp-2">
@@ -292,7 +293,7 @@ export default function MarketplacePage() {
                                             {/* Price per unit and MOQ */}
                                             <div className="flex items-center justify-between gap-4">
                                                 <div className="flex flex-col">
-                                                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Price Per Unit</span>
+                                                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Unit Price</span>
                                                     <div className="flex items-baseline gap-2">
                                                         <span className="text-2xl font-bold text-text-main leading-none">
                                                             ₦{product.price.toLocaleString()}
@@ -304,7 +305,7 @@ export default function MarketplacePage() {
                                                 </div>
                                                 <div className="flex flex-col items-end">
                                                     <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Min. Order</span>
-                                                    <span className="text-lg font-bold text-primary">100 pieces</span>
+                                                    <span className="text-lg font-bold text-primary">{product.moq || 1} {product.moq === 1 ? 'unit' : 'units'}</span>
                                                 </div>
                                             </div>
 

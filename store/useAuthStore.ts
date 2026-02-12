@@ -17,6 +17,7 @@ interface User {
   subscriptionStatus?: SubscriptionStatus;
   trialEndsAt?: string;
   billingCycleAt?: string;
+  phone?: string;
 }
 
 interface AuthState {

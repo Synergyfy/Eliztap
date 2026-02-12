@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import {
     Search, Grid, Star, ArrowRight,
-    Home, ChevronRight, ShieldCheck, Truck, Headset,
-    Share2, X, CheckCircle2
+    Home, ChevronRight, ChevronLeft, ShieldCheck, Truck, Headset,
+    Share2, X, CheckCircle2, Play
 } from 'lucide-react';
 import { fetchProductDetail } from '@/lib/api/marketplace';
 import { ProductDetailSkeleton } from '@/components/marketplace/Skeletons';
@@ -36,6 +36,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         firstName: user?.name?.split(' ')[0] || '',
         lastName: user?.name?.split(' ').slice(1).join(' ') || '',
         email: user?.email || '',
+        phone: user?.phone || '',
         company: user?.businessName || '',
         quantity: '',
         location: '',
@@ -49,6 +50,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 firstName: user.name?.split(' ')[0] || '',
                 lastName: user.name?.split(' ').slice(1).join(' ') || '',
                 email: user.email || '',
+                phone: user.phone || '',
                 company: user.businessName || ''
             }));
         }
@@ -133,6 +135,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             firstName: quoteData.firstName,
             lastName: quoteData.lastName,
             email: quoteData.email,
+            phone: quoteData.phone,
             company: quoteData.company,
             quantity,
             message: quoteData.notes,
@@ -145,6 +148,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             firstName: user?.name?.split(' ')[0] || '',
             lastName: user?.name?.split(' ').slice(1).join(' ') || '',
             email: user?.email || '',
+            phone: user?.phone || '',
             company: user?.businessName || '',
             quantity: '',
             location: '',
@@ -237,6 +241,24 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 <span className={`px-3 py-1 rounded-none text-xs font-bold uppercase tracking-wider ${product.tagColor}`}>
                                     {product.tag}
                                 </span>
+                            </div>
+
+                            {/* Chevron Controls */}
+                            <div className="absolute inset-y-0 left-4 flex items-center z-20">
+                                <button 
+                                    onClick={() => emblaApi?.scrollPrev()}
+                                    className="p-3 bg-white/90 hover:bg-white text-slate-900 rounded-none shadow-xl border border-slate-100 transition-all active:scale-95 group"
+                                >
+                                    <ChevronLeft size={24} className="group-hover:-translate-x-0.5 transition-transform" />
+                                </button>
+                            </div>
+                            <div className="absolute inset-y-0 right-4 flex items-center z-20">
+                                <button 
+                                    onClick={() => emblaApi?.scrollNext()}
+                                    className="p-3 bg-white/90 hover:bg-white text-slate-900 rounded-none shadow-xl border border-slate-100 transition-all active:scale-95 group"
+                                >
+                                    <ChevronRight size={24} className="group-hover:translate-x-0.5 transition-transform" />
+                                </button>
                             </div>
                         </div>
                         <div className="grid grid-cols-4 gap-4">
@@ -387,7 +409,32 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         {/* Tab Content */}
                         <div className="space-y-12">
                             {activeTab === 'specs' && (
-                                <section className="space-y-8 animate-in fade-in duration-300">
+                                <section className="space-y-12 animate-in fade-in duration-300">
+                                    {/* Video Showcase Section */}
+                                    <div className="space-y-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-primary/10 rounded-none flex items-center justify-center text-primary">
+                                                <Play size={20} fill="currentColor" />
+                                            </div>
+                                            <h3 className="text-2xl font-bold text-slate-900">Product Demonstration</h3>
+                                        </div>
+                                        <div className="relative aspect-video bg-slate-900 rounded-none overflow-hidden group border border-slate-200">
+                                            <video 
+                                                src="/assets/videos/ElizTap_Video.mp4" 
+                                                autoPlay 
+                                                muted 
+                                                loop 
+                                                playsInline
+                                                className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                                            />
+                                            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+                                            <div className="absolute bottom-8 left-8 text-white">
+                                                <p className="text-xs font-black uppercase tracking-widest mb-1 text-primary">Live Preview</p>
+                                                <h4 className="text-xl font-bold">Watch how it works</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div className="space-y-4">
                                         <h3 className="text-2xl font-bold text-slate-900">Technical Specifications</h3>
                                         <div className="prose prose-slate max-w-none bg-slate-50 p-6 rounded-none border border-slate-100">
@@ -454,12 +501,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Location / State</label>
+                                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Phone Number</label>
                                                     <input
-                                                        type="text"
-                                                        value={quoteData.location}
-                                                        onChange={(e) => setQuoteData({ ...quoteData, location: e.target.value })}
-                                                        placeholder="Lagos, Nigeria"
+                                                        type="tel"
+                                                        value={quoteData.phone || ''}
+                                                        onChange={(e) => setQuoteData({ ...quoteData, phone: e.target.value })}
+                                                        placeholder="+234 800 000 0000"
                                                         className="w-full px-4 py-3 bg-white border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
@@ -467,12 +514,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             </div>
                                             <div className="grid grid-cols-2 gap-6">
                                                 <div>
-                                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Quantity Needed</label>
+                                                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Location / State</label>
                                                     <input
-                                                        type="number"
-                                                        value={quoteData.quantity}
-                                                        onChange={(e) => setQuoteData({ ...quoteData, quantity: e.target.value })}
-                                                        placeholder="e.g. 100"
+                                                        type="text"
+                                                        value={quoteData.location}
+                                                        onChange={(e) => setQuoteData({ ...quoteData, location: e.target.value })}
+                                                        placeholder="Lagos, Nigeria"
                                                         className="w-full px-4 py-3 bg-white border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium"
                                                         required
                                                     />
