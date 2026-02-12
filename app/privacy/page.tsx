@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'Privacy Policy',
-    description: 'Learn how EntryConnect collects, uses, and protects your information. We are committed to GDPR and CCPA compliance and data security.',
+    description: 'Learn how ElizTap collects, uses, and protects your information. We are committed to GDPR and CCPA compliance and data security.',
 };
 
 export default function PrivacyPolicy() {

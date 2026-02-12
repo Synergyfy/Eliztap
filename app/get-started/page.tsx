@@ -21,10 +21,11 @@ export default function GetStarted() {
         password: '',
         confirmPassword: '',
         businessName: '',
+        businessLogo: null as string | null,
         category: '',
         role: 'Owner' as 'Owner' | 'Manager',
         visitors: '',
-        goal: '',
+        goals: [] as string[],
         serialNumber: '',
         otp: '',
         agreeToTerms: false
@@ -44,15 +45,17 @@ export default function GetStarted() {
                 name: `${formData.firstName} ${formData.lastName}`,
                 role: formData.role.toLowerCase() as any,
                 businessName: formData.businessName,
+                businessLogo: formData.businessLogo,
+                businessGoals: formData.goals,
                 businessId: 'new_' + Math.random().toString(36).substr(2, 6)
             };
 
             await signup(userData);
-            setStep(5);
+            setStep(6);
 
-            // Auto redirect after 3 seconds
+            // Auto redirect to Plan Selection after 3 seconds
             setTimeout(() => {
-                router.push('/dashboard');
+                router.push('/pricing');
             }, 3000);
         } catch (error) {
             toast.error('Failed to create account. Please try again.');
@@ -74,7 +77,7 @@ export default function GetStarted() {
                     <div className="max-w-md w-full mx-auto lg:mx-0">
                         {/* Progress Bar */}
                         <div className="flex gap-1.5 mb-12">
-                            {[1, 2, 3, 4, 5].map(s => (
+                            {[1, 2, 3, 4, 5, 6].map(s => (
                                 <div key={s} className={`h-1 flex-1 rounded-full transition-all duration-500 ${step >= s ? 'bg-primary' : 'bg-gray-100'}`}></div>
                             ))}
                         </div>
@@ -263,6 +266,41 @@ export default function GetStarted() {
                                         </div>
 
                                         <div className="space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Logo</label>
+                                            <div className="flex items-center gap-4">
+                                                <div className="size-20 rounded-2xl bg-gray-50 border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden shrink-0">
+                                                    {formData.businessLogo ? (
+                                                        <img src={formData.businessLogo} alt="Logo Preview" className="w-full h-full object-contain p-2" />
+                                                    ) : (
+                                                        <span className="material-icons-round text-gray-300 text-3xl">image</span>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1">
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        id="logo-upload"
+                                                        className="hidden"
+                                                        onChange={(e) => {
+                                                            const file = e.target.files?.[0];
+                                                            if (file) {
+                                                                const reader = new FileReader();
+                                                                reader.onloadend = () => {
+                                                                    setFormData({ ...formData, businessLogo: reader.result as string });
+                                                                };
+                                                                reader.readAsDataURL(file);
+                                                            }
+                                                        }}
+                                                    />
+                                                    <label htmlFor="logo-upload" className="inline-flex px-4 py-2 border border-gray-100 bg-gray-50 hover:bg-white rounded-lg text-xs font-bold text-text-main cursor-pointer transition-colors shadow-sm active:scale-95">
+                                                        Upload Brand Logo
+                                                    </label>
+                                                    <p className="text-[10px] text-text-secondary mt-2 font-medium">PNG or SVG, max. 2MB. This will appear on your dashboard and customer tags.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-3">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Your Role at the Business</label>
                                             <div className="grid grid-cols-2 gap-3">
                                                 {['Owner', 'Manager'].map((r) => (
@@ -310,7 +348,13 @@ export default function GetStarted() {
 
                                         <div className="flex gap-4 pt-4">
                                             <button onClick={prevStep} className="h-12 px-8 border border-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">Back</button>
-                                            <button onClick={nextStep} className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all text-sm">Save & Continue</button>
+                                            <button
+                                                onClick={nextStep}
+                                                disabled={!formData.businessName || !formData.category || !formData.visitors}
+                                                className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all text-sm disabled:opacity-50"
+                                            >
+                                                Save & Continue
+                                            </button>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -325,19 +369,24 @@ export default function GetStarted() {
                                     className="space-y-8"
                                 >
                                     <div>
-                                        <h1 className="text-2xl font-display font-bold text-text-main mb-2 leading-tight tracking-tight">Main objective</h1>
-                                        <p className="text-[13px] text-text-secondary font-medium leading-relaxed">What would you like to achieve first with ElizTap?</p>
+                                        <h1 className="text-2xl font-display font-bold text-text-main mb-2 leading-tight tracking-tight">Select your objectives</h1>
+                                        <p className="text-[13px] text-text-secondary font-medium leading-relaxed">Choose one or more things you'd like to achieve with ElizTap.</p>
                                     </div>
 
                                     <div className="grid grid-cols-1 gap-3">
                                         {goals.map(g => (
                                             <button
                                                 key={g}
-                                                onClick={() => setFormData({ ...formData, goal: g })}
-                                                className={`w-full p-5 rounded-2xl border flex items-center justify-between transition-all ${formData.goal === g ? 'bg-primary/5 border-primary/20' : 'bg-gray-50 border-gray-100 hover:border-gray-200'}`}
+                                                onClick={() => {
+                                                    const newGoals = formData.goals.includes(g)
+                                                        ? formData.goals.filter(item => item !== g)
+                                                        : [...formData.goals, g];
+                                                    setFormData({ ...formData, goals: newGoals });
+                                                }}
+                                                className={`w-full p-5 rounded-2xl border flex items-center justify-between transition-all ${formData.goals.includes(g) ? 'bg-primary/5 border-primary/20' : 'bg-gray-50 border-gray-100 hover:border-gray-200'}`}
                                             >
-                                                <span className={`text-sm font-bold ${formData.goal === g ? 'text-primary' : 'text-text-main'}`}>{g}</span>
-                                                {formData.goal === g && <span className="material-icons-round text-primary">check_circle</span>}
+                                                <span className={`text-sm font-bold ${formData.goals.includes(g) ? 'text-primary' : 'text-text-main'}`}>{g}</span>
+                                                {formData.goals.includes(g) && <span className="material-icons-round text-primary">check_circle</span>}
                                             </button>
                                         ))}
                                     </div>
@@ -345,21 +394,102 @@ export default function GetStarted() {
                                     <div className="flex gap-4 pt-4">
                                         <button onClick={prevStep} className="h-12 px-8 border border-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">Back</button>
                                         <button
-                                            onClick={handleFinalize}
-                                            disabled={isLoading || !formData.goal}
-                                            className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all text-sm flex items-center justify-center gap-2"
+                                            onClick={nextStep}
+                                            disabled={formData.goals.length === 0}
+                                            className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all text-sm flex items-center justify-center gap-2 disabled:opacity-50"
                                         >
-                                            {isLoading ? (
-                                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                            ) : (
-                                                'Finalize Setup'
-                                            )}
+                                            Continue to Review
+                                            <span className="material-icons-round text-lg">arrow_forward</span>
                                         </button>
                                     </div>
                                 </motion.div>
                             )}
 
                             {step === 5 && (
+                                <motion.div
+                                    key="step5"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 20 }}
+                                    className="space-y-8"
+                                >
+                                    <div>
+                                        <h1 className="text-2xl font-display font-bold text-text-main mb-2 leading-tight tracking-tight">Review your details</h1>
+                                        <p className="text-[13px] text-text-secondary font-medium leading-relaxed">Check everything over before we create your account.</p>
+                                    </div>
+
+                                    <div className="space-y-4 bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                                        <div className="flex items-center gap-4 border-b border-gray-200 pb-4 mb-4">
+                                            <div className="size-16 rounded-xl bg-white border border-gray-200 flex items-center justify-center overflow-hidden shadow-sm">
+                                                {formData.businessLogo ? (
+                                                    <img src={formData.businessLogo} alt="Logo" className="w-full h-full object-contain p-2" />
+                                                ) : (
+                                                    <span className="material-icons-round text-gray-200 text-2xl">storefront</span>
+                                                )}
+                                            </div>
+                                            <div>
+                                                <h3 className="font-bold text-text-main">{formData.businessName}</h3>
+                                                <p className="text-[10px] font-black text-primary uppercase tracking-wider">{formData.category}</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Account Owner</p>
+                                                    <p className="text-xs font-bold text-text-main">{formData.firstName} {formData.lastName}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Email</p>
+                                                    <p className="text-xs font-bold text-text-main">{formData.email}</p>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Target Objectives</p>
+                                                <div className="flex flex-wrap gap-1.5 mt-2">
+                                                    {formData.goals.map(g => (
+                                                        <span key={g} className="px-2 py-1 bg-white border border-gray-200 rounded-lg text-[10px] font-bold text-text-main">
+                                                            {g}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-4 pt-2">
+                                                <div>
+                                                    <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Visitors Scale</p>
+                                                    <p className="text-xs font-bold text-text-main">{formData.visitors}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Role</p>
+                                                    <p className="text-xs font-bold text-text-main">{formData.role}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-4 pt-4">
+                                        <button onClick={prevStep} className="h-12 px-8 border border-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">Back</button>
+                                        <button
+                                            onClick={handleFinalize}
+                                            disabled={isLoading}
+                                            className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all text-sm flex items-center justify-center gap-2"
+                                        >
+                                            {isLoading ? (
+                                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                            ) : (
+                                                <>
+                                                    Confirm & Create Account
+                                                    <span className="material-icons-round text-lg">verified</span>
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {step === 6 && (
                                 <motion.div
                                     key="final"
                                     initial={{ opacity: 0, scale: 0.95 }}

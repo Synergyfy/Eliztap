@@ -6,7 +6,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'Features',
-    description: 'Explore the powerful features of EntryConnect: from digital lead capture and CRM integration to real-time analytics and NFC-driven automation.',
+    description: 'Explore the powerful features of ElizTap: from digital lead capture and CRM integration to real-time analytics and NFC-driven automation.',
 };
 
 export default function FeaturesPage() {

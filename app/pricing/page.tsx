@@ -6,7 +6,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'Pricing',
-    description: 'Simple, transparent pricing for growing businesses. Explore EntryConnect plans designed for every stage of your business growth.',
+    description: 'Simple, transparent pricing for growing businesses. Explore ElizTap plans designed for every stage of your business growth.',
 };
 
 export default function PricingPage() {
