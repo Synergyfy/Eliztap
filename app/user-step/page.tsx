@@ -273,6 +273,10 @@ export default function UserStepPage() {
                         onRestart={resetFlow}
                         onEngagement={handleEngagement}
                         engagementSettings={engagementSettings}
+                        socialLinks={{
+                            instagram: engagementSettings.socialUrl,
+                            // Add other placeholder or config links here
+                        }}
                     />
                 )}
 
@@ -286,7 +290,10 @@ export default function UserStepPage() {
 
                 {currentStep === 'FINAL_SUCCESS' && (
                     <StepFinalSuccess
-                        finalSuccessMessage={customSuccessMessage || config.finalSuccessMessage}
+                        customSuccessTag={useCustomerFlowStore.getState().customSuccessTag}
+                        customSuccessTitle={useCustomerFlowStore.getState().customSuccessTitle}
+                        finalSuccessMessage={useCustomerFlowStore.getState().customSuccessMessage || config.finalSuccessMessage}
+                        customSuccessButton={useCustomerFlowStore.getState().customSuccessButton}
                         onFinish={resetFlow}
                     />
                 )}

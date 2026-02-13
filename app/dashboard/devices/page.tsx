@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { Device } from '@/lib/store/mockDashboardStore';
@@ -63,16 +62,14 @@ export default function DevicesPage() {
 
     if (isLoading) {
         return (
-            <DashboardSidebar>
-                <div className="p-8 flex items-center justify-center min-h-[60vh]">
-                    <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-                </div>
-            </DashboardSidebar>
+            <div className="p-8 flex items-center justify-center min-h-[60vh]">
+                <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+            </div>
         );
     }
 
     return (
-        <DashboardSidebar>
+        <>
             <div className="p-4 md:p-8">
                 {/* Page Header */}
                 <div className="flex items-center justify-between mb-8">
@@ -199,9 +196,8 @@ export default function DevicesPage() {
                 }}
                 onSubmit={(id, updates) => updateDeviceMutation.mutate({ id, updates })}
                 onDelete={(id) => deleteDeviceMutation.mutate(id)}
-                device={selectedDevice}
                 isLoading={updateDeviceMutation.isPending || deleteDeviceMutation.isPending}
             />
-        </DashboardSidebar>
+        </>
     );
 }

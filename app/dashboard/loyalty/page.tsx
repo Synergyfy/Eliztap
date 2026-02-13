@@ -1,7 +1,6 @@
 "use client";
 
 import React from 'react';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import PageHeader from '@/components/dashboard/PageHeader';
 import { LoyaltyAnalytics } from '@/components/loyalty/admin/LoyaltyAnalytics';
 import Link from 'next/link';
@@ -48,7 +47,6 @@ const QUICK_LINKS = [
 
 export default function LoyaltyOverviewPage() {
     return (
-        <DashboardSidebar>
             <div className="p-8 space-y-10">
                 <PageHeader
                     title="Loyalty Overview"
@@ -95,6 +93,5 @@ export default function LoyaltyOverviewPage() {
                     </div>
                 </section>
             </div>
-        </DashboardSidebar>
     );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
+import React, { useState } from 'react';
 import { MessageSquare, LifeBuoy, Clock, Search, Filter, Plus, ChevronRight, HelpCircle, ShieldAlert } from 'lucide-react';
 import CreateTicketModal from '@/components/ui/CreateTicketModal';
 import { notify } from '@/lib/notify';
@@ -29,8 +29,7 @@ export default function BusinessSupportPage() {
     };
 
     return (
-        <DashboardSidebar>
-            <div className="p-8">
+        <div className="p-8">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
                     <div>
@@ -140,6 +139,6 @@ export default function BusinessSupportPage() {
                 onSubmit={handleCreateTicket}
                 userType="business"
             />
-        </DashboardSidebar>
+        </div >
     );
 }

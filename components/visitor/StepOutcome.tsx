@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { presets } from './presets';
 import { EngagementTiles } from './EngagementTiles';
+import { SocialMediaModal } from '@/components/ui/SocialMediaModal';
 
 interface StepOutcomeProps {
     config: any;
@@ -14,6 +15,7 @@ interface StepOutcomeProps {
     onRestart: () => void;
     onEngagement?: (type: 'review' | 'social' | 'feedback') => void;
     engagementSettings?: any;
+    socialLinks?: any;
 }
 
 export const StepOutcome: React.FC<StepOutcomeProps> = ({
@@ -26,8 +28,17 @@ export const StepOutcome: React.FC<StepOutcomeProps> = ({
     onFinish,
     onRestart,
     onEngagement,
-    engagementSettings
+    engagementSettings,
+    socialLinks
 }) => {
+    const [isSocialModalOpen, setIsSocialModalOpen] = React.useState(false);
+
+    const handleEngagement = (type: 'review' | 'social' | 'feedback') => {
+        if (type === 'social') {
+            setIsSocialModalOpen(true);
+        }
+        onEngagement?.(type);
+    };
     return (
         <motion.div key="outcome" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className={presets.card}>
             <div className="flex flex-col items-center text-center">
@@ -63,7 +74,7 @@ export const StepOutcome: React.FC<StepOutcomeProps> = ({
                 {/* Engagement Layer */}
                 {onEngagement && (
                     <EngagementTiles
-                        onAction={onEngagement}
+                        onAction={handleEngagement}
                         settings={engagementSettings}
                     />
                 )}
@@ -74,6 +85,12 @@ export const StepOutcome: React.FC<StepOutcomeProps> = ({
                     )}
                     <button onClick={onRestart} className="text-[10px] font-black text-gray-300 uppercase tracking-widest hover:text-red-400 transition-colors">Return to Start</button>
                 </div>
+
+                <SocialMediaModal
+                    isOpen={isSocialModalOpen}
+                    onClose={() => setIsSocialModalOpen(false)}
+                    socialLinks={socialLinks}
+                />
             </div>
         </motion.div>
     );
