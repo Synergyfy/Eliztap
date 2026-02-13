@@ -24,7 +24,16 @@ export default function DashboardSidebar({ children }: SidebarProps) {
     const router = useRouter();
     const { user, logout } = useAuthStore();
     const { storeName, logoUrl: businessLogo } = useCustomerFlowStore();
-    const [expandedMenus, setExpandedMenus] = useState<string[]>(['visitors']);
+
+    // Auto-expand the menu corresponding to the current path
+    const [expandedMenus, setExpandedMenus] = useState<string[]>(() => {
+        const pathParts = pathname.split('/');
+        // If we're in a sub-path like /dashboard/visitors/new, expand 'visitors'
+        if (pathParts.length > 2) {
+            return [pathParts[2]];
+        }
+        return ['visitors'];
+    });
     const [showNotifications, setShowNotifications] = useState(false);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const queryClient = useQueryClient();
@@ -234,7 +243,6 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                                                     <Link
                                                         key={subItem.href}
                                                         href={subItem.href}
-                                                        onClick={(e) => e.stopPropagation()}
                                                         className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(subItem.href)
                                                             ? 'bg-primary text-white'
                                                             : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
