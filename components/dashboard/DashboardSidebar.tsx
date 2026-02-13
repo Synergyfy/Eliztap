@@ -11,7 +11,7 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { Notification } from '@/lib/store/mockDashboardStore';
 import {
     Home, Users, Nfc, Send, Gift, BarChart, Users2, Settings,
-    ChevronDown, LogOut, Bell, Search, HelpCircle, Menu, X
+    ChevronDown, LogOut, Bell, Search, HelpCircle, Menu, X, Zap, MessageSquare
 } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 
@@ -24,7 +24,16 @@ export default function DashboardSidebar({ children }: SidebarProps) {
     const router = useRouter();
     const { user, logout } = useAuthStore();
     const { storeName, logoUrl: businessLogo } = useCustomerFlowStore();
-    const [expandedMenus, setExpandedMenus] = useState<string[]>(['visitors']);
+
+    // Auto-expand the menu corresponding to the current path
+    const [expandedMenus, setExpandedMenus] = useState<string[]>(() => {
+        const pathParts = pathname.split('/');
+        // If we're in a sub-path like /dashboard/visitors/new, expand 'visitors'
+        if (pathParts.length > 2) {
+            return [pathParts[2]];
+        }
+        return ['visitors'];
+    });
     const [showNotifications, setShowNotifications] = useState(false);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const queryClient = useQueryClient();
@@ -109,11 +118,31 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             ]
         },
         {
+            id: 'surveys',
+            label: 'Surveys',
+            icon: MessageSquare,
+            href: '/dashboard/surveys',
+            roles: ['owner', 'manager']
+        },
+        {
+            id: 'automations',
+            label: 'Automations',
+            icon: Zap,
+            href: '/dashboard/automations',
+            roles: ['owner', 'manager']
+        },
+        {
             id: 'loyalty',
             label: 'Loyalty',
             icon: Gift,
-            href: '/dashboard/loyalty',
-            roles: ['owner', 'manager', 'staff']
+            roles: ['owner', 'manager', 'staff'],
+            submenu: [
+                { label: 'Overview', href: '/dashboard/loyalty' },
+                { label: 'Rewards', href: '/dashboard/loyalty/rewards' },
+                { label: 'Settings', href: '/dashboard/loyalty/settings' },
+                { label: 'Customers', href: '/dashboard/loyalty/customers' },
+                { label: 'Verify', href: '/dashboard/loyalty/verify' },
+            ]
         },
         {
             id: 'analytics',
@@ -214,7 +243,6 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                                                     <Link
                                                         key={subItem.href}
                                                         href={subItem.href}
-                                                        onClick={(e) => e.stopPropagation()}
                                                         className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(subItem.href)
                                                             ? 'bg-primary text-white'
                                                             : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'

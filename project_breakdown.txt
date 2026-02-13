@@ -206,3 +206,20 @@ min-qusntity
 1-100 price:500/unit
 500-999:400/unit
 1000=> :350/unit
+
+===================================
+
+--biuussinessscammers
+--integrations with twilo and sendgrid
+--whatsaap,automayttion --premium integration,
+--lock loyalty and automation only for  premium users and update to use the service
+--admin should be able to give like one month free acess to some 
+--each nfc card is linked  to a particular bussiness
+--the link shoould be generated for all the links ,
+--now create a place for the bussines to generatee links for nfc hardware--also qr code for each link generated
+--bussiness profiles
+--bussiness can put thier profile link ,update logo
+--users should close
+
+--rules education by bussiness owner
+--once they submit thier thier  data it will automatically create the account and login eg. send an email link
