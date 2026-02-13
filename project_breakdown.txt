@@ -206,3 +206,10 @@ min-qusntity
 1-100 price:500/unit
 500-999:400/unit
 1000=> :350/unit
+
+===================================
+
+--biuussinessscammers
+
+--rules education b
+

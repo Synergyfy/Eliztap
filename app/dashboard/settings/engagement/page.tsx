@@ -35,13 +35,13 @@ export default function EngagementSettingsPage() {
 
                 <div className="max-w-4xl space-y-6">
                     {/* Capture Settings Optimization Note */}
-                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 flex gap-4">
-                        <div className="size-10 bg-blue-500 text-white rounded-xl flex items-center justify-center shrink-0">
+                    <div className="bg-primary/5 border border-primary/10 rounded-2xl p-6 flex gap-4">
+                        <div className="size-10 bg-primary text-white rounded-xl flex items-center justify-center shrink-0">
                             <Star size={20} />
                         </div>
                         <div>
-                            <h3 className="text-sm font-bold text-blue-900 mb-1">Performance Optimized</h3>
-                            <p className="text-xs text-blue-700 leading-relaxed font-medium">
+                            <h3 className="text-sm font-bold text-primary mb-1">Performance Optimized</h3>
+                            <p className="text-xs text-text-secondary leading-relaxed font-medium">
                                 Your capture form is currently set to "High-Speed" mode (Name + Phone/Email).
                                 Load times are under 800ms to ensure maximum conversion.
                             </p>
@@ -50,13 +50,13 @@ export default function EngagementSettingsPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Review Tile */}
-                        <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
+                        <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4 shadow-sm hover:border-primary/10 transition-all">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <div className="size-10 bg-amber-50 text-amber-500 rounded-xl flex items-center justify-center">
                                         <Star size={20} />
                                     </div>
-                                    <h3 className="font-bold text-slate-900">Review Tile</h3>
+                                    <h3 className="font-bold text-text-main">Review Tile</h3>
                                 </div>
                                 <Toggle
                                     active={localSettings.showReview}
@@ -64,16 +64,16 @@ export default function EngagementSettingsPage() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Google Review URL</label>
+                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Google Review URL</label>
                                 <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
                                         <LinkIcon size={14} />
                                     </div>
                                     <input
                                         type="url"
                                         value={localSettings.reviewUrl}
                                         onChange={(e) => setLocalSettings({ ...localSettings, reviewUrl: e.target.value })}
-                                        className="w-full h-10 pl-9 pr-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-xs font-medium"
+                                        className="w-full h-10 pl-9 pr-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-xs font-medium"
                                         placeholder="https://g.page/r/your-id/review"
                                     />
                                 </div>
@@ -81,13 +81,13 @@ export default function EngagementSettingsPage() {
                         </div>
 
                         {/* Social Tile */}
-                        <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
+                        <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4 shadow-sm hover:border-primary/10 transition-all">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <div className="size-10 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center">
                                         <Share2 size={20} />
                                     </div>
-                                    <h3 className="font-bold text-slate-900">Social Tile</h3>
+                                    <h3 className="font-bold text-text-main">Social Tile</h3>
                                 </div>
                                 <Toggle
                                     active={localSettings.showSocial}
@@ -95,16 +95,16 @@ export default function EngagementSettingsPage() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Instagram/Twitter URL</label>
+                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Instagram/Twitter URL</label>
                                 <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
                                         <LinkIcon size={14} />
                                     </div>
                                     <input
                                         type="url"
                                         value={localSettings.socialUrl}
                                         onChange={(e) => setLocalSettings({ ...localSettings, socialUrl: e.target.value })}
-                                        className="w-full h-10 pl-9 pr-4 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-xs font-medium"
+                                        className="w-full h-10 pl-9 pr-4 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-xs font-medium"
                                         placeholder="https://instagram.com/your-id"
                                     />
                                 </div>
@@ -112,32 +112,32 @@ export default function EngagementSettingsPage() {
                         </div>
 
                         {/* Survey Tile */}
-                        <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
+                        <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4 shadow-sm hover:border-primary/10 transition-all">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <div className="size-10 bg-purple-50 text-purple-500 rounded-xl flex items-center justify-center">
                                         <MessageCircle size={20} />
                                     </div>
-                                    <h3 className="font-bold text-slate-900">Survey Tile</h3>
+                                    <h3 className="font-bold text-text-main">Survey Tile</h3>
                                 </div>
                                 <Toggle
                                     active={localSettings.showFeedback}
                                     onChange={(val: boolean) => setLocalSettings({ ...localSettings, showFeedback: val })}
                                 />
                             </div>
-                            <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
+                            <p className="text-[10px] text-text-secondary font-medium leading-relaxed">
                                 Collect quick feedback after capture. Configure questions in the <span className="text-primary font-bold cursor-pointer">Survey Builder</span>.
                             </p>
                         </div>
 
                         {/* Rewards Tile (Future) */}
-                        <div className="bg-slate-50 rounded-2xl border border-dashed border-slate-200 p-6 opacity-60">
+                        <div className="bg-gray-50 rounded-2xl border border-dashed border-gray-200 p-6 opacity-60">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <div className="size-10 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center">
                                         <Trophy size={20} />
                                     </div>
-                                    <h3 className="font-bold text-slate-900">Loyalty Rewards</h3>
+                                    <h3 className="font-bold text-text-main">Loyalty Rewards</h3>
                                 </div>
                                 <span className="text-[8px] font-black uppercase tracking-widest bg-emerald-100 text-emerald-600 px-2 py-1 rounded">Coming Soon</span>
                             </div>

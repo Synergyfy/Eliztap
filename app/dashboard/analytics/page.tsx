@@ -15,10 +15,10 @@ import { useQuery } from '@tanstack/react-query';
 import { dashboardApi } from '@/lib/api/dashboard';
 
 const STATS = [
-    { label: 'Total Visits', value: '12,842', trend: '+14%', isUp: true, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'New Customers', value: '4,120', trend: '+22%', isUp: true, icon: Zap, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { label: 'Total Visits', value: '12,842', trend: '+14%', isUp: true, icon: Users, color: 'text-primary', bg: 'bg-primary/5' },
+    { label: 'New Customers', value: '4,120', trend: '+22%', isUp: true, icon: Zap, color: 'text-emerald-500', bg: 'bg-emerald-50' },
     { label: 'Avg. Stay Time', value: '42m', trend: '-2%', isUp: false, icon: Clock, color: 'text-purple-600', bg: 'bg-purple-50' },
-    { label: 'Repeat Rate', value: '68%', trend: '+5%', isUp: true, icon: TrendingUp, color: 'text-amber-600', bg: 'bg-amber-50' },
+    { label: 'Repeat Rate', value: '68%', trend: '+5%', isUp: true, icon: TrendingUp, color: 'text-amber-500', bg: 'bg-amber-50' },
 ];
 
 const PEAK_TIMES = [
@@ -58,10 +58,10 @@ export default function AnalyticsDashboardPage() {
                     <div className="flex items-center gap-3">
                         <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-gray-100 shadow-sm">
                             <button className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-primary bg-primary/5 rounded-lg transition-all">7D</button>
-                            <button className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 rounded-lg transition-all">30D</button>
-                            <button className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 rounded-lg transition-all">90D</button>
+                            <button className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-text-secondary hover:text-text-main rounded-lg transition-all">30D</button>
+                            <button className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-text-secondary hover:text-text-main rounded-lg transition-all">90D</button>
                         </div>
-                        <button className="flex items-center gap-2 px-4 py-2.5 bg-slate-900 text-white font-black uppercase tracking-widest text-[10px] rounded-xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10">
+                        <button className="flex items-center gap-2 px-4 py-2.5 bg-text-main text-white font-black uppercase tracking-widest text-[10px] rounded-xl hover:bg-black transition-all shadow-lg shadow-text-main/10">
                             <Download size={14} />
                             Export
                         </button>
@@ -76,7 +76,7 @@ export default function AnalyticsDashboardPage() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.1 }}
-                            className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all group"
+                            className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all group"
                         >
                             <div className="flex items-start justify-between mb-4">
                                 <div className={`size-12 rounded-2xl ${stat.bg} ${stat.color} flex items-center justify-center transition-transform group-hover:scale-110`}>
@@ -87,18 +87,18 @@ export default function AnalyticsDashboardPage() {
                                     {stat.trend}
                                 </div>
                             </div>
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1">{stat.label}</p>
-                            <h3 className="text-3xl font-black italic tracking-tight text-slate-900">{stat.value}</h3>
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary mb-1">{stat.label}</p>
+                            <h3 className="text-3xl font-black italic tracking-tight text-text-main">{stat.value}</h3>
                         </motion.div>
                     ))}
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Hourly Traffic Chart */}
-                    <div className="lg:col-span-2 bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden">
+                    <div className="lg:col-span-2 bg-white p-8 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden">
                         <div className="relative z-10">
-                            <h4 className="text-xl font-black italic mb-2 tracking-tight">Peak Traffic Times</h4>
-                            <p className="text-sm text-slate-400 font-medium mb-12">Identify your busiest hours to optimize staffing</p>
+                            <h4 className="text-xl font-black italic mb-2 tracking-tight text-text-main">Peak Traffic Times</h4>
+                            <p className="text-sm text-text-secondary font-medium mb-12">Identify your busiest hours to optimize staffing</p>
 
                             <div className="flex items-end justify-between gap-4 h-64">
                                 {PEAK_TIMES.map((t, i) => (
@@ -107,7 +107,7 @@ export default function AnalyticsDashboardPage() {
                                             <motion.div
                                                 initial={{ height: 0 }}
                                                 animate={{ height: `${t.value}%` }}
-                                                className="w-full bg-slate-900 rounded-2xl relative overflow-hidden group-hover:bg-primary transition-colors cursor-pointer"
+                                                className="w-full bg-text-main rounded-xl relative overflow-hidden group-hover:bg-primary transition-colors cursor-pointer"
                                             >
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                                             </motion.div>
@@ -115,7 +115,7 @@ export default function AnalyticsDashboardPage() {
                                                 <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-primary text-white text-[8px] font-black py-1 px-2 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-widest shadow-lg">Peak Hour</div>
                                             )}
                                         </div>
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t.hour}</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-text-secondary">{t.hour}</span>
                                     </div>
                                 ))}
                             </div>
@@ -124,7 +124,7 @@ export default function AnalyticsDashboardPage() {
 
                     {/* Engagement Metrics */}
                     <div className="space-y-6">
-                        <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white relative overflow-hidden">
+                        <div className="bg-text-main p-8 rounded-2xl text-white relative overflow-hidden">
                             <Star className="absolute -right-6 -top-6 size-40 text-white/5 rotate-12" />
                             <h4 className="text-xl font-black italic mb-6 tracking-tight relative z-10">Engagement Quality</h4>
                             <div className="space-y-6 relative z-10">
@@ -158,8 +158,8 @@ export default function AnalyticsDashboardPage() {
                             </div>
                         </div>
 
-                        <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm">
-                            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-6">Top Performers</h4>
+                        <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-text-secondary mb-6">Top Performers</h4>
                             <div className="space-y-4">
                                 {[
                                     { label: 'Review Collection', icon: Share2, color: 'text-blue-500' },
@@ -168,12 +168,12 @@ export default function AnalyticsDashboardPage() {
                                 ].map((item, i) => (
                                     <div key={i} className="flex items-center justify-between group cursor-pointer">
                                         <div className="flex items-center gap-3">
-                                            <div className="size-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-primary/5 group-hover:text-primary transition-all">
+                                            <div className="size-10 rounded-xl bg-gray-50 flex items-center justify-center text-text-secondary group-hover:bg-primary/5 group-hover:text-primary transition-all">
                                                 <item.icon size={18} />
                                             </div>
-                                            <span className="text-xs font-bold text-slate-600 group-hover:text-slate-900 transition-all">{item.label}</span>
+                                            <span className="text-xs font-bold text-text-secondary group-hover:text-text-main transition-all">{item.label}</span>
                                         </div>
-                                        <ArrowUpRight size={14} className="text-slate-300 group-hover:text-primary transition-all" />
+                                        <ArrowUpRight size={14} className="text-gray-300 group-hover:text-primary transition-all" />
                                     </div>
                                 ))}
                             </div>
