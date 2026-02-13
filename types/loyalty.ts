@@ -68,9 +68,10 @@ export interface Reward {
 
 export interface Redemption {
   id: string;
+  userId: string;
   loyaltyProfileId: string;
   rewardId: string;
-  reward?: Reward; // populated
+  reward?: Reward; 
   redemptionCode: string;
   pointsSpent: number;
   status: RedemptionStatus;

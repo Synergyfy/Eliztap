@@ -16,6 +16,7 @@ export const RedemptionVerifier: React.FC<{ className?: string }> = ({ className
     const [code, setCode] = useState('');
     const [isValidating, setIsValidating] = useState(false);
     const [result, setResult] = useState<{
+        userId?: string;
         success: boolean;
         redemption?: Redemption;
         reward?: Reward;
