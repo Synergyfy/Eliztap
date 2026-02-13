@@ -248,6 +248,8 @@ export const loyaltyApi = {
       value: reward.value || 0,
       validityDays: reward.validityDays || 30,
       isActive: true,
+      usageLimitPerUser: reward.usageLimitPerUser || 1, // PRD Section 7.2 requirement
+  totalRedeemed: 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
