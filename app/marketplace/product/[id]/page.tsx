@@ -17,6 +17,28 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { useQuoteStore } from '@/store/quoteStore';
 import { calculateQuotePrice } from '@/lib/utils/calculateQuotePrice';
 
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const product = await fetchProductDetail(id);
+
+    if (!product) {
+        return {
+            title: 'Product Not Found | VemTap Market',
+            description: 'The requested product could not be found.'
+        };
+    }
+
+    return {
+        title: `${product.name} | VemTap Market`,
+        description: product.description || `Buy ${product.name} at the best price on VemTap Market.`,
+        openGraph: {
+            title: `${product.name} | VemTap Market`,
+            description: product.description,
+            images: product.images || []
+        }
+    };
+}
+
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
     const { id } = React.use(params);
@@ -162,11 +184,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
                 <div className="max-w-[1400px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-8">
                     <div className="flex items-center gap-12">
-                        <Link href="/" className="flex items-center gap-2 group">
-                            <div className="w-12 h-12 flex items-center justify-center transition-all duration-300">
-                                <span className="material-icons-round text-primary text-4xl select-none">nfc</span>
+                        <Link href="/" className="flex items-center gap-3 group">
+                            <div className="w-14 h-14 flex items-center justify-center transition-all duration-300">
+                                <span className="material-icons-round text-primary text-5xl select-none">nfc</span>
                             </div>
-                            <span className="font-display font-bold text-xl tracking-tight text-slate-900">
+                            <span className="font-display font-bold text-2xl tracking-tight text-slate-900">
                                 VemTap<span className="text-primary">.Market</span>
                             </span>
                         </Link>
@@ -193,7 +215,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     {/* Left Column: Images */}
                     <div className="lg:col-span-7 space-y-6">
-                        <div className="aspect-square bg-white rounded-3xl border border-slate-200 overflow-hidden relative group shadow-sm">
+                        <div className="aspect-square bg-white rounded-2xl border border-slate-200 overflow-hidden relative group shadow-sm">
                             <div className="h-full w-full" ref={emblaRef}>
                                 <div className="flex h-full">
                                     {product.images.map((img: string, i: number) => (
@@ -283,7 +305,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         </div>
 
                         {/* Pricing Tiers */}
-                        <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 space-y-4">
+                        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4">
                             <h4 className="text-sm font-bold text-slate-600 uppercase tracking-wider">Volume Pricing</h4>
                             <div className="space-y-2">
                                 {product.tieredPricing?.map((tier: any, index: number) => (
@@ -300,7 +322,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         </div>
 
                         {/* Minimum Order Display */}
-                        <div className="bg-primary/5 p-6 rounded-3xl border border-primary/10 space-y-4 shadow-sm">
+                        <div className="bg-primary/5 p-6 rounded-2xl border border-primary/10 space-y-4 shadow-sm">
                             <div className="flex items-center justify-between">
                                 <span className="text-sm font-bold text-slate-600 uppercase tracking-wider">Minimum Quantity</span>
                                 <span className="text-2xl font-black text-primary">{product.moq || product.tieredPricing?.[0]?.minQuantity || 1} Pieces</span>
@@ -309,7 +331,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 <span className="text-sm font-bold text-slate-600 uppercase tracking-wider">Unit Price</span>
                                 <div className="flex items-baseline gap-1">
                                     <span className="text-2xl font-black text-slate-900">₦{product.price.toLocaleString()}</span>
-                                    <span className="text-xs text-slate-500 font-bold lowercase">/ unit</span>
+                                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">/ unit</span>
                                 </div>
                             </div>
                             <button
@@ -322,7 +344,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         </div>
 
                         {/* Low MOQ Quote */}
-                        <div className="bg-amber-50 p-6 rounded-3xl border border-amber-200 space-y-3">
+                        <div className="bg-amber-50 p-6 rounded-2xl border border-amber-200 space-y-3">
                             <h4 className="text-sm font-bold text-amber-900 uppercase tracking-wider">Need Less Than {product.tieredPricing?.[0]?.minQuantity || 1} Units?</h4>
                             <p className="text-sm text-amber-800 font-medium">Contact us for special pricing on smaller quantities</p>
                             <div className="flex items-center gap-2 text-sm font-bold text-amber-900">
@@ -391,7 +413,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             </div>
                                             <h3 className="text-2xl font-bold text-slate-900">Product Demonstration</h3>
                                         </div>
-                                        <div className="relative aspect-video bg-slate-900 rounded-3xl overflow-hidden group border border-slate-200">
+                                        <div className="relative aspect-video bg-slate-100 rounded-2xl overflow-hidden group border border-slate-200">
                                             <video
                                                 src="/assets/videos/VemTap_Video.mp4"
                                                 autoPlay
@@ -432,7 +454,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                             {activeTab === 'quote' && (
                                 <section className="animate-in slide-in-from-bottom-4 duration-500 space-y-6">
-                                    <div className="bg-slate-50 p-8 border border-slate-200 rounded-3xl">
+                                    <div className="bg-slate-50 p-8 border border-slate-200 rounded-2xl">
                                         <h3 className="text-2xl font-bold text-slate-900 mb-2">Bulk Pricing Request</h3>
                                         <p className="text-slate-600 mb-8">Fill in the details below and our hardware team will reach out with customized pricing for {product.name}.</p>
 
@@ -571,7 +593,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     </div>
 
                                     {/* Add Review Form */}
-                                    <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm">
+                                    <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
                                         <h4 className="text-lg font-bold text-slate-900 mb-4">Write a Review</h4>
                                         <form onSubmit={(e) => {
                                             e.preventDefault();
@@ -638,7 +660,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                     {/* Right / Sidebar removal placeholder - now spanning 8/12 grid but we can adjust to centered if needed or just keep empty */}
                     <div className="hidden lg:block lg:col-span-4">
-                        <div className="bg-primary/5 p-8 border border-primary/10 space-y-6 rounded-3xl">
+                        <div className="bg-primary/5 p-8 border border-primary/10 space-y-6 rounded-2xl">
                             <Headset size={40} className="text-primary" />
                             <h4 className="text-xl font-bold text-slate-900">Need Customization?</h4>
                             <p className="text-sm text-slate-600 font-medium">Our hardware team specializes in custom NFC builds for large-scale enterprise deployments.</p>
@@ -696,7 +718,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             {isQuoteModalOpen && (
                 <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsQuoteModalOpen(false)}></div>
-                    <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col md:flex-row">
+                    <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col md:flex-row">
                         {/* Signup Suggestion Side Panel */}
                         {!user && (
                             <div className="w-full md:w-80 bg-primary/5 p-8 border-b md:border-b-0 md:border-r border-primary/10 flex flex-col justify-center">
@@ -807,11 +829,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         value={quoteData.notes}
                                         onChange={(e) => setQuoteData({ ...quoteData, notes: e.target.value })}
                                         placeholder="Any specific requirements?"
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-none focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 outline-none font-medium resize-none"
                                     ></textarea>
                                 </div>
                                 <div className="pt-2">
-                                    <button type="submit" className="w-full py-4 bg-primary text-white font-bold rounded-none hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
+                                    <button type="submit" className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
                                         Submit Request
                                     </button>
                                 </div>
