@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import React from 'react';
 import PageHeader from '@/components/dashboard/PageHeader';
 
 export default function PrivacySettingsPage() {
@@ -80,6 +79,5 @@ export default function PrivacySettingsPage() {
                 </div>
             </div>
         </div>
-        </div >
     );
 }

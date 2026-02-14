@@ -1,52 +1,13 @@
 "use client";
 
-import React from 'react';
-import PageHeader from '@/components/dashboard/PageHeader';
-import { LoyaltyAnalytics } from '@/components/loyalty/admin/LoyaltyAnalytics';
-import Link from 'next/link';
-import {
-    Settings, Gift, Users, ShieldCheck,
-    ArrowRight, ExternalLink
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-
-const QUICK_LINKS = [
-    {
-        title: 'Program Settings',
-        description: 'Configure earning rules, base points, and cooldowns.',
-        href: '/dashboard/loyalty/settings',
-        icon: Settings,
-        color: 'text-blue-600',
-        bgColor: 'bg-blue-50'
-    },
-    {
-        title: 'Reward Manager',
-        description: 'Create and manage your business reward catalog.',
-        href: '/dashboard/loyalty/rewards',
-        icon: Gift,
-        color: 'text-primary',
-        bgColor: 'bg-primary/5'
-    },
-    {
-        title: 'Member Directory',
-        description: 'View customer balances and tier distributions.',
-        href: '/dashboard/loyalty/customers',
-        icon: Users,
-        color: 'text-emerald-600',
-        bgColor: 'bg-emerald-50'
-    },
-    {
-        title: 'Terminal Verifier',
-        description: 'Securely validate customer reward codes.',
-        href: '/dashboard/loyalty/verify',
-        icon: ShieldCheck,
-        color: 'text-slate-900',
-        bgColor: 'bg-slate-100'
-    },
-];
+import PremiumFeatureWrapper from '@/components/dashboard/PremiumFeatureWrapper';
 
 export default function LoyaltyOverviewPage() {
     return (
+        <PremiumFeatureWrapper
+            featureName="Loyalty Program"
+            description="Build customer retention with points, tiers, and exclusive rewards."
+        >
             <div className="p-8 space-y-10">
                 <PageHeader
                     title="Loyalty Overview"
@@ -93,5 +54,7 @@ export default function LoyaltyOverviewPage() {
                     </div>
                 </section>
             </div>
+        </PremiumFeatureWrapper>
     );
 }
+

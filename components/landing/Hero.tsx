@@ -40,7 +40,7 @@ export default function Hero() {
                     {/* Right Column: Video Showcase (Portrait Refined) */}
                     <div className="relative animate-in fade-in slide-in-from-right-32 duration-1000 delay-200 flex justify-center lg:justify-end">
                         <div className="relative w-full max-w-[320px] p-3 bg-gray-50/50 rounded-[2.5rem] border border-gray-100 shadow-sm">
-                            <div className="relative aspect-[9/16] bg-gray-900 rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-gray-900">
+                            <div className="relative aspect-9/16 bg-gray-900 rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-gray-900">
                                 <video
                                     autoPlay
                                     loop
@@ -48,7 +48,7 @@ export default function Hero() {
                                     playsInline
                                     className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity duration-700"
                                 >
-                                    <source src="/assets/videos/ElizTap_Video.mp4" type="video/mp4" />
+                                    <source src="/assets/videos/VemTap_Video.mp4" type="video/mp4" />
                                 </video>
                                 <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
                             </div>

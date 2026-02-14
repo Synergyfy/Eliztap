@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
-import React, { useState, useEffect, Suspense } from 'react';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
 import DataTable, { Column } from '@/components/dashboard/DataTable';
@@ -261,6 +260,5 @@ export default function AllMessagesPage() {
                 <MessagesContent />
             </Suspense>
         </div>
-        </div >
     );
 }

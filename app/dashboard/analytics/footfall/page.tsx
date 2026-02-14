@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import React from 'react';
 import PageHeader from '@/components/dashboard/PageHeader';
 import StatsCard from '@/components/dashboard/StatsCard';
 import ChartCard from '@/components/dashboard/ChartCard';
@@ -119,6 +118,5 @@ export default function FootfallReportsPage() {
                 </ChartCard>
             </div>
         </div>
-        </div >
     );
 }

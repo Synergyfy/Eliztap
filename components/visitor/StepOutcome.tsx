@@ -13,7 +13,7 @@ interface StepOutcomeProps {
     onDownload: () => void;
     onFinish: () => void;
     onRestart: () => void;
-    onEngagement?: (type: 'review' | 'social' | 'feedback') => void;
+    onEngagement?: (type: 'review' | 'social' | 'feedback' | 'rewards') => void;
     engagementSettings?: any;
     socialLinks?: any;
 }
@@ -33,7 +33,7 @@ export const StepOutcome: React.FC<StepOutcomeProps> = ({
 }) => {
     const [isSocialModalOpen, setIsSocialModalOpen] = React.useState(false);
 
-    const handleEngagement = (type: 'review' | 'social' | 'feedback') => {
+    const handleEngagement = (type: 'review' | 'social' | 'feedback' | 'rewards') => {
         if (type === 'social') {
             setIsSocialModalOpen(true);
         }
@@ -42,10 +42,10 @@ export const StepOutcome: React.FC<StepOutcomeProps> = ({
     return (
         <motion.div key="outcome" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className={presets.card}>
             <div className="flex flex-col items-center text-center">
-                <div className="size-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-8 shadow-inner">
-                    <span className="material-symbols-outlined text-4xl">{config.specificIcon}</span>
+                <div className="size-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                    <span className="material-symbols-outlined text-4xl">check_circle</span>
                 </div>
-                <h1 className={presets.title}>{customSuccessMessage || config.outcomeTitle}</h1>
+                <h1 className={presets.title}>{customSuccessMessage || "Visit recorded successfully!"}</h1>
                 <p className={`${presets.body} mt-4 mb-4`}>{config.outcomeDesc}</p>
 
                 {hasRewardSetup && (

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import React, { useState } from 'react';
 import PageHeader from '@/components/dashboard/PageHeader';
 import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
 import { toast } from 'react-hot-toast';
@@ -138,7 +137,7 @@ export default function SurveyBuilderPage() {
                     )}
 
                     {activeTab === 'settings' && (
-                        <div className="bg-white rounded-2xl border border-gray-200 p-8 space-y-8">
+                        <div className="bg-white rounded-4xl border border-gray-100 p-8 shadow-2xl shadow-primary/5 sticky top-8">
                             <div className="space-y-4">
                                 <h3 className="text-sm font-black uppercase tracking-widest text-text-main">Trigger Conditions</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -204,7 +203,7 @@ export default function SurveyBuilderPage() {
                         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary mb-4 ml-6">Live Preview</h3>
                         <div className="w-[300px] h-[600px] bg-text-main rounded-[3rem] p-4 border-8 border-gray-900 shadow-2xl relative overflow-hidden">
                             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-2xl z-20" />
-                            <div className="bg-white w-full h-full rounded-[2rem] overflow-hidden flex flex-col p-6 pt-10 text-center">
+                            <div className="bg-white w-full h-full rounded-4xl overflow-hidden flex flex-col p-6 pt-10 text-center">
                                 <div className="size-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
                                     <span className="material-symbols-outlined text-3xl">chat_bubble</span>
                                 </div>
@@ -259,6 +258,5 @@ export default function SurveyBuilderPage() {
                 </div>
             </div>
         </div>
-        </div >
     );
 }

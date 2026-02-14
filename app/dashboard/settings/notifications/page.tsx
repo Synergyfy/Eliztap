@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import React from 'react';
 import PageHeader from '@/components/dashboard/PageHeader';
 
 export default function NotificationsPage() {
@@ -74,6 +73,5 @@ export default function NotificationsPage() {
                 </div>
             </div>
         </div>
-        </div >
     );
 }

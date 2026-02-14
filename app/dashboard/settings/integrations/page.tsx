@@ -58,6 +58,5 @@ export default function IntegrationsPage() {
                 </div>
             </div>
         </div>
-        </div >
     );
 }
