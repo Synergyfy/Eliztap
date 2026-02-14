@@ -170,6 +170,13 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             roles: ['owner']
         },
         {
+            id: 'nfc-manager',
+            label: 'NFC Manager',
+            icon: Smartphone,
+            href: '/dashboard/nfc-manager',
+            roles: ['owner', 'manager']
+        },
+        {
             id: 'settings',
             label: 'Settings',
             icon: Settings,
