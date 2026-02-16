@@ -177,9 +177,17 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             roles: ['owner', 'manager']
         },
         {
+            id: 'agent-hub',
+            label: 'Support Agent Hub',
+            icon: HelpCircle,
+            href: '/dashboard/agent',
+            roles: ['owner', 'manager', 'staff']
+        },
+        {
             id: 'settings',
             label: 'Settings',
             icon: Settings,
+            href: '/dashboard/settings', // Shared entry point
             roles: ['owner', 'manager'],
             submenu: [
                 { label: 'Profile', href: '/dashboard/settings/profile' },

@@ -12,6 +12,9 @@ export interface ChatMessage {
   content: string;
 }
 
+// Simple in-memory cache for AI responses
+const responseCache = new Map<string, string>();
+
 export async function generateChatResponse(messages: ChatMessage[], context?: string): Promise<string> {
   // 1. Check if we have an API key. If not, use rule-based fallback.
   if (!process.env.OPENAI_API_KEY) {
@@ -21,11 +24,18 @@ export async function generateChatResponse(messages: ChatMessage[], context?: st
 
   // 2. Extract the latest user message
   const lastUserMessage = messages[messages.length - 1].content;
+  const normalizedQuery = lastUserMessage.toLowerCase().trim();
 
-  // 3. Search Knowledge Base for relevant info
+  // 3. AI Cost Optimization: Use Caching for frequent/exact questions
+  if (responseCache.has(normalizedQuery)) {
+    console.log("Serving response from cache:", normalizedQuery);
+    return responseCache.get(normalizedQuery)!;
+  }
+
+  // 4. Search Knowledge Base for relevant info
   const knowledge = searchKnowledgeBase(lastUserMessage);
 
-  // 4. Construct System Prompt
+  // 5. Construct System Prompt
   const systemPrompt = `You are the VemTap AI Assistant, a helpful and friendly bot for the VemTap Visitor Engagement Platform.
   
   Your goal is to assist users with platform questions, troubleshooting, and guidance.
@@ -44,18 +54,29 @@ export async function generateChatResponse(messages: ChatMessage[], context?: st
   - Format your response with clear paragraphs or bullet points if needed.
   `;
 
+  // 6. AI Cost Optimization: Limit session history to last 5 messages
+  const historyLimit = 5;
+  const limitedMessages = messages.slice(-historyLimit);
+
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o-mini", // GPT-4o-mini is efficient and high-quality for majority of tasks
       messages: [
         { role: 'system', content: systemPrompt },
-        ...messages
+        ...limitedMessages
       ],
       temperature: 0.7,
       max_tokens: 300,
     });
 
-    return completion.choices[0].message.content || "I apologize, but I couldn't generate a response at the moment.";
+    const response = completion.choices[0].message.content || "I apologize, but I couldn't generate a response at the moment.";
+    
+    // Save to cache if it's a short, high-confidence response
+    if (response.length < 500) {
+      responseCache.set(normalizedQuery, response);
+    }
+
+    return response;
   } catch (error) {
     console.error("OpenAI API Error:", error);
     return "I'm having trouble connecting to my brain right now. Please try again in a moment, or contact support if the issue persists.";

@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { X, Send, Minimize2, Maximize2, MessageCircle, User, Bot, Loader2, Headset } from 'lucide-react';
+import { X, Send, Minimize2, Maximize2, MessageCircle, User, Bot, Loader2, Headset, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useChatStore } from '@/store/chatStore';
 
 interface Message {
     id: string;
@@ -18,20 +19,23 @@ interface SupportChatbotProps {
 
 export default function SupportChatbot({ onRequestConsultation }: SupportChatbotProps) {
     const pathname = usePathname();
+    const { history, addMessage, clearHistory } = useChatStore();
     const [isOpen, setIsOpen] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false);
-    const [messages, setMessages] = useState<Message[]>([
-        {
-            id: '1',
-            text: 'Hi! 👋 I\'m your VemTap AI assistant. How can I help you today?',
-            sender: 'bot',
-            timestamp: new Date()
-        }
-    ]);
     const [inputValue, setInputValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [handedToAgent, setHandedToAgent] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // Initial greeting if history is empty
+    useEffect(() => {
+        if (history.length === 0) {
+            addMessage({
+                role: 'assistant',
+                content: 'Hi! 👋 I\'m your VemTap AI assistant. How can I help you today?'
+            });
+        }
+    }, [history.length, addMessage]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -39,7 +43,7 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages, isLoading]);
+    }, [history, isLoading]);
 
     const handleSendMessage = async () => {
         if (!inputValue.trim() || isLoading) return;
@@ -47,14 +51,10 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
         const userText = inputValue;
         setInputValue('');
 
-        const userMessage: Message = {
-            id: Date.now().toString(),
-            text: userText,
-            sender: 'user',
-            timestamp: new Date()
-        };
-
-        setMessages(prev => [...prev, userMessage]);
+        addMessage({
+            role: 'user',
+            content: userText
+        });
         setIsLoading(true);
 
         try {
@@ -69,9 +69,9 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    messages: messages.concat(userMessage).map(m => ({
-                        role: m.sender === 'user' ? 'user' : 'assistant',
-                        content: m.text
+                    messages: history.concat({ role: 'user', content: userText, timestamp: Date.now() }).map(m => ({
+                        role: m.role,
+                        content: m.content
                     })),
                     context
                 })
@@ -81,16 +81,11 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
 
             if (data.error) throw new Error(data.error);
 
-            const botMessage: Message = {
-                id: (Date.now() + 1).toString(),
-                text: data.content,
-                sender: 'bot',
-                timestamp: new Date()
-            };
+            addMessage({
+                role: 'assistant',
+                content: data.content
+            });
 
-            setMessages(prev => [...prev, botMessage]);
-
-            // Check for escalation triggers in response (simple heuristic)
             // Check for escalation triggers in response (simple heuristic)
             if (data.content.toLowerCase().includes('connect you with a human') ||
                 data.content.toLowerCase().includes('agent')) {
@@ -99,13 +94,10 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
 
         } catch (error) {
             console.error(error);
-            const errorMessage: Message = {
-                id: (Date.now() + 1).toString(),
-                text: "I'm having trouble connecting right now. Please try again or contact support if the issue persists.",
-                sender: 'bot',
-                timestamp: new Date()
-            };
-            setMessages(prev => [...prev, errorMessage]);
+            addMessage({
+                role: 'assistant',
+                content: "I'm having trouble connecting right now. Please try again or contact support if the issue persists."
+            });
         } finally {
             setIsLoading(false);
         }
@@ -143,16 +135,11 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
     const handleQuickActionSend = async (text: string) => {
         if (isLoading) return;
 
-        const userMessage: Message = {
-            id: Date.now().toString(),
-            text: text,
-            sender: 'user',
-            timestamp: new Date()
-        };
-
-        setMessages(prev => [...prev, userMessage]);
+        addMessage({
+            role: 'user',
+            content: text
+        });
         setIsLoading(true);
-        // ... duplicate logic or refactor. For now, simple implementation:
 
         try {
             let context = "General";
@@ -162,29 +149,23 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    messages: messages.concat(userMessage).map(m => ({
-                        role: m.sender === 'user' ? 'user' : 'assistant',
-                        content: m.text
+                    messages: history.concat({ role: 'user', content: text, timestamp: Date.now() }).map(m => ({
+                        role: m.role,
+                        content: m.content
                     })),
                     context
                 })
             });
             const data = await response.json();
-            const botMessage: Message = {
-                id: (Date.now() + 1).toString(),
-                text: data.content || "Sorry, I couldn't understand that.",
-                sender: 'bot',
-                timestamp: new Date()
-            };
-            setMessages(prev => [...prev, botMessage]);
+            addMessage({
+                role: 'assistant',
+                content: data.content || "Sorry, I couldn't understand that."
+            });
         } catch (e) {
-            const errorMessage: Message = {
-                id: (Date.now() + 1).toString(),
-                text: "Network error. Please try again.",
-                sender: 'bot',
-                timestamp: new Date()
-            };
-            setMessages(prev => [...prev, errorMessage]);
+            addMessage({
+                role: 'assistant',
+                content: "Network error. Please try again."
+            });
         } finally {
             setIsLoading(false);
         }
@@ -248,6 +229,13 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
 
                             <div className="flex items-center gap-1">
                                 <button
+                                    onClick={() => clearHistory()}
+                                    className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"
+                                    title="Clear Chat"
+                                >
+                                    <Trash2 size={18} />
+                                </button>
+                                <button
                                     onClick={() => setIsFullScreen(!isFullScreen)}
                                     className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"
                                 >
@@ -264,26 +252,26 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
 
                         {/* Messages Area */}
                         <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-                            {messages.map((message) => (
+                            {history.map((message, idx) => (
                                 <motion.div
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    key={message.id}
-                                    className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                                    key={idx}
+                                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                                 >
-                                    <div className={`flex max-w-[85%] ${message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'} gap-2`}>
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${message.sender === 'user' ? 'bg-blue-600' : 'bg-gray-200'}`}>
-                                            {message.sender === 'user' ? <User size={14} className="text-white" /> : <Bot size={14} className="text-gray-600" />}
+                                    <div className={`flex max-w-[85%] ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'} gap-2`}>
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${message.role === 'user' ? 'bg-blue-600' : 'bg-gray-200'}`}>
+                                            {message.role === 'user' ? <User size={14} className="text-white" /> : <Bot size={14} className="text-gray-600" />}
                                         </div>
                                         <div
-                                            className={`rounded-2xl px-4 py-3 shadow-sm ${message.sender === 'user'
+                                            className={`rounded-2xl px-4 py-3 shadow-sm ${message.role === 'user'
                                                 ? 'bg-blue-600 text-white rounded-tr-none'
                                                 : 'bg-white text-gray-800 border border-gray-100 rounded-tl-none'
                                                 }`}
                                         >
-                                            <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
-                                            <p className={`text-[10px] mt-1 text-right ${message.sender === 'user' ? 'text-blue-100' : 'text-gray-400'}`}>
-                                                {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                                            <p className={`text-[10px] mt-1 text-right ${message.role === 'user' ? 'text-blue-100' : 'text-gray-400'}`}>
+                                                {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </p>
                                         </div>
                                     </div>
@@ -310,7 +298,7 @@ export default function SupportChatbot({ onRequestConsultation }: SupportChatbot
                         </div>
 
                         {/* Quick Actions */}
-                        {!isLoading && messages.length < 4 && (
+                        {!isLoading && history.length < 4 && (
                             <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 overflow-x-auto">
                                 <div className="flex gap-2">
                                     {quickActions.map((qa, index) => (
