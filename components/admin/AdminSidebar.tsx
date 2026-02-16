@@ -140,6 +140,12 @@ export default function AdminSidebar({ children, activePage }: AdminSidebarProps
             href: '/admin/pricing',
         },
         {
+            id: 'agents',
+            label: 'Manage Agents',
+            icon: Shield,
+            href: '/admin/agents',
+        },
+        {
             id: 'settings',
             label: 'System Settings',
             icon: Settings,

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useChatStore } from './chatStore';
 
 export type UserRole = 'owner' | 'manager' | 'staff' | 'admin' | 'customer' | null;
 export type SubscriptionPlan = 'free' | 'basic' | 'premium' | 'white-label' | 'enterprise';
@@ -137,6 +138,10 @@ export const useAuthStore = create<AuthState>()(
 
       logout: () => {
         set({ user: null, isAuthenticated: false });
+        // Clear chat history on logout
+        useChatStore.getState().clearHistory();
+        // Also clear any other sensitive data if needed
+        localStorage.removeItem('chat-history'); // Double check persistence removal
       },
 
       subscribe: async (planId: SubscriptionPlan) => {
