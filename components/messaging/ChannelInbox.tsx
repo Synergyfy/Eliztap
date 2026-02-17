@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useMessagingStore, Thread, Message } from '@/lib/store/useMessagingStore';
 import { messagingApi } from '@/lib/api/messaging';
-import { Search, Send, Paperclip, MoreVertical, Check, CheckCheck, Phone, Video, User } from 'lucide-react';
+import { Search, Send, Paperclip, MoreVertical, Check, CheckCheck, Phone, Video, User, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'react-hot-toast';
 
