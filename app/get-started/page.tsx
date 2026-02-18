@@ -27,6 +27,9 @@ export default function GetStarted() {
         category: '',
         role: 'Owner' as 'Owner' | 'Manager',
         visitors: '',
+        whatsappNumber: '',
+        officialEmail: '',
+        businessNumber: '',
         goals: [] as string[],
         serialNumber: '',
         otp: '',
@@ -37,7 +40,7 @@ export default function GetStarted() {
     const goals = ['Capture Leads', 'Automated Rewards', 'Customer Feedback', 'Digital Loyalty'];
 
     const nextStep = () => {
-        if (step === 3 && subStep < 5) {
+        if (step === 3 && subStep < 8) {
             setSubStep(prev => prev + 1);
         } else {
             setStep(prev => prev + 1);
@@ -49,7 +52,7 @@ export default function GetStarted() {
             setSubStep(prev => prev - 1);
         } else {
             setStep(prev => prev - 1);
-            if (step === 4) setSubStep(5);
+            if (step === 4) setSubStep(8);
         }
     };
 
@@ -94,7 +97,7 @@ export default function GetStarted() {
                                 let progress = 0;
                                 if (step > s) progress = 100;
                                 else if (step === s) {
-                                    if (step === 3) progress = (subStep / 5) * 100;
+                                    if (step === 3) progress = (subStep / 8) * 100;
                                     else progress = 100;
                                 }
                                 return (
@@ -277,14 +280,20 @@ export default function GetStarted() {
                                             {subStep === 2 && "Add your brand's face"}
                                             {subStep === 3 && "What describes you best?"}
                                             {subStep === 4 && "What kind of space is it?"}
-                                            {subStep === 5 && "How many visitors do you see?"}
+                                            {subStep === 5 && "WhatsApp & Official Email"}
+                                            {subStep === 6 && "Reach you at Business Number"}
+                                            {subStep === 7 && "How many visitors do you see?"}
+                                            {subStep === 8 && "What are your goals?"}
                                         </h1>
                                         <p className="text-[13px] text-text-secondary font-medium leading-relaxed">
                                             {subStep === 1 && "Start with the name customers know you by."}
                                             {subStep === 2 && "Upload your logo to personalize your dashboard and customer tags."}
                                             {subStep === 3 && "This helps us tailor the dashboard features for you."}
                                             {subStep === 4 && "Select the category that best fits your business."}
-                                            {subStep === 5 && "This helps us optimize your experience for your footfall volume."}
+                                            {subStep === 5 && "Important for campaign communications and support."}
+                                            {subStep === 6 && "The primary number for your business operations."}
+                                            {subStep === 7 && "This helps us optimize your experience for your footfall volume."}
+                                            {subStep === 8 && "Tell us what you want to achieve with VemTap."}
                                         </p>
                                     </div>
 
@@ -381,6 +390,53 @@ export default function GetStarted() {
                                         )}
 
                                         {subStep === 5 && (
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+                                                <div className="space-y-1.5">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">WhatsApp Number</label>
+                                                    <div className="relative">
+                                                        <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">message</span>
+                                                        <input
+                                                            type="tel"
+                                                            placeholder="+234 801 234 5678"
+                                                            className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                                                            value={formData.whatsappNumber}
+                                                            onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Official Email</label>
+                                                    <div className="relative">
+                                                        <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">alternate_email</span>
+                                                        <input
+                                                            type="email"
+                                                            placeholder="hello@business.com"
+                                                            className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                                                            value={formData.officialEmail}
+                                                            onChange={(e) => setFormData({ ...formData, officialEmail: e.target.value })}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
+
+                                        {subStep === 6 && (
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-1.5">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Business Phone Number</label>
+                                                <div className="relative">
+                                                    <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">phone</span>
+                                                    <input
+                                                        type="tel"
+                                                        placeholder="+234 801 234 5678"
+                                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-5 font-medium outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm"
+                                                        value={formData.businessNumber}
+                                                        onChange={(e) => setFormData({ ...formData, businessNumber: e.target.value })}
+                                                    />
+                                                </div>
+                                            </motion.div>
+                                        )}
+
+                                        {subStep === 7 && (
                                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Monthly Visitors</label>
                                                 <div className="grid grid-cols-1 gap-2">
@@ -398,6 +454,29 @@ export default function GetStarted() {
                                             </motion.div>
                                         )}
 
+                                        {subStep === 8 && (
+                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Select Goals</label>
+                                                <div className="grid grid-cols-1 gap-2">
+                                                    {goals.map(goal => (
+                                                        <button
+                                                            key={goal}
+                                                            onClick={() => {
+                                                                const newGoals = formData.goals.includes(goal)
+                                                                    ? formData.goals.filter(g => g !== goal)
+                                                                    : [...formData.goals, goal];
+                                                                setFormData({ ...formData, goals: newGoals });
+                                                            }}
+                                                            className={`w-full h-14 rounded-xl px-6 text-sm font-bold transition-all border flex items-center justify-between ${formData.goals.includes(goal) ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-gray-50 border-gray-100 text-text-secondary hover:bg-gray-100'}`}
+                                                        >
+                                                            <span>{goal}</span>
+                                                            {formData.goals.includes(goal) && <span className="material-icons-round text-primary text-sm">check_circle</span>}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </motion.div>
+                                        )}
+
                                         <div className="flex gap-4 pt-4">
                                             <button onClick={prevStep} className="h-12 px-8 border border-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-50 transition-all text-sm">Back</button>
                                             <button
@@ -406,11 +485,14 @@ export default function GetStarted() {
                                                     (subStep === 1 && !formData.businessName) ||
                                                     (subStep === 3 && !formData.role) ||
                                                     (subStep === 4 && !formData.category) ||
-                                                    (subStep === 5 && !formData.visitors)
+                                                    (subStep === 5 && (!formData.whatsappNumber || !formData.officialEmail)) ||
+                                                    (subStep === 6 && !formData.businessNumber) ||
+                                                    (subStep === 7 && !formData.visitors) ||
+                                                    (subStep === 8 && formData.goals.length === 0)
                                                 }
                                                 className="flex-1 h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all text-sm disabled:opacity-50"
                                             >
-                                                {subStep === 5 ? "Save & Continue" : "Next Question"}
+                                                {subStep === 8 ? "Save & Continue" : "Next Question"}
                                             </button>
                                         </div>
                                     </div>
@@ -521,6 +603,18 @@ export default function GetStarted() {
                                                 <div>
                                                     <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Role</p>
                                                     <p className="text-xs font-bold text-text-main">{formData.role}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">WhatsApp</p>
+                                                    <p className="text-xs font-bold text-text-main">{formData.whatsappNumber || 'Not set'}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Official Email</p>
+                                                    <p className="text-xs font-bold text-text-main break-all">{formData.officialEmail || 'Not set'}</p>
+                                                </div>
+                                                <div className="col-span-2">
+                                                    <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Business Phone</p>
+                                                    <p className="text-xs font-bold text-text-main">{formData.businessNumber || 'Not set'}</p>
                                                 </div>
                                             </div>
                                         </div>

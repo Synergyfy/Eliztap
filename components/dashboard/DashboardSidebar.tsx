@@ -112,8 +112,11 @@ export default function DashboardSidebar({ children }: SidebarProps) {
             icon: Nfc,
             roles: ['owner', 'manager', 'staff'],
             submenu: [
-                { label: 'Overview', href: '/dashboard/devices' },
-                { label: 'Device Settings', href: '/dashboard/settings/devices' },
+                { label: 'Device Overview', href: '/dashboard/devices' },
+                { label: 'NFC Scan', href: '/dashboard/devices/nfc/scan' },
+                { label: 'NFC History', href: '/dashboard/devices/nfc/history' },
+                { label: 'Manage NFC', href: '/dashboard/devices/nfc/manage' },
+                { label: 'Settings', href: '/dashboard/settings/devices' },
             ]
         },
         {

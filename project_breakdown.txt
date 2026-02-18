@@ -363,6 +363,7 @@ the copy button should be in front of the url and the button should be in front 
 
 -
 --add the emeail list 
+=====================================================
 
 --the top up modal should select Channel
 --layout still misbehaving 
@@ -377,4 +378,5 @@ the copy button should be in front of the url and the button should be in front 
 --onboarding reviews,onbaoridng process,
 --nfc manager should be inside devices 
 --allow creating message from scratch or choose template and edit and coutomize for that message and then see the preview 
---let the preview show like the phone
+--let the preview show like the phone for all channels 
+--target audience, template for email
