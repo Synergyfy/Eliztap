@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import PageHeader from '@/components/dashboard/PageHeader';
 import { useMessagingStore } from '@/lib/store/useMessagingStore';
 import { Mail, Send, CheckCircle, Eye, BarChart } from 'lucide-react';
@@ -54,12 +55,12 @@ export default function EmailOverviewPage() {
                             "Tell your brand's story with rich content and personalized messaging delivered to the inbox."
                         </div>
                         <div className="flex gap-4">
-                            <button className="flex-1 h-12 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all">
+                            <Link href="/dashboard/messaging/email/send" className="flex-1 h-12 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all flex items-center justify-center">
                                 Create Newsletter
-                            </button>
-                            <button className="flex-1 h-12 bg-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-200 transition-all">
+                            </Link>
+                            <Link href="/dashboard/messaging/email/settings" className="flex-1 h-12 bg-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-200 transition-all flex items-center justify-center">
                                 SMTP Settings
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </div>

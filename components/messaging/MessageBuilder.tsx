@@ -13,12 +13,13 @@ interface MessageBuilderProps {
 
 export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilderProps) {
     const router = useRouter();
-    const { templates, wallet } = useMessagingStore();
+    const { templates, wallets } = useMessagingStore();
+    const [channel, setChannel] = useState<MessageChannel>(defaultChannel);
+    const wallet = wallets[channel];
     const [step, setStep] = useState(1);
 
     // Form State
     const [messageName, setMessageName] = useState('');
-    const [channel, setChannel] = useState<MessageChannel>(defaultChannel);
     const [audience, setAudience] = useState('all');
     const [selectedTemplate, setSelectedTemplate] = useState<string>('');
     const [customContent, setCustomContent] = useState('');

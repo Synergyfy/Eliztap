@@ -1,13 +1,15 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import PageHeader from '@/components/dashboard/PageHeader';
 import { useMessagingStore } from '@/lib/store/useMessagingStore';
 import { MessageSquare, Phone, Mail, LayoutDashboard, Wallet, CreditCard, Send, CheckCircle, Clock, Smartphone } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function WhatsAppOverviewPage() {
-    const { wallet, stats } = useMessagingStore();
+    const { wallets, stats } = useMessagingStore();
+    const wallet = wallets.WhatsApp;
 
     const channelStats = [
         { label: 'Messages Sent', value: '842', icon: Send, color: 'text-blue-600', bg: 'bg-blue-50' },
@@ -58,12 +60,12 @@ export default function WhatsAppOverviewPage() {
                             "Perfect for sending automated confirmation messages and marketing broadcasts to your WhatsApp audience."
                         </div>
                         <div className="flex gap-4">
-                            <button className="flex-1 h-12 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all">
+                            <Link href="/dashboard/messaging/whatsapp/send" className="flex-1 h-12 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all flex items-center justify-center">
                                 Send Broadcast
-                            </button>
-                            <button className="flex-1 h-12 bg-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-200 transition-all">
+                            </Link>
+                            <Link href="/dashboard/messaging/whatsapp/templates" className="flex-1 h-12 bg-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-200 transition-all flex items-center justify-center">
                                 View Templates
-                            </button>
+                            </Link>
                         </div>
                     </div>
                     <div className="relative">
