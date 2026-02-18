@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import PageHeader from '@/components/dashboard/PageHeader';
 import { useMessagingStore } from '@/lib/store/useMessagingStore';
 import { Phone, Send, CheckCircle, Clock, Smartphone } from 'lucide-react';
@@ -54,12 +55,12 @@ export default function SMSOverviewPage() {
                             "Direct, fast, and effective. Use SMS for time-sensitive offers and verification codes."
                         </div>
                         <div className="flex gap-4">
-                            <button className="flex-1 h-12 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all">
+                            <Link href="/dashboard/messaging/sms/send" className="flex-1 h-12 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all flex items-center justify-center">
                                 New Campaign
-                            </button>
-                            <button className="flex-1 h-12 bg-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-200 transition-all">
+                            </Link>
+                            <Link href="/dashboard/messaging/sms/topup" className="flex-1 h-12 bg-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-200 transition-all flex items-center justify-center">
                                 Top Up Points
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
