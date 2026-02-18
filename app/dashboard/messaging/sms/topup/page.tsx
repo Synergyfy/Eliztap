@@ -7,7 +7,8 @@ import { Wallet, Plus, ShieldCheck } from 'lucide-react';
 import TopUpModal from '@/components/messaging/TopUpModal';
 
 export default function SMSTopUpPage() {
-    const { wallet } = useMessagingStore();
+    const { wallets } = useMessagingStore();
+    const wallet = wallets.SMS;
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
@@ -40,7 +41,7 @@ export default function SMSTopUpPage() {
                 </div>
             </div>
 
-            <TopUpModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            <TopUpModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} targetChannel="SMS" />
         </div>
     );
 }

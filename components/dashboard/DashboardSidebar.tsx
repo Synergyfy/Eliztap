@@ -156,6 +156,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                     ]
                 },
                 { label: 'Message History', href: '/dashboard/messaging/history' },
+                { label: 'Guest Preview', href: '/dashboard/messaging/preview/returning' },
             ]
         },
         {

@@ -78,6 +78,7 @@ interface MessagingState {
     updateThread: (id: string, updates: Partial<Thread>) => void;
     
     addTemplate: (template: Template) => void;
+    updateTemplate: (id: string, updates: Partial<Template>) => void;
     deleteTemplate: (id: string) => void;
     
     addBroadcast: (broadcast: BroadcastLog) => void;
@@ -194,6 +195,10 @@ export const useMessagingStore = create<MessagingState>()(
 
             addTemplate: (template) => set((state) => ({
                 templates: [...state.templates, template]
+            })),
+
+            updateTemplate: (id, updates) => set((state) => ({
+                templates: state.templates.map(t => t.id === id ? { ...t, ...updates } : t)
             })),
 
             deleteTemplate: (id) => set((state) => ({

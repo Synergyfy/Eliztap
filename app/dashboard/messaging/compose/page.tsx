@@ -104,7 +104,7 @@ export default function ComposeMessagePage() {
 
                             <button
                                 onClick={() => setStep(2)}
-                                className="w-full py-4 bg-slate-900 text-white font-black rounded-3xl shadow-2xl shadow-slate-900/20 hover:bg-black transition-all flex items-center justify-center gap-3 group"
+                                className="w-full py-4 bg-primary text-white font-black rounded-3xl shadow-2xl shadow-primary/20 hover:bg-primary-hover transition-all flex items-center justify-center gap-3 group"
                             >
                                 Continue to Compose
                                 <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
@@ -182,7 +182,7 @@ export default function ComposeMessagePage() {
                             <div className="pt-8">
                                 <button
                                     onClick={() => setStep(1)}
-                                    className="px-12 py-4 bg-slate-900 text-white font-black rounded-3xl hover:bg-black transition-all shadow-xl shadow-slate-900/20"
+                                    className="px-12 py-4 bg-primary text-white font-black rounded-3xl hover:bg-primary-hover transition-all shadow-xl shadow-primary/20"
                                 >
                                     Done
                                 </button>

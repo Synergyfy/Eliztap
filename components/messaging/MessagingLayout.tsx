@@ -28,14 +28,13 @@ export default function MessagingLayout({ children }: MessagingLayoutProps) {
     // For Global or Journey, we show a default or total, but for specific channels we show their balance
     const activeWallet = currentChannel !== 'Global'
         ? wallets[currentChannel as MessageChannel]
-        : { credits: Object.values(wallets).reduce((acc, w) => acc + w.credits, 0), currency: 'POINTS' as const };
+        : { credits: 0, currency: 'POINTS' as const };
 
     const tabs: { name: string; href: string; icon: any; exact: boolean; channel?: MessageChannel | 'Global' }[] = [
         { name: 'Overview', href: '/dashboard/messaging', icon: LayoutDashboard, exact: true, channel: 'Global' },
         { name: 'WhatsApp', href: '/dashboard/messaging/whatsapp', icon: MessageSquare, exact: false, channel: 'WhatsApp' },
         { name: 'SMS', href: '/dashboard/messaging/sms', icon: Phone, exact: false, channel: 'SMS' },
         { name: 'Email', href: '/dashboard/messaging/email', icon: Mail, exact: false, channel: 'Email' },
-        { name: 'Customer Journey', href: '/dashboard/messaging/journey', icon: Smartphone, exact: false, channel: 'Global' },
     ];
 
     const isActive = (tab: typeof tabs[0]) => {
@@ -69,10 +68,10 @@ export default function MessagingLayout({ children }: MessagingLayoutProps) {
                         </div>
                         <div>
                             <p className="text-[10px] text-text-secondary font-bold uppercase tracking-wider">
-                                {currentChannel === 'Global' ? 'Total Balance' : `${currentChannel} Credits`}
+                                {currentChannel === 'Global' ? 'Select a Channel' : `${currentChannel} Credits`}
                             </p>
                             <p className="text-lg font-mono font-bold text-text-main leading-none">
-                                {activeWallet.credits.toLocaleString()} <span className="text-[10px] text-gray-400 uppercase tracking-widest">{activeWallet.currency}</span>
+                                {currentChannel === 'Global' ? '-' : activeWallet.credits.toLocaleString()} <span className="text-[10px] text-gray-400 uppercase tracking-widest">{activeWallet.currency}</span>
                             </p>
                         </div>
                     </div>
