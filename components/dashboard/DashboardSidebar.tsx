@@ -157,7 +157,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                 },
                 { label: 'Message History', href: '/dashboard/messaging/history' },
                 { label: 'Guest Preview', href: '/dashboard/messaging/preview/returning' },
-            ]
+            ].map(item => ({ ...item, onClick: () => setIsMobileOpen(false) }))
         },
         {
             id: 'surveys',
@@ -362,6 +362,7 @@ export default function DashboardSidebar({ children }: SidebarProps) {
                                                         <Link
                                                             key={subItem.href}
                                                             href={subItem.href}
+                                                            onClick={() => setIsMobileOpen(false)}
                                                             className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(subItem.href)
                                                                 ? 'bg-primary text-white'
                                                                 : 'text-text-secondary hover:bg-gray-50 hover:text-text-main'
