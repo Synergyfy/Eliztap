@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import PageHeader from '@/components/dashboard/PageHeader';
-import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import { Smartphone, Plus, QrCode, Copy, Download, Trash2, Calendar, Link as LinkIcon, ExternalLink } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { toast } from 'react-hot-toast';
@@ -16,7 +16,9 @@ interface NFCLink {
 }
 
 export default function NFCManagerPage() {
-    const { businessId } = useCustomerFlowStore();
+    const { user } = useAuthStore();
+    const { businessId: customerFlowStoreId } = useCustomerFlowStore();
+    const businessId = user?.businessId || customerFlowStoreId;
     const [quantity, setQuantity] = useState<number>(1);
     const [generatedLinks, setGeneratedLinks] = useState<NFCLink[]>([]);
 
