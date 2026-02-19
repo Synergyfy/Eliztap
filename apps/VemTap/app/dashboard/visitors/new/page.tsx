@@ -1,0 +1,150 @@
+'use client';
+
+import React, { useState } from 'react';
+import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
+import PageHeader from '@/components/dashboard/PageHeader';
+import StatsCard from '@/components/dashboard/StatsCard';
+import DataTable, { Column } from '@/components/dashboard/DataTable';
+import EmptyState from '@/components/dashboard/EmptyState';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { dashboardApi } from '@/lib/api/dashboard';
+import { Visitor } from '@/lib/store/mockDashboardStore';
+import { UserPlus, Calendar, TrendingUp, Timer, Send, Hand } from 'lucide-react';
+import SendMessageModal from '@/components/dashboard/SendMessageModal';
+import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
+import toast from 'react-hot-toast';
+
+export default function NewVisitorsPage() {
+    const queryClient = useQueryClient();
+
+    const [isBulkMsgOpen, setIsBulkMsgOpen] = useState(false);
+    const [selectedVisitorForMsg, setSelectedVisitorForMsg] = useState<Visitor | null>(null);
+    const [selectedVisitorForDetails, setSelectedVisitorForDetails] = useState<Visitor | null>(null);
+
+    const { data: storeData, isLoading } = useQuery({
+        queryKey: ['dashboard'],
+        queryFn: dashboardApi.fetchDashboardData,
+    });
+
+    const allVisitors = storeData?.recentVisitors || [];
+    const newVisitors = allVisitors.filter((v: Visitor) => v.status === 'new');
+
+    const handleWelcomeVisitor = (visitor: Visitor) => {
+        setSelectedVisitorForMsg(visitor);
+    };
+
+    const handleSendWelcomeMessage = () => {
+        if (newVisitors.length > 0) {
+            setIsBulkMsgOpen(true);
+        } else {
+            toast.error('No new visitors to send welcome message to');
+        }
+    };
+
+    const stats = [
+        { label: 'New Today', value: newVisitors.length.toString(), icon: UserPlus, color: 'green' as const, trend: { value: '+20%', isUp: true } },
+        { label: 'Weekly New', value: '124', icon: Calendar, color: 'blue' as const, trend: { value: '+15%', isUp: true } },
+        { label: 'Conv. Rate', value: '68%', icon: TrendingUp, color: 'purple' as const, trend: { value: '+2%', isUp: true } },
+        { label: 'Avg. Wait', value: '2m', icon: Timer, color: 'yellow' as const, trend: { value: '-30s', isUp: true } },
+    ];
+
+    const columns: Column<Visitor>[] = [
+        {
+            header: 'Visitor',
+            accessor: (item: Visitor) => (
+                <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center text-green-600 font-bold text-xs border border-green-100">
+                        {item.name.split(' ').map((n: string) => n[0]).join('')}
+                    </div>
+                    <div>
+                        <p className="font-bold text-text-main">{item.name}</p>
+                        <p className="text-xs text-text-secondary">{item.phone}</p>
+                    </div>
+                </div>
+            )
+        },
+        { header: 'Joined', accessor: 'time' },
+        {
+            header: 'Status',
+            accessor: () => (
+                <span className="inline-flex px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-green-100 text-green-700">
+                    NEW
+                </span>
+            )
+        },
+        {
+            header: 'Actions',
+            accessor: (item: Visitor) => (
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleWelcomeVisitor(item);
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-primary-hover transition-colors"
+                >
+                    <Hand size={14} />
+                    Welcome
+                </button>
+            )
+        }
+    ];
+
+    return (
+        <div className="p-4 md:p-8">
+            <PageHeader
+                title="New Visitors"
+                description="Identify and welcome your first-time customers"
+                actions={
+                    <button
+                        onClick={handleSendWelcomeMessage}
+                        className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md shadow-primary/20"
+                    >
+                        <Send size={18} />
+                        Send Welcome Message
+                    </button>
+                }
+            />
+
+            <SendMessageModal
+                isOpen={isBulkMsgOpen}
+                onClose={() => setIsBulkMsgOpen(false)}
+                recipientName={`${newVisitors.length} New Visitors`}
+                type="welcome"
+            />
+
+            <SendMessageModal
+                isOpen={!!selectedVisitorForMsg}
+                onClose={() => setSelectedVisitorForMsg(null)}
+                recipientName={selectedVisitorForMsg?.name || ''}
+                recipientPhone={selectedVisitorForMsg?.phone}
+                type="welcome"
+            />
+
+            <VisitorDetailsModal
+                isOpen={!!selectedVisitorForDetails}
+                onClose={() => setSelectedVisitorForDetails(null)}
+                visitor={selectedVisitorForDetails}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {stats.map((stat, index) => (
+                    <StatsCard key={index} {...stat} />
+                ))}
+            </div>
+
+            <DataTable
+                columns={columns}
+                data={newVisitors}
+                isLoading={isLoading}
+                onRowClick={(visitor) => setSelectedVisitorForDetails(visitor)}
+                emptyState={
+                    <EmptyState
+                        icon="person_add"
+                        title="No new visitors today"
+                        description="All visitors today are returning customers. That's great for loyalty!"
+                    />
+                }
+            />
+        </div>
+    );
+}

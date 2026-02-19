@@ -1,0 +1,414 @@
+'use client';
+
+import React, { useState } from 'react';
+import { useMessagingStore, Template, MessageChannel } from '@/lib/store/useMessagingStore';
+import { messagingApi } from '@/lib/api/messaging';
+import { Users, FileText, Send, CheckCircle, Smartphone, MessageSquare, Mail } from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+
+interface MessageBuilderProps {
+    defaultChannel?: MessageChannel;
+}
+
+// Device-style Preview Component
+function PhonePreview({ channel, content, onContentChange, isEditable = false }: { channel: MessageChannel, content: string, onContentChange?: (val: string) => void, isEditable?: boolean }) {
+    return (
+        <div className="relative w-[300px] h-[580px] bg-slate-900 rounded-[3.5rem] border-[12px] border-slate-800 shadow-2xl overflow-hidden ring-1 ring-slate-700">
+            {/* Notch */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-slate-800 rounded-b-3xl z-30" />
+
+            {/* Screen Content */}
+            <div className={`w-full h-full pt-12 flex flex-col relative ${channel === 'WhatsApp' ? 'bg-[#efe7de] bg-[url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png")] bg-repeat' :
+                    channel === 'Email' ? 'bg-gray-100' : 'bg-white'
+                }`}>
+                {/* App Header */}
+                {channel === 'WhatsApp' ? (
+                    <div className="bg-[#075E54] p-4 text-white flex items-center gap-3 z-20">
+                        <div className="size-8 rounded-full bg-white/20 flex items-center justify-center">
+                            <Users size={16} />
+                        </div>
+                        <div>
+                            <p className="text-xs font-bold leading-none">VemTap Outreach</p>
+                            <p className="text-[10px] opacity-70 mt-1">online</p>
+                        </div>
+                    </div>
+                ) : channel === 'SMS' ? (
+                    <div className="p-4 border-b border-gray-100 flex flex-col items-center gap-1 z-20 bg-white/80 backdrop-blur-md">
+                        <div className="size-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                            <Smartphone size={20} />
+                        </div>
+                        <p className="text-[10px] font-bold text-gray-900">VemTap</p>
+                    </div>
+                ) : (
+                    <div className="p-4 bg-white border-b border-gray-200 flex items-center gap-3 z-20">
+                        <div className="size-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                            <Mail size={16} />
+                        </div>
+                        <div className="flex-1">
+                            <p className="text-[10px] font-black leading-none">Support @ VemTap</p>
+                            <p className="text-[8px] text-gray-400 mt-1">To: Customer</p>
+                        </div>
+                    </div>
+                )}
+
+                {/* Message Area */}
+                <div className="flex-1 p-4 overflow-auto custom-scrollbar">
+                    {channel === 'Email' ? (
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                            <div className="p-3 border-b border-gray-50">
+                                <p className="text-[10px] font-black text-gray-900">Exclusive Update from VemTap</p>
+                            </div>
+                            <div className="p-4 min-h-[100px]">
+                                {isEditable ? (
+                                    <textarea
+                                        value={content}
+                                        onChange={(e) => onContentChange?.(e.target.value)}
+                                        className="w-full min-h-[200px] text-xs leading-relaxed outline-none border-none bg-transparent resize-none focus:ring-0 p-0 text-gray-700"
+                                        placeholder="Type your email content..."
+                                    />
+                                ) : (
+                                    <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-wrap">{content || 'Your email content will appear here...'}</p>
+                                )}
+                            </div>
+                            <div className="p-4 bg-gray-50 mt-4 text-center">
+                                <button className="px-6 py-2 bg-primary text-white text-[10px] font-bold rounded-lg pointer-events-none">
+                                    Action Button
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={`relative flex flex-col ${channel === 'WhatsApp' ? 'items-start' : 'items-start'}`}>
+                            <div className={`
+                                max-w-[90%] p-3 rounded-2xl text-[11px] shadow-sm relative group
+                                ${channel === 'WhatsApp' ? 'bg-white rounded-tl-none' : 'bg-gray-100 rounded-tl-none text-gray-800'}
+                            `}>
+                                {isEditable ? (
+                                    <textarea
+                                        value={content}
+                                        onChange={(e) => onContentChange?.(e.target.value)}
+                                        className="w-full bg-transparent border-none outline-none resize-none focus:ring-0 p-0 text-[11px] min-h-[60px]"
+                                        placeholder="Type message..."
+                                    />
+                                ) : (
+                                    <p className="whitespace-pre-wrap">{content || 'Your message will appear here...'}</p>
+                                )}
+                                <p className="text-[8px] text-right mt-1 opacity-50 uppercase tracking-tighter">12:45</p>
+
+                                {/* WhatsApp Tail */}
+                                {channel === 'WhatsApp' && (
+                                    <div className="absolute top-0 -left-1.5 w-3 h-3 bg-white clip-path-whatsapp-tail" />
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Input Bar Simulation */}
+                {(channel === 'WhatsApp' || channel === 'SMS') && (
+                    <div className="p-3 bg-gray-50 border-t border-gray-100 flex items-center gap-2">
+                        <div className="flex-1 h-8 bg-white border border-gray-200 rounded-full px-4 text-[10px] flex items-center text-gray-400">
+                            iMessage
+                        </div>
+                        <div className={`size-8 rounded-full flex items-center justify-center ${channel === 'WhatsApp' ? 'bg-[#128C7E]' : 'bg-primary'} text-white`}>
+                            <Send size={14} />
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* Editing Indicator Badge */}
+            {isEditable && (
+                <div className="absolute top-20 right-4 bg-primary text-white text-[8px] font-black px-2 py-1 rounded-full shadow-lg animate-pulse z-40">
+                    LIVE EDITING ON
+                </div>
+            )}
+
+            <style jsx>{`
+                .clip-path-whatsapp-tail {
+                    clip-path: polygon(100% 0, 0 0, 100% 100%);
+                }
+            `}</style>
+        </div>
+    );
+}
+
+export default function MessageBuilder({ defaultChannel = 'SMS' }: MessageBuilderProps) {
+    const router = useRouter();
+    const { templates, wallets } = useMessagingStore();
+    const [channel, setChannel] = useState<MessageChannel>(defaultChannel);
+    const wallet = wallets[channel];
+    const [step, setStep] = useState(defaultChannel ? 2 : 1);
+
+    // Form State
+    const [messageName, setMessageName] = useState('');
+    const [audience, setAudience] = useState('all');
+    const [selectedTemplate, setSelectedTemplate] = useState<string>('');
+    const [templateCategory, setTemplateCategory] = useState('All');
+    const [customContent, setCustomContent] = useState('');
+    const [isSending, setIsSending] = useState(false);
+    const [isLiveEdit, setIsLiveEdit] = useState(false);
+
+    // Mock Audience count
+    const getAudienceCount = () => {
+        if (audience === 'all') return 1240;
+        if (audience === 'vip') return 150;
+        if (audience === 'new') return 340;
+        return 0;
+    };
+
+    const count = getAudienceCount();
+    const costPerMsg = channel === 'SMS' ? 2.5 : channel === 'WhatsApp' ? 4.0 : 0.5;
+    const totalCost = count * costPerMsg;
+
+    const handleSend = async () => {
+        setIsSending(true);
+        try {
+            await messagingApi.sendBroadcast(
+                messageName || 'Untitled Message',
+                channel,
+                count,
+                selectedTemplate ? (templates.find(t => t.id === selectedTemplate)?.content || '') : customContent
+            );
+            toast.success('Message launched successfully!');
+            router.push('/dashboard/messaging');
+        } catch (error: any) {
+            toast.error(error.message || 'Failed to send message');
+        } finally {
+            setIsSending(false);
+        }
+    };
+
+    const renderStep1 = () => (
+        <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+            <h3 className="text-lg font-bold text-text-main flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm border border-primary/20">1</span>
+                Message Check
+            </h3>
+
+            <div className="space-y-4">
+                <div>
+                    <label className="block text-xs font-bold uppercase text-text-secondary mb-2">Message Name</label>
+                    <input
+                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl"
+                        placeholder="e.g. Weekend Promo"
+                        value={messageName}
+                        onChange={(e) => setMessageName(e.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-xs font-bold uppercase text-text-secondary mb-2">Select Broadcast Place</label>
+                    <div className="grid grid-cols-3 gap-4">
+                        {(['WhatsApp', 'SMS', 'Email'] as const).map((c) => (
+                            <button
+                                key={c}
+                                onClick={() => setChannel(c)}
+                                className={`p-4 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${channel === c ? 'border-primary bg-primary/5' : 'border-gray-100 hover:border-gray-200'}`}
+                            >
+                                {c === 'WhatsApp' ? <MessageSquare size={24} className="text-green-500" /> : c === 'SMS' ? <Smartphone size={24} className="text-blue-500" /> : <Mail size={24} className="text-purple-500" />}
+                                <span className="font-bold text-sm">{c}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div>
+                    <label className="block text-xs font-bold uppercase text-text-secondary mb-3">Target Audience</label>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        {[
+                            { id: 'all', label: 'All Contacts', sub: '(1,240)', icon: Users },
+                            { id: 'new', label: 'New Visitors', sub: '(340)', icon: Smartphone },
+                            { id: 'vip', label: 'VIP Members', sub: '(150)', icon: CheckCircle }
+                        ].map(opt => (
+                            <button
+                                key={opt.id}
+                                onClick={() => setAudience(opt.id)}
+                                className={`p-4 rounded-2xl border-2 transition-all text-left ${audience === opt.id
+                                    ? 'border-primary bg-primary/5'
+                                    : 'border-gray-100 bg-white hover:border-gray-200'
+                                    }`}
+                            >
+                                <div className="flex items-center justify-between mb-1">
+                                    <span className="font-bold text-sm text-text-main">{opt.label}</span>
+                                    {audience === opt.id && <div className="size-4 bg-primary rounded-full flex items-center justify-center">
+                                        <div className="size-1.5 bg-white rounded-full" />
+                                    </div>}
+                                </div>
+                                <p className="text-[10px] text-text-secondary font-medium uppercase tracking-tighter">{opt.sub}</p>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex justify-end pt-4">
+                <button onClick={() => setStep(2)} className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20">
+                    Next: Compose
+                </button>
+            </div>
+        </div>
+    );
+
+    const renderStep2 = () => (
+        <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+            <h3 className="text-lg font-bold text-text-main flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm border border-primary/20">2</span>
+                Compose Message
+            </h3>
+
+            <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Category</label>
+                        <select
+                            className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl font-bold text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                            value={templateCategory}
+                            onChange={(e) => {
+                                setTemplateCategory(e.target.value);
+                                setSelectedTemplate('');
+                            }}
+                        >
+                            <option value="All">All Categories</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Utility">Utility</option>
+                            <option value="Auth">Auth</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Template</label>
+                        <select
+                            className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl font-bold text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                            value={selectedTemplate}
+                            onChange={(e) => {
+                                const tplId = e.target.value;
+                                setSelectedTemplate(tplId);
+                                if (tplId) {
+                                    const tpl = templates.find(t => t.id === tplId);
+                                    if (tpl) setCustomContent(tpl.content);
+                                }
+                            }}
+                        >
+                            <option value="">Write Custom Message...</option>
+                            {templates
+                                .filter(t => (t.channel === channel || t.channel === 'Any') && (templateCategory === 'All' || t.category === templateCategory))
+                                .map(t => (
+                                    <option key={t.id} value={t.id}>{t.name}</option>
+                                ))}
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Message Content</label>
+                    <div className="relative">
+                        <textarea
+                            className="w-full h-40 p-4 bg-gray-50 border border-gray-200 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/10 font-medium text-sm transition-all"
+                            placeholder="Type your message here..."
+                            value={customContent}
+                            onChange={(e) => setCustomContent(e.target.value)}
+                        />
+                        <div className="absolute bottom-4 left-4 flex gap-2">
+                            <div className="absolute bottom-4 left-4 flex gap-2">
+                                {['{Name}', '{BusinessName}', '{Points}'].map(variable => (
+                                    <button
+                                        key={variable}
+                                        type="button"
+                                        onClick={() => setCustomContent(prev => prev + variable)}
+                                        className="px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-black hover:bg-primary-hover transition-all shadow-md active:scale-95"
+                                    >
+                                        + {variable.replace(/{|}/g, '')}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    <p className="text-[10px] text-text-secondary mt-2 text-right font-medium uppercase tracking-tighter">
+                        Characters: <span className="text-primary font-black">{customContent.length}</span>
+                    </p>
+                </div>
+            </div>
+
+            <div className="flex justify-between pt-4">
+                <button onClick={() => setStep(1)} className="px-6 py-3 text-text-secondary hover:text-text-main font-bold">Back</button>
+                <button onClick={() => setStep(3)} className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20">
+                    Next: Review
+                </button>
+            </div>
+        </div>
+    );
+
+    const renderStep3 = () => (
+        <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+            <div className="text-center py-6">
+                <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle size={32} />
+                </div>
+                <h3 className="text-2xl font-display font-bold text-text-main">Ready to Send?</h3>
+                <p className="text-text-secondary">Review your message details before launching.</p>
+            </div>
+
+            <div className="bg-gray-50 p-6 rounded-2xl border border-gray-200 space-y-4">
+                <div className="flex justify-between items-center pb-4 border-b border-gray-200">
+                    <span className="text-sm font-bold text-text-secondary">Message Name</span>
+                    <span className="font-bold text-text-main">{messageName || 'Untitled'}</span>
+                </div>
+                <div className="flex justify-between items-center pb-4 border-b border-gray-200">
+                    <span className="text-sm font-bold text-text-secondary">Audience Size</span>
+                    <div className="flex items-center gap-2">
+                        <Users size={16} className="text-primary" />
+                        <span className="font-bold text-text-main">{count.toLocaleString()} Contacts</span>
+                    </div>
+                </div>
+                <div className="flex justify-between items-center pb-4 border-b border-gray-200">
+                    <span className="text-sm font-bold text-text-secondary">Estimated Cost</span>
+                    <span className="font-mono font-bold text-text-main">{totalCost.toLocaleString()} {wallet.currency}</span>
+                </div>
+                <div className="pt-2">
+                    <div className="flex items-center justify-between mb-3 px-1">
+                        <label className="text-[10px] font-black uppercase text-text-secondary tracking-widest">Message Preview</label>
+                        <button
+                            onClick={() => setIsLiveEdit(!isLiveEdit)}
+                            className={`text-[10px] font-black uppercase px-3 py-1 rounded-full border-2 transition-all ${isLiveEdit ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20' : 'bg-white text-text-secondary border-gray-100'
+                                }`}
+                        >
+                            {isLiveEdit ? 'Finish Editing' : 'Live Edit Preview'}
+                        </button>
+                    </div>
+                    <div className="flex justify-center py-4 bg-white rounded-3xl border border-gray-100 shadow-inner">
+                        <PhonePreview
+                            channel={channel}
+                            content={customContent}
+                            isEditable={isLiveEdit}
+                            onContentChange={setCustomContent}
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex justify-between pt-4">
+                <button onClick={() => setStep(2)} className="px-6 py-3 text-text-secondary hover:text-text-main font-bold">Back</button>
+                <button
+                    onClick={handleSend}
+                    disabled={isSending || wallet.credits < totalCost}
+                    className="px-8 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20 flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {isSending ? (
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                        <Send size={18} />
+                    )}
+                    {wallet.credits < totalCost ? 'Insufficient Funds' : 'Launch Message'}
+                </button>
+            </div>
+        </div>
+    );
+
+    return (
+        <div className="max-w-2xl mx-auto py-8">
+            {step === 1 && renderStep1()}
+            {step === 2 && renderStep2()}
+            {step === 3 && renderStep3()}
+        </div>
+    );
+}

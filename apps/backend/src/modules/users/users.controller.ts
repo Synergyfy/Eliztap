@@ -1,0 +1,54 @@
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, BadRequestException } from '@nestjs/common';
+import { UsersService } from './users.service';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { UserRole } from './entities/user.entity';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import { InviteStaffDto } from './dto/invite-staff.dto';
+import * as bcrypt from 'bcrypt';
+
+@ApiTags('users')
+@ApiBearerAuth()
+@Controller('users')
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Get('staff')
+  @Roles(UserRole.OWNER, UserRole.MANAGER)
+  @ApiOperation({ summary: 'Get all staff members for the business' })
+  async getStaff(@Request() req) {
+    return this.usersService.findByBusiness(req.user.businessId);
+  }
+
+  @Post('staff/invite')
+  @Roles(UserRole.OWNER)
+  @ApiOperation({ summary: 'Invite a new staff member' })
+  @ApiBody({ type: InviteStaffDto })
+  async inviteStaff(@Request() req, @Body() inviteDto: InviteStaffDto) {
+    const existing = await this.usersService.findByEmail(inviteDto.email);
+    if (existing) {
+      throw new BadRequestException('User with this email already exists');
+    }
+
+    // In a real app, we'd send an invite email. For this MVP, we create them with a default password.
+    const hashedPassword = await bcrypt.hash('staff123', 10);
+    return this.usersService.create({
+      ...inviteDto,
+      businessId: req.user.businessId,
+      password: hashedPassword,
+    });
+  }
+
+  @Patch('staff/:id/role')
+  @Roles(UserRole.OWNER)
+  @ApiOperation({ summary: 'Update a staff member role' })
+  async updateRole(@Request() req, @Param('id') id: string, @Body('role') role: UserRole) {
+    return this.usersService.updateRole(id, req.user.businessId, role);
+  }
+
+  @Delete('staff/:id')
+  @Roles(UserRole.OWNER)
+  @ApiOperation({ summary: 'Remove a staff member' })
+  async removeStaff(@Request() req, @Param('id') id: string) {
+    return this.usersService.remove(id, req.user.businessId);
+  }
+}

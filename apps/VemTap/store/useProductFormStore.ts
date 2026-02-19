@@ -1,0 +1,106 @@
+
+import { create } from 'zustand';
+
+interface Spec {
+  id: string;
+  label: string;
+  value: string;
+}
+
+interface Step {
+  id: string;
+  title: string;
+  description: string;
+}
+
+interface VolumeDiscount {
+  id: string;
+  minQty: number;
+  maxQty: number | null; // null for "+" (infinity)
+  discountPercent: number;
+}
+
+interface ProductFormData {
+  // Step 1
+  title: string;
+  manufacturer: string;
+  category: string;
+  tag: string;
+  tagColor: string;
+  sku: string;
+  description: string;
+  
+  // Step 2
+  images: {
+    primary: File | string | null;
+    side: File | string | null;
+    detail: File | string | null;
+    packaging: File | string | null;
+  };
+  video: {
+    file: File | null;
+    url: string;
+    autoplay: boolean;
+  };
+  specs: Spec[];
+  howToSteps: Step[];
+  
+  // Step 3
+  msrp: number;
+  originalPrice: number;
+  costPrice: number;
+  bulkQuotesEnabled: boolean;
+  customBrandingEnabled: boolean;
+  customizationFee: number;
+  volumeDiscounts: VolumeDiscount[];
+}
+
+interface ProductFormState {
+  currentStep: number;
+  formData: ProductFormData;
+  setStep: (step: number) => void;
+  updateFormData: (data: Partial<ProductFormData>) => void;
+  nextStep: () => void;
+  prevStep: () => void;
+  resetForm: () => void;
+}
+
+const initialFormData: ProductFormData = {
+  title: '',
+  manufacturer: '',
+  category: 'NFC Hardware',
+  tag: 'New Arrival',
+  tagColor: 'bg-primary',
+  sku: '',
+  description: '',
+  images: { primary: null, side: null, detail: null, packaging: null },
+  video: { file: null, url: '', autoplay: false },
+  specs: [
+    { id: '1', label: 'Frequency', value: '13.56 MHz' },
+    { id: '2', label: 'Connection Interface', value: 'USB 2.0 / Bluetooth 5.0' }
+  ],
+  howToSteps: [
+    { id: '1', title: 'Tap to Connect', description: 'Enable NFC on your device and tap the reader.' }
+  ],
+  msrp: 450.00,
+  originalPrice: 0,
+  costPrice: 280.00,
+  bulkQuotesEnabled: true,
+  customBrandingEnabled: false,
+  customizationFee: 1500,
+  volumeDiscounts: [
+    { id: '1', minQty: 1, maxQty: 9, discountPercent: 0 },
+    { id: '2', minQty: 10, maxQty: 49, discountPercent: 5 },
+    { id: '3', minQty: 50, maxQty: null, discountPercent: 12 },
+  ]
+};
+
+export const useProductFormStore = create<ProductFormState>((set) => ({
+  currentStep: 1,
+  formData: initialFormData,
+  setStep: (step) => set({ currentStep: step }),
+  updateFormData: (data) => set((state) => ({ formData: { ...state.formData, ...data } })),
+  nextStep: () => set((state) => ({ currentStep: Math.min(state.currentStep + 1, 4) })),
+  prevStep: () => set((state) => ({ currentStep: Math.max(state.currentStep - 1, 1) })),
+  resetForm: () => set({ currentStep: 1, formData: initialFormData }),
+}));

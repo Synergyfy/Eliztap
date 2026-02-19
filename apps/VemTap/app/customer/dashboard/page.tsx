@@ -1,0 +1,273 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import Modal from '@/components/ui/Modal';
+import AnimatedRewardModal from '@/components/customer/AnimatedRewardModal';
+import Link from 'next/link';
+import {
+    History, Star, PiggyBank, Coffee, Smartphone, Dumbbell,
+    QrCode, Scan, X, ExternalLink, ArrowRight, ChevronRight
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useLoyaltyStore } from '@/store/loyaltyStore';
+import { notify } from '@/lib/notify';
+
+export default function CustomerDashboardPage() {
+    const { user, isAuthenticated } = useAuthStore();
+    const { profiles, fetchLoyaltyProfile } = useLoyaltyStore();
+    const router = useRouter();
+    const [showIdModal, setShowIdModal] = useState(false);
+    const [showRewardAnimation, setShowRewardAnimation] = useState(false);
+    const [currentReward, setCurrentReward] = useState<{ name: string; points: number; icon?: React.ReactNode } | null>(null);
+
+    const businessId = 'bistro_001';
+    const profile = profiles[businessId];
+    // Local state for demo purposes as found in the existing logic
+    const [localPoints, setLocalPoints] = useState(0);
+
+    useEffect(() => {
+        if (profile) {
+            setLocalPoints(profile.currentPointsBalance);
+        }
+    }, [profile]);
+
+    const userPoints = localPoints;
+
+    useEffect(() => {
+        if (!isAuthenticated || user?.role !== 'customer') {
+            router.push('/login');
+        } else if (user?.id) {
+            fetchLoyaltyProfile(user.id, businessId);
+        }
+    }, [isAuthenticated, user, router, fetchLoyaltyProfile]);
+
+    if (!isAuthenticated || user?.role !== 'customer') {
+        return null;
+    }
+
+    const recentVisits = [
+        { id: 1, place: 'Green Terrace Cafe', date: 'Today, 10:30 AM', points: '+50', icon: Coffee },
+        { id: 2, place: 'NextGen Tech Store', date: 'Yesterday, 4:15 PM', points: '+120', icon: Smartphone },
+        { id: 3, place: 'Fitness Center', date: 'Feb 1, 9:00 AM', points: '+30', icon: Dumbbell },
+        { id: 4, place: 'Green Terrace Cafe', date: 'Jan 28, 11:00 AM', points: '+50', icon: Coffee },
+    ];
+
+    const handleRedeem = (reward: string, points: number, icon?: React.ReactNode) => {
+        if (points > userPoints) {
+            notify.error(`Insufficient points to redeem ${reward}`);
+            return;
+        }
+
+        // Show animated modal
+        setCurrentReward({ name: reward, points, icon });
+        setShowRewardAnimation(true);
+
+        // Deduct points (UI only for simulation)
+        setLocalPoints((prev: number) => prev - points);
+
+        // Close animation after some time
+        setTimeout(() => {
+            setShowRewardAnimation(false);
+            setCurrentReward(null);
+        }, 5000);
+    };
+
+
+    return (
+        <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
+            <div className="max-w-7xl mx-auto space-y-8 p-4 md:p-8">
+                {/* ID Card / Quick Scan - Hero Section */}
+                <div className="bg-linear-to-br from-primary via-blue-600 to-indigo-700 rounded-2xl p-8 md:p-12 text-white relative overflow-hidden shadow-2xl shadow-primary/30 group">
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-32 -translate-y-32 blur-3xl group-hover:scale-110 transition-transform duration-700"></div>
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/20 rounded-full -translate-x-20 translate-y-20 blur-2xl"></div>
+
+                    <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
+                        <div className="text-center md:text-left flex-1">
+                            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 backdrop-blur-md border border-white/10">
+                                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                                Member ID: EC-{user?.id || '2847'}
+                            </span>
+                            <h1 className="text-4xl md:text-5xl font-display font-bold mb-4 tracking-tight leading-tight">
+                                Welcome back, <br />
+                                {user?.name?.split(' ')[0] || 'Customer'}!
+                            </h1>
+                            <p className="text-blue-50 text-base md:text-lg max-w-lg mb-8 font-medium leading-relaxed opacity-90">
+                                Visit participating venues and tap your phone at the VemTap terminal to earn rewards instantly.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                                <button
+                                    onClick={() => setShowIdModal(true)}
+                                    className="bg-white text-primary px-8 py-4 rounded-xl font-black text-sm shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all active:scale-95 flex items-center justify-center gap-3"
+                                >
+                                    <Scan size={20} />
+                                    Show My Digital ID
+                                </button>
+                                <Link
+                                    href="/customer/rewards"
+                                    className="bg-primary-hover/30 text-white border border-white/20 px-8 py-4 rounded-xl font-black text-sm backdrop-blur-sm hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                                >
+                                    Browse Perks
+                                    <ArrowRight size={18} />
+                                </Link>
+                            </div>
+                        </div>
+                        <div
+                            onClick={() => setShowIdModal(true)}
+                            className="bg-white p-8 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-500 cursor-pointer"
+                        >
+                            <div className="relative">
+                                <QrCode size={160} className="text-text-main" />
+                                <div className="absolute inset-0 flex items-center justify-center bg-white/0 hover:bg-white/5 transition-colors"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Quick Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {[
+                        { label: 'Total Visits', value: '42', icon: History, color: 'blue' },
+                        { label: 'Reward Points', value: userPoints.toLocaleString(), icon: Star, color: 'orange' },
+                        { label: 'Net Savings', value: '₦15,000', icon: PiggyBank, color: 'green' },
+                    ].map((stat, index) => {
+                        const IconComponent = stat.icon;
+                        return (
+                            <div key={index} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all group">
+                                <div className="flex items-center gap-4">
+                                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center transition-colors ${stat.color === 'blue' ? 'bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white' :
+                                        stat.color === 'orange' ? 'bg-orange-50 text-orange-600 group-hover:bg-orange-600 group-hover:text-white' :
+                                            'bg-green-50 text-green-600 group-hover:bg-green-600 group-hover:text-white'
+                                        }`}>
+                                        <IconComponent size={24} />
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="text-[10px] font-black uppercase text-text-secondary tracking-[0.15em] mb-1">{stat.label}</p>
+                                        <p className="text-2xl font-display font-bold text-text-main">{stat.value}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Recent Visits */}
+                    <div className="lg:col-span-2 space-y-6">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-xl font-display font-bold text-text-main">Recent Activity</h2>
+                            <Link href="/customer/history" className="text-primary text-sm font-bold hover:underline flex items-center gap-1">
+                                View all <ChevronRight size={16} />
+                            </Link>
+                        </div>
+                        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+                            {recentVisits.map((visit, index) => {
+                                const IconComp = visit.icon;
+                                return (
+                                    <div key={visit.id} className={`p-4 flex items-center justify-between ${index !== recentVisits.length - 1 ? 'border-b border-gray-50' : ''}`}>
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-text-secondary">
+                                                <IconComp size={20} />
+                                            </div>
+                                            <div>
+                                                <p className="font-bold text-text-main text-sm">{visit.place}</p>
+                                                <p className="text-xs text-text-secondary font-medium">{visit.date}</p>
+                                            </div>
+                                        </div>
+                                        <span className="text-green-600 font-black text-sm">{visit.points} pts</span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Quick Perks */}
+                    <div className="space-y-6">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-xl font-display font-bold text-text-main">Ready to Redeem</h2>
+                            <span className="text-primary font-black text-xs uppercase tracking-widest">{userPoints.toLocaleString()} PTS</span>
+                        </div>
+                        <div className="space-y-4">
+                            {[
+                                { name: 'Free Coffee', points: 250, icon: <Coffee size={18} /> },
+                                { name: '10% Discount', points: 500, icon: <Star size={18} /> },
+                                { name: 'Welcome Pack', points: 1000, icon: <History size={18} /> }
+                            ].map((reward, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => handleRedeem(reward.name, reward.points, reward.icon)}
+                                    className="w-full p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary/20 transition-all flex items-center gap-4 group"
+                                >
+                                    <div className="w-10 h-10 rounded-lg bg-primary/5 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+                                        {reward.icon}
+                                    </div>
+                                    <div className="flex-1 text-left">
+                                        <p className="font-bold text-text-main text-sm">{reward.name}</p>
+                                        <p className="text-xs text-text-secondary font-bold">{reward.points} pts</p>
+                                    </div>
+                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:text-primary group-hover:bg-primary/5 transition-all">
+                                        <ArrowRight size={16} />
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* My ID Modal */}
+            <Modal
+                isOpen={showIdModal}
+                onClose={() => setShowIdModal(false)}
+                title="Your Digital Member ID"
+                size="md"
+            >
+                <div className="space-y-8 p-4">
+                    <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 text-center relative group">
+                        <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
+                        <QrCode size={180} className="mx-auto text-slate-900 relative z-10" />
+                        <div className="mt-6">
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Scan at Terminal</p>
+                            <p className="text-sm font-bold text-slate-900">EC-{user?.id || '2847'}</p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <button className="h-14 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-all text-xs uppercase tracking-widest active:scale-95 flex items-center justify-center gap-2">
+                            Add to Apple Wallet
+                        </button>
+                        <button className="h-14 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all text-xs uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-95 flex items-center justify-center gap-2">
+                            Save to G-Pay
+                        </button>
+                    </div>
+
+                    <div className="pt-6 border-t border-slate-100 flex items-center justify-between">
+                        <div className="text-left">
+                            <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Points Balance</p>
+                            <p className="text-lg font-display font-bold text-primary">{userPoints.toLocaleString()} pts</p>
+                        </div>
+                        <div className="text-right">
+                            <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Membership</p>
+                            <p className="text-lg font-display font-bold text-slate-900 flex items-center gap-1 justify-end">
+                                Gold Elite
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Animated Reward Modal */}
+            <AnimatedRewardModal
+                isOpen={showRewardAnimation}
+                onClose={() => {
+                    setShowRewardAnimation(false);
+                    setCurrentReward(null);
+                }}
+                rewardName={currentReward?.name || ''}
+                rewardIcon={currentReward?.icon}
+                points={currentReward?.points || 0}
+            />
+        </div>
+    );
+}
+
