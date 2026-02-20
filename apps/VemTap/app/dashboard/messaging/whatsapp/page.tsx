@@ -4,17 +4,19 @@ import React from 'react';
 import Link from 'next/link';
 import PageHeader from '@/components/dashboard/PageHeader';
 import { useMessagingStore } from '@/lib/store/useMessagingStore';
-import { MessageSquare, Phone, Mail, LayoutDashboard, Wallet, CreditCard, Send, CheckCircle, Clock, Smartphone } from 'lucide-react';
+import { MessageSquare, Phone, Mail, LayoutDashboard, Wallet, CreditCard, Send, CheckCircle, Clock, Smartphone, Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
+import TopUpModal from '@/components/messaging/TopUpModal';
 
 export default function WhatsAppOverviewPage() {
-    const { wallets, stats } = useMessagingStore();
+    const { wallets } = useMessagingStore();
+    const [isTopUpOpen, setIsTopUpOpen] = React.useState(false);
     const wallet = wallets.WhatsApp;
 
     const channelStats = [
+        { label: 'Wallet Balance', value: `${wallet.credits.toLocaleString()} ${wallet.currency}`, icon: Wallet, color: 'text-primary', bg: 'bg-primary/5' },
         { label: 'Messages Sent', value: '842', icon: Send, color: 'text-blue-600', bg: 'bg-blue-50' },
         { label: 'Delivered', value: '98%', icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-50' },
-        { label: 'Avg. Response', value: '12m', icon: Clock, color: 'text-purple-600', bg: 'bg-purple-50' },
     ];
 
     return (
@@ -63,8 +65,15 @@ export default function WhatsAppOverviewPage() {
                             <Link href="/dashboard/messaging/whatsapp/send" className="flex-1 h-12 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all flex items-center justify-center">
                                 Send Broadcast
                             </Link>
+                            <button 
+                                onClick={() => setIsTopUpOpen(true)}
+                                className="flex-1 h-12 bg-blue-50 text-blue-600 border border-blue-100 font-bold rounded-xl hover:bg-blue-100 transition-all flex items-center justify-center gap-2"
+                            >
+                                <Plus size={18} />
+                                Top Up Wallet
+                            </button>
                             <Link href="/dashboard/messaging/whatsapp/templates" className="flex-1 h-12 bg-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-200 transition-all flex items-center justify-center">
-                                View Templates
+                                Templates
                             </Link>
                         </div>
                     </div>
@@ -77,6 +86,11 @@ export default function WhatsAppOverviewPage() {
                     </div>
                 </div>
             </div>
+            <TopUpModal 
+                isOpen={isTopUpOpen} 
+                onClose={() => setIsTopUpOpen(false)} 
+                targetChannel="WhatsApp" 
+            />
         </div>
     );
 }

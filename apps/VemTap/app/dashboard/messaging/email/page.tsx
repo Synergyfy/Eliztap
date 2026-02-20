@@ -4,16 +4,19 @@ import React from 'react';
 import Link from 'next/link';
 import PageHeader from '@/components/dashboard/PageHeader';
 import { useMessagingStore } from '@/lib/store/useMessagingStore';
-import { Mail, Send, CheckCircle, Eye, BarChart } from 'lucide-react';
+import { Mail, Send, CheckCircle, Eye, BarChart, Wallet, Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
+import TopUpModal from '@/components/messaging/TopUpModal';
 
 export default function EmailOverviewPage() {
-    const { stats } = useMessagingStore();
+    const { stats, wallets } = useMessagingStore();
+    const [isTopUpOpen, setIsTopUpOpen] = React.useState(false);
+    const wallet = wallets.Email;
 
     const channelStats = [
+        { label: 'Wallet Balance', value: `${wallet.credits.toLocaleString()} ${wallet.currency}`, icon: Wallet, color: 'text-primary', bg: 'bg-primary/5' },
         { label: 'Emails Sent', value: '15,820', icon: Send, color: 'text-purple-600', bg: 'bg-purple-50' },
         { label: 'Open Rate', value: '28.4%', icon: Eye, color: 'text-blue-600', bg: 'bg-blue-50' },
-        { label: 'Click Rate', value: '4.2%', icon: BarChart, color: 'text-green-600', bg: 'bg-green-50' },
     ];
 
     return (
@@ -58,6 +61,13 @@ export default function EmailOverviewPage() {
                             <Link href="/dashboard/messaging/email/send" className="flex-1 h-12 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-all flex items-center justify-center">
                                 Create Newsletter
                             </Link>
+                            <button
+                                onClick={() => setIsTopUpOpen(true)}
+                                className="flex-1 h-12 bg-blue-50 text-blue-600 border border-blue-100 font-bold rounded-xl hover:bg-blue-100 transition-all flex items-center justify-center gap-2"
+                            >
+                                <Plus size={18} />
+                                Top Up Wallet
+                            </button>
                             <Link href="/dashboard/messaging/email/settings" className="flex-1 h-12 bg-gray-100 text-text-main font-bold rounded-xl hover:bg-gray-200 transition-all flex items-center justify-center">
                                 SMTP Settings
                             </Link>
@@ -65,6 +75,11 @@ export default function EmailOverviewPage() {
                     </div>
                 </div>
             </div>
+            <TopUpModal
+                isOpen={isTopUpOpen}
+                onClose={() => setIsTopUpOpen(false)}
+                targetChannel="Email"
+            />
         </div>
     );
 }

@@ -77,7 +77,8 @@ export default function AdminPricingPage() {
             buttonText: 'Get Started',
             color: 'slate',
             visitorLimit: 100,
-            tagLimit: 1
+            tagLimit: 1,
+            billingPeriod: 'monthly'
         });
     };
 
