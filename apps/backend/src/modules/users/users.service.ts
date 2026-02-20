@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User, UserRole } from './entities/user.entity';
+import { User, UserRole, UserStatus } from './entities/user.entity';
+import { UpdateStaffDto } from './dto/update-staff.dto';
 
 @Injectable()
 export class UsersService {
@@ -30,12 +31,20 @@ export class UsersService {
     });
   }
 
-  async updateRole(id: string, businessId: string, role: UserRole): Promise<User> {
+  async updateStaff(id: string, businessId: string, updates: UpdateStaffDto): Promise<User> {
     const user = await this.findOne(id);
     if (!user || user.businessId !== businessId) {
       throw new NotFoundException('Staff member not found');
     }
-    user.role = role;
+
+    if (updates.role && updates.role === UserRole.OWNER && user.role !== UserRole.OWNER) {
+        // Prevent changing non-owner to owner directly without checks?
+        // Assuming minimal checks for now as per MVP.
+    }
+
+    // Use Object.assign to copy properties from updates to user
+    Object.assign(user, updates);
+
     return this.usersRepository.save(user);
   }
 

@@ -4,6 +4,7 @@ import { Roles } from '../../common/decorators/roles.decorator';
 import { UserRole } from './entities/user.entity';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { InviteStaffDto } from './dto/invite-staff.dto';
+import { UpdateStaffDto } from './dto/update-staff.dto';
 import * as bcrypt from 'bcrypt';
 
 @ApiTags('users')
@@ -38,11 +39,12 @@ export class UsersController {
     });
   }
 
-  @Patch('staff/:id/role')
+  @Patch('staff/:id')
   @Roles(UserRole.OWNER)
-  @ApiOperation({ summary: 'Update a staff member role' })
-  async updateRole(@Request() req, @Param('id') id: string, @Body('role') role: UserRole) {
-    return this.usersService.updateRole(id, req.user.businessId, role);
+  @ApiOperation({ summary: 'Update a staff member (role, permissions, etc.)' })
+  @ApiBody({ type: UpdateStaffDto })
+  async updateStaff(@Request() req, @Param('id') id: string, @Body() updates: UpdateStaffDto) {
+    return this.usersService.updateStaff(id, req.user.businessId, updates);
   }
 
   @Delete('staff/:id')

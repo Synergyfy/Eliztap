@@ -11,6 +11,7 @@ import { Otp } from './modules/auth/entities/otp.entity';
 import { Device } from './modules/devices/entities/device.entity';
 import { Campaign } from './modules/campaigns/entities/campaign.entity';
 import { CampaignTemplate } from './modules/campaigns/entities/campaign-template.entity';
+import { Survey } from './modules/surveys/entities/survey.entity';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { BusinessesModule } from './modules/businesses/businesses.module';
@@ -18,6 +19,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { DevicesModule } from './modules/devices/devices.module';
 import { VisitorsModule } from './modules/visitors/visitors.module';
 import { CampaignsModule } from './modules/campaigns/campaigns.module';
+import { SurveysModule } from './modules/surveys/surveys.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
@@ -35,7 +37,7 @@ import { RolesGuard } from './common/guards/roles.guard';
           return {
             type: 'sqlite',
             database: ':memory:',
-            entities: [User, Business, Visit, Notification, Otp, Device, Campaign, CampaignTemplate],
+            entities: [User, Business, Visit, Notification, Otp, Device, Campaign, CampaignTemplate, Survey],
             synchronize: true,
             dropSchema: true,
           };
@@ -47,7 +49,7 @@ import { RolesGuard } from './common/guards/roles.guard';
           username: configService.get<string>('DB_USERNAME'),
           password: configService.get<string>('DB_PASSWORD'),
           database: configService.get<string>('DB_NAME'),
-          entities: [User, Business, Visit, Notification, Otp, Device, Campaign, CampaignTemplate],
+          entities: [User, Business, Visit, Notification, Otp, Device, Campaign, CampaignTemplate, Survey],
           synchronize: configService.get<string>('NODE_ENV') === 'development',
           ssl: configService.get<string>('DB_SSL') === 'true' ? { rejectUnauthorized: false } : false,
         };
@@ -61,6 +63,7 @@ import { RolesGuard } from './common/guards/roles.guard';
     DevicesModule,
     VisitorsModule,
     CampaignsModule,
+    SurveysModule,
   ],
   controllers: [AppController],
   providers: [
