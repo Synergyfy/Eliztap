@@ -8,6 +8,7 @@ import { MailService } from '../mail/mail.service';
 import * as bcrypt from 'bcrypt';
 import { User, UserRole } from '../users/entities/user.entity';
 import { Otp } from './entities/otp.entity';
+import { RegisterOwnerDto } from './dto/register-owner.dto';
 
 @Injectable()
 export class AuthService {
@@ -84,6 +85,7 @@ export class AuthService {
     };
   }
 
+  // --- Original Generic Register (Kept for compatibility) ---
   async register(registrationData: any) {
     const existingUser = await this.usersService.findByEmail(registrationData.email);
     if (existingUser) {
@@ -131,5 +133,52 @@ export class AuthService {
 
     const { password, ...result } = user;
     return result;
+  }
+
+  // --- New Dedicated Owner Registration ---
+  async registerOwner(dto: RegisterOwnerDto) {
+    const existingUser = await this.usersService.findByEmail(dto.email);
+    if (existingUser) {
+      throw new ConflictException('Email already exists');
+    }
+
+    // 1. Create User (Owner)
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+    const user = await this.usersService.create({
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      email: dto.email,
+      password: hashedPassword,
+      role: UserRole.OWNER, // Explicitly OWNER
+      phone: dto.businessNumber || undefined, // Use business number as user phone if generic phone not provided? Frontend sends 'businessNumber' and 'whatsappNumber'
+      // Frontend doesn't explicitly send user phone, just business phone. Using businessNumber for now.
+    });
+
+    // 2. Create Business with detailed info
+    // Join array goals to string if needed, or update Business entity to support array.
+    // Current entity 'goal' is a string. We can join them or pick the first.
+    const goalString = Array.isArray(dto.goals) ? dto.goals.join(', ') : dto.goals;
+
+    const business = await this.businessesService.create({
+      name: dto.businessName,
+      category: dto.category,
+      monthlyVisitors: dto.visitors, // Frontend field mapped to entity
+      goal: goalString,
+      logoUrl: dto.businessLogo,
+      ownerId: user.id,
+      // New fields
+      address: dto.businessAddress,
+      website: dto.businessWebsite,
+      whatsappNumber: dto.whatsappNumber,
+      officialEmail: dto.officialEmail,
+    });
+
+    // 3. Link User to Business
+    user.businessId = business.id;
+    await this.usersService.create(user); // Update user with businessId
+
+    // Return auth response (token + user) or just user?
+    // Usually auto-login after register is good UX.
+    return this.login(user);
   }
 }
