@@ -1,18 +1,18 @@
 import { Controller, Post, Body, UseGuards, Request, Get, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Public } from '../../common/decorators/public.decorator';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { OtpDto } from './dto/otp.dto';
+import { VerifyOtpDto } from './dto/otp.dto';
 import { RegisterOwnerDto } from './dto/register-owner.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   @Public()
   @Post('otp/send')
@@ -24,8 +24,8 @@ export class AuthController {
   @Public()
   @Post('otp/verify')
   @ApiOperation({ summary: 'Verify OTP' })
-  @ApiBody({ type: OtpDto })
-  async verifyOtp(@Body() otpDto: OtpDto) {
+  @ApiBody({ type: VerifyOtpDto })
+  async verifyOtp(@Body() otpDto: VerifyOtpDto) {
     return this.authService.verifyOtp(otpDto.email, otpDto.code);
   }
 

@@ -20,7 +20,9 @@ const mockTemplateRepository = () => ({
   find: jest.fn(),
 });
 
-type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
+import { ObjectLiteral } from 'typeorm';
+
+type MockRepository<T extends ObjectLiteral = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
 describe('CampaignsService', () => {
   let service: CampaignsService;
@@ -54,8 +56,8 @@ describe('CampaignsService', () => {
       const businessId = 'biz-123';
       const expectedCampaign = { ...createDto, businessId, id: '1', sent: 0, delivered: '0%', clicks: 0, status: CampaignStatus.DRAFT };
 
-      campaignRepository.create.mockReturnValue(expectedCampaign);
-      campaignRepository.save.mockResolvedValue(expectedCampaign);
+      campaignRepository.create!.mockReturnValue(expectedCampaign);
+      campaignRepository.save!.mockResolvedValue(expectedCampaign);
 
       const result = await service.create(createDto, businessId);
       expect(result).toEqual(expectedCampaign);
