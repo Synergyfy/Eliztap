@@ -76,7 +76,7 @@ export default function GetStarted() {
                 name: `${cleanData.firstName} ${cleanData.lastName}`,
                 role: cleanData.role.toLowerCase() as any,
                 businessName: cleanData.businessName,
-                businessLogo: cleanData.businessLogo,
+                businessLogo: cleanData.businessLogo || undefined,
                 businessGoals: cleanData.goals,
                 businessId: 'new_' + Math.random().toString(36).substr(2, 6)
             };
