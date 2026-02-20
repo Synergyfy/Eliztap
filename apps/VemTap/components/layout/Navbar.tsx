@@ -17,8 +17,6 @@ export default function Navbar() {
             .slice(0, 2);
     };
 
-    const [isSolutionsOpen, setIsSolutionsOpen] = useState(false);
-
     return (
         <>
             <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
@@ -30,19 +28,21 @@ export default function Navbar() {
                     </div>
 
                     <div className="hidden md:flex items-center gap-8 text-sm font-bold text-text-secondary">
-                        <div
-                            className="relative group"
-                            onMouseEnter={() => setIsSolutionsOpen(true)}
-                            onMouseLeave={() => setIsSolutionsOpen(false)}
-                        >
-                            <button
-                                onClick={() => setIsSolutionsOpen(!isSolutionsOpen)}
-                                className="flex items-center gap-1 hover:text-primary transition-colors py-2 active:scale-95"
-                            >
+                        <div className="relative group">
+                            <button className="flex items-center gap-1 hover:text-primary transition-colors py-2">
                                 Solutions
-                                <span className={`material-icons-round text-lg transition-transform ${isSolutionsOpen ? 'rotate-180' : ''}`}>expand_more</span>
+                                <span className="material-icons-round text-lg transition-transform group-hover:rotate-180">expand_more</span>
                             </button>
-                            <div className={`absolute top-full left-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 transition-all duration-300 z-50 ${isSolutionsOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
+                            <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                                <Link href="/solutions/hardware" className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                                    <div className="size-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
+                                        <span className="material-icons-round">nfc</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-text-main text-xs font-black uppercase tracking-wider">Hardware</p>
+                                        <p className="text-[10px] text-text-secondary font-medium">NFC Plates & Cards</p>
+                                    </div>
+                                </Link>
                                 <Link href="/solutions/software" className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
                                     <div className="size-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
                                         <span className="material-icons-round">terminal</span>
@@ -142,6 +142,7 @@ export default function Navbar() {
                         <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors" href="/marketplace">Marketplace</Link>
                         <div className="flex flex-col gap-4">
                             <span className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Solutions</span>
+                            <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors pl-4 border-l-2 border-gray-100" href="/solutions/hardware">Hardware</Link>
                             <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors pl-4 border-l-2 border-gray-100" href="/solutions/software">Software</Link>
                             <Link onClick={() => setIsMenuOpen(false)} className="hover:text-primary transition-colors pl-4 border-l-2 border-gray-100" href="/pricing">White Label</Link>
                         </div>

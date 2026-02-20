@@ -37,10 +37,6 @@ export const messagingApi = {
         store.deductCredits(channel, cost);
 
         // 3. Create Message
-        const threads = useMessagingStore.getState().threads;
-        const thread = threads.find(t => t.id === threadId);
-        const branchId = thread?.branchId || 'head-office';
-
         const newMessage: Message = {
             id: `msg_${Date.now()}`,
             threadId,
@@ -48,8 +44,7 @@ export const messagingApi = {
             content,
             status: 'sent',
             timestamp: Date.now(),
-            channel,
-            branchId
+            channel
         };
 
         store.addMessage(newMessage);
@@ -70,8 +65,7 @@ export const messagingApi = {
                 content: "Thanks for reaching out! We'll get back to you shortly.",
                 status: 'delivered',
                 timestamp: Date.now(),
-                channel,
-                branchId
+                channel
             };
             store.addMessage(reply);
             store.updateThread(threadId, {
@@ -115,9 +109,6 @@ export const messagingApi = {
          store.deductCredits(channel, totalCost);
          
          // Log the Broadcast internally
-         const { activeBranchId } = (await import('@/store/useBusinessStore')).useBusinessStore.getState();
-         const bId = activeBranchId === 'all' ? 'head-office' : activeBranchId;
-
          const broadcastId = `brd_${Date.now()}`;
          store.addBroadcast({
              id: broadcastId,
@@ -127,8 +118,7 @@ export const messagingApi = {
              sent: audienceSize,
              delivered: Math.floor(audienceSize * 0.95),
              status: 'Completed',
-             timestamp: Date.now(),
-             branchId: bId
+             timestamp: Date.now()
          });
  
          return broadcastId;

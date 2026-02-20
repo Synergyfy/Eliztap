@@ -22,7 +22,6 @@ import {
     CheckCircle2, Timer, MessageCircle, MapPin, Upload
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useBusinessStore } from '@/store/useBusinessStore';
 
 export default function AllVisitorsPage() {
     const router = useRouter();
@@ -52,14 +51,8 @@ export default function AllVisitorsPage() {
         }
     });
 
-    const { activeBranchId, getActiveBranch } = useBusinessStore();
-
     const addVisitorMutation = useMutation({
         mutationFn: (data: VisitorFormData) => {
-            const activeBranch = getActiveBranch();
-            const bId = activeBranchId === 'all' ? 'head-office' : activeBranchId;
-            const loc = activeBranch?.address || 'Head Office';
-
             const newVisitor: Visitor = {
                 id: Math.random().toString(36).substr(2, 9),
                 name: data.name,
@@ -67,9 +60,7 @@ export default function AllVisitorsPage() {
                 time: 'Just now',
                 timestamp: Date.now(),
                 status: data.status as any,
-                optIn: true,
-                branchId: bId,
-                location: loc
+                optIn: true
             };
             return dashboardApi.addVisitor(newVisitor);
         },

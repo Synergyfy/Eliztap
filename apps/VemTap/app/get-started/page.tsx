@@ -40,27 +40,6 @@ export default function GetStarted() {
         agreeToTerms: false
     });
 
-    const otpRefs = React.useRef<(HTMLInputElement | null)[]>([]);
-
-    const handleOtpChange = (index: number, value: string) => {
-        if (!/^\d*$/.test(value)) return;
-
-        const newOtp = formData.otp.split('');
-        newOtp[index] = value.slice(-1);
-        const otpString = newOtp.join('');
-        setFormData({ ...formData, otp: otpString });
-
-        if (value && index < 3) {
-            otpRefs.current[index + 1]?.focus();
-        }
-    };
-
-    const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Backspace' && !formData.otp[index] && index > 0) {
-            otpRefs.current[index - 1]?.focus();
-        }
-    };
-
     const categories = ['Retail', 'Hospitality', 'Events & Booths', 'Service Centers', 'Professional Office'];
     const goals = ['Capture Leads', 'Automated Rewards', 'Customer Feedback', 'Digital Loyalty'];
 
@@ -92,17 +71,14 @@ export default function GetStarted() {
         try {
             // Sanitize all form data before submission
             const cleanData = sanitizeFormData(formData);
-            const businessSlug = cleanData.businessName.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
-
             const userData = {
                 email: cleanData.email,
                 name: `${cleanData.firstName} ${cleanData.lastName}`,
                 role: cleanData.role.toLowerCase() as any,
                 businessName: cleanData.businessName,
-                businessSlug: businessSlug,
                 businessLogo: cleanData.businessLogo || undefined,
                 businessGoals: cleanData.goals,
-                businessId: `${businessSlug}-${Math.random().toString(36).substr(2, 4)}`
+                businessId: 'new_' + Math.random().toString(36).substr(2, 6)
             };
 
             await signup(userData);
@@ -255,15 +231,11 @@ export default function GetStarted() {
 
                                     <div className="space-y-8">
                                         <div className="flex gap-3 justify-between">
-                                            {[0, 1, 2, 3].map(i => (
+                                            {[1, 2, 3, 4].map(i => (
                                                 <input
                                                     key={i}
-                                                    ref={el => { otpRefs.current[i] = el; }}
                                                     type="text"
                                                     maxLength={1}
-                                                    value={formData.otp[i] || ''}
-                                                    onChange={(e) => handleOtpChange(i, e.target.value)}
-                                                    onKeyDown={(e) => handleOtpKeyDown(i, e)}
                                                     className="w-16 h-16 bg-gray-50 border border-gray-100 rounded-xl text-center font-display font-black text-2xl focus:ring-2 focus:ring-primary/20 focus:bg-white outline-none transition-all"
                                                 />
                                             ))}
