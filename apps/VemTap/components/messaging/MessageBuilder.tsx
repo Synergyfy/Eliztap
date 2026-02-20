@@ -8,6 +8,8 @@ import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
 import Image from 'next/image';
+import { useMockDashboardStore } from '@/lib/store/mockDashboardStore';
+import { useCustomerFlowStore } from '@/store/useCustomerFlowStore';
 
 interface MessageBuilderProps {
     /** When set, skip channel selection and go straight to compose */
@@ -177,8 +179,12 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
     const router = useRouter();
     const { user } = useAuthStore();
     const { templates, wallets } = useMessagingStore();
+    const { branchId: currentBranchId } = useCustomerFlowStore();
     const [channel, setChannel] = useState<MessageChannel>(defaultChannel || 'SMS');
     const wallet = wallets[channel];
+
+    // Get audience data from mock store
+    const { getFilteredVisitors } = useMockDashboardStore();
 
     // Business Branding Helper
     const businessName = user?.businessName || 'Your Business';
@@ -195,12 +201,13 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
     const [isSending, setIsSending] = useState(false);
     const [isLiveEdit, setIsLiveEdit] = useState(false);
 
-    // Mock Audience count
+    // Dynamic Audience counts based on branch
     const getAudienceCount = () => {
-        if (audience === 'returning') return 850;
-        if (audience === 'new') return 340;
-        if (audience === 'premium') return 150;
-        return 1240; // fallback
+        const branchVisitors = getFilteredVisitors(currentBranchId || 'bistro_001');
+        if (audience === 'returning') return branchVisitors.filter(v => v.visits > 1).length;
+        if (audience === 'new') return branchVisitors.filter(v => v.visits === 1).length;
+        if (audience === 'premium') return branchVisitors.filter(v => (v.visits > 5 || v.totalSpent > 10000)).length;
+        return branchVisitors.length;
     };
 
     const count = getAudienceCount();
@@ -263,9 +270,9 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
                     <label className="block text-xs font-bold uppercase text-text-secondary mb-3">Target Audience</label>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                         {[
-                            { id: 'returning', label: 'Returning Users', sub: '(850)', icon: Users },
-                            { id: 'new', label: 'New Users', sub: '(340)', icon: Smartphone },
-                            { id: 'premium', label: 'Premium Users', sub: '(150)', icon: CheckCircle }
+                            { id: 'returning', label: 'Returning Users', sub: `(${getFilteredVisitors(currentBranchId || 'all').filter(v => v.visits > 1).length})`, icon: Users },
+                            { id: 'new', label: 'New Users', sub: `(${getFilteredVisitors(currentBranchId || 'all').filter(v => v.visits === 1).length})`, icon: Smartphone },
+                            { id: 'premium', label: 'Premium Users', sub: `(${getFilteredVisitors(currentBranchId || 'all').filter(v => (v.visits > 5 || v.totalSpent > 10000)).length})`, icon: CheckCircle }
                         ].map(opt => (
                             <button
                                 key={opt.id}
@@ -322,7 +329,7 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
                             >
                                 <option value="">Write Custom Message...</option>
                                 {templates
-                                    .filter(t => (t.channel === channel || t.channel === 'Any'))
+                                    .filter(t => (t.channel === channel || t.channel === 'Any') && (!t.branchId || t.branchId === currentBranchId))
                                     .map(t => (
                                         <option key={t.id} value={t.id}>{t.name}</option>
                                     ))}
@@ -333,9 +340,9 @@ export default function MessageBuilder({ defaultChannel }: MessageBuilderProps) 
                             <label className="block text-[10px] font-black uppercase text-text-secondary mb-2 tracking-widest ml-1">Target Audience</label>
                             <div className="grid grid-cols-3 gap-2">
                                 {[
-                                    { id: 'returning', label: 'Returning', sub: '850', icon: Users },
-                                    { id: 'new', label: 'New', sub: '340', icon: Smartphone },
-                                    { id: 'premium', label: 'Premium', sub: '150', icon: CheckCircle }
+                                    { id: 'returning', label: 'Returning', sub: getFilteredVisitors(currentBranchId || 'all').filter(v => v.visits > 1).length, icon: Users },
+                                    { id: 'new', label: 'New', sub: getFilteredVisitors(currentBranchId || 'all').filter(v => v.visits === 1).length, icon: Smartphone },
+                                    { id: 'premium', label: 'Premium', sub: getFilteredVisitors(currentBranchId || 'all').filter(v => (v.visits > 5 || v.totalSpent > 10000)).length, icon: CheckCircle }
                                 ].map(opt => (
                                     <button
                                         key={opt.id}

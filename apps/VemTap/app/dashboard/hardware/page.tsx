@@ -82,7 +82,7 @@ export default function HardwarePage() {
                                 href="/marketplace"
                                 className="inline-flex items-center gap-2 px-6 py-3 bg-white text-primary font-bold rounded-xl hover:bg-gray-50 transition-all text-sm"
                             >
-                                Order Hardware
+                                Request Quote
                                 <ExternalLink size={16} />
                             </Link>
                         </div>
