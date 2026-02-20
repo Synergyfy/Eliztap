@@ -156,13 +156,17 @@ export const dashboardApi = {
   createMessage: async (message: any) => {
     await delay(1000);
     const id = Math.random().toString(36).substr(2, 9);
+    const { activeBranchId } = (await import('@/store/useBusinessStore')).useBusinessStore.getState();
+    const bId = activeBranchId === 'all' ? 'head-office' : activeBranchId;
+    
     const newMessage = {
       ...message,
       id,
       sent: 0,
       delivered: '0%',
       clicks: 0,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      branchId: message.branchId || bId
     };
     useMockDashboardStore.getState().addMessage(newMessage);
     useMockDashboardStore.getState().addNotification({
@@ -198,8 +202,17 @@ export const dashboardApi = {
   // Staff Actions
   addStaff: async (staff: any) => {
     await delay(800);
+    const { activeBranchId } = (await import('@/store/useBusinessStore')).useBusinessStore.getState();
+    const bId = activeBranchId === 'all' ? 'head-office' : activeBranchId;
+    
     const id = Math.random().toString(36).substr(2, 9);
-    const newStaff = { ...staff, id, lastActive: 'Never', status: 'Active' };
+    const newStaff = { 
+      ...staff, 
+      id, 
+      lastActive: 'Never', 
+      status: 'Active',
+      branchId: staff.branchId || bId
+    };
     useMockDashboardStore.getState().addStaff(newStaff);
     return newStaff;
   },
@@ -219,6 +232,9 @@ export const dashboardApi = {
   // Device Actions
   addDevice: async (device: any) => {
     await delay(800);
+    const { activeBranchId } = (await import('@/store/useBusinessStore')).useBusinessStore.getState();
+    const bId = activeBranchId === 'all' ? 'head-office' : activeBranchId;
+    
     const id = Math.random().toString(36).substr(2, 9);
     const newDevice = { 
       ...device, 
@@ -227,7 +243,8 @@ export const dashboardApi = {
       status: 'active', 
       batteryLevel: 100,
       totalScans: 0,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      branchId: device.branchId || bId
     };
     useMockDashboardStore.getState().addDevice(newDevice);
     return newDevice;

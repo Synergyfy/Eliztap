@@ -20,6 +20,7 @@ export interface Message {
     timestamp: number;
     channel: MessageChannel;
     attachments?: string[];
+    branchId: string;
 }
 
 export interface Thread {
@@ -33,6 +34,7 @@ export interface Thread {
     unreadCount: number;
     status: 'open' | 'resolved' | 'archived';
     tags: string[];
+    branchId: string;
 }
 
 export interface Template {
@@ -52,6 +54,7 @@ export interface BroadcastLog {
     delivered: number;
     status: 'Draft' | 'Scheduled' | 'Sending' | 'Completed';
     timestamp: number;
+    branchId: string;
 }
 
 interface MessagingState {
