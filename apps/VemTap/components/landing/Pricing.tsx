@@ -45,23 +45,32 @@ export default function Pricing() {
     const mainPlans = plans.filter(plan => plan.id !== 'white-label');
     const enterprisePlan = plans.find(plan => plan.id === 'white-label');
 
-    const formatPrice = (priceStr: string, cycle: string) => {
+    const getMonthlyEquivalent = (priceStr: string, cycle: string) => {
         if (priceStr === 'Custom') return priceStr;
         const basePrice = parseInt(priceStr.replace(/[^0-9]/g, ''));
         if (isNaN(basePrice)) return priceStr;
 
-        let finalPrice = basePrice;
-        let period = '/mo';
+        let discount = 1;
+        if (cycle === 'yearly') discount = 0.8;
+        else if (cycle === 'quarterly') discount = 0.9;
 
-        if (cycle === 'yearly') {
-            finalPrice = Math.floor((basePrice * 12) * 0.8); // 20% discount
-            period = '/yr';
-        } else if (cycle === 'quarterly') {
-            finalPrice = Math.floor((basePrice * 3) * 0.9); // 10% discount
-            period = '/qt';
-        }
+        const monthlyPrice = Math.floor(basePrice * discount);
+        return `₦${monthlyPrice.toLocaleString()}`;
+    };
 
-        return `₦${finalPrice.toLocaleString()}`;
+    const getBilledMessage = (priceStr: string, cycle: string) => {
+        if (priceStr === 'Custom' || cycle === 'monthly') return null;
+        const basePrice = parseInt(priceStr.replace(/[^0-9]/g, ''));
+        if (isNaN(basePrice)) return null;
+
+        let discount = 1;
+        let months = 1;
+        if (cycle === 'yearly') { discount = 0.8; months = 12; }
+        else if (cycle === 'quarterly') { discount = 0.9; months = 3; }
+
+        const monthlyPrice = Math.floor(basePrice * discount);
+        const total = monthlyPrice * months;
+        return `₦${total.toLocaleString()} billed ${cycle}`;
     };
 
     return (
@@ -100,8 +109,8 @@ export default function Pricing() {
                     {mainPlans.map((plan, index) => {
                         const highlight = plan.isPopular;
                         const isCurrentPlan = user?.planId === plan.id;
-                        const displayPrice = formatPrice(plan.price, billingCycle);
-                        const displayPeriod = billingCycle === 'monthly' ? '/mo' : billingCycle === 'yearly' ? '/yr' : '/qt';
+                        const displayPrice = getMonthlyEquivalent(plan.price, billingCycle);
+                        const billedMessage = getBilledMessage(plan.price, billingCycle);
 
                         return (
                             <div
@@ -128,11 +137,18 @@ export default function Pricing() {
                                     </p>
                                 </div>
                                 <div className="mb-8">
-                                    <span className="text-4xl font-display font-bold">{displayPrice}</span>
-                                    {plan.id !== 'free' && (
-                                        <span className={`text-sm font-bold ml-2 ${highlight ? 'text-white/70' : 'text-text-secondary dark:opacity-60'}`}>
-                                            {displayPeriod}
-                                        </span>
+                                    <div className="flex items-baseline">
+                                        <span className="text-4xl font-display font-bold">{displayPrice}</span>
+                                        {plan.id !== 'free' && (
+                                            <span className={`text-sm font-bold ml-2 ${highlight ? 'text-white/70' : 'text-text-secondary dark:opacity-60'}`}>
+                                                /mo
+                                            </span>
+                                        )}
+                                    </div>
+                                    {billedMessage && (
+                                        <p className={`text-[10px] font-bold mt-1 uppercase tracking-widest ${highlight ? 'text-white/60' : 'text-text-secondary/60'}`}>
+                                            {billedMessage}
+                                        </p>
                                     )}
                                 </div>
                                 <ul className="space-y-4 mb-8 flex-1">
@@ -217,6 +233,7 @@ export default function Pricing() {
                         isOpen={!!checkoutPlan}
                         onClose={() => setCheckoutPlan(null)}
                         plan={checkoutPlan}
+                        billingCycle={billingCycle}
                     />
                 )}
             </div>

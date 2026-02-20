@@ -17,7 +17,6 @@ interface Product {
 
 interface FilterState {
     selectedCategory: string;
-    priceRange: [number, number];
     selectedBrands: string[];
     currentPage: number;
     searchQuery: string;
@@ -25,7 +24,6 @@ interface FilterState {
 
 interface MarketplaceStore extends FilterState {
     setCategory: (category: string) => void;
-    setPriceRange: (range: [number, number]) => void;
     toggleBrand: (brand: string) => void;
     setPage: (page: number) => void;
     setSearchQuery: (query: string) => void;
@@ -34,13 +32,11 @@ interface MarketplaceStore extends FilterState {
 
 export const useMarketplaceStore = create<MarketplaceStore>((set) => ({
     selectedCategory: 'All Products',
-    priceRange: [0, 1000000],
     selectedBrands: [],
     currentPage: 1,
     searchQuery: '',
 
     setCategory: (category) => set({ selectedCategory: category, currentPage: 1 }),
-    setPriceRange: (range) => set({ priceRange: range, currentPage: 1 }),
     toggleBrand: (brand) => set((state) => {
         const newBrands = state.selectedBrands.includes(brand)
             ? state.selectedBrands.filter((b) => b !== brand)
@@ -51,7 +47,6 @@ export const useMarketplaceStore = create<MarketplaceStore>((set) => ({
     setSearchQuery: (query) => set({ searchQuery: query, currentPage: 1 }),
     resetFilters: () => set({
         selectedCategory: 'All Products',
-        priceRange: [0, 1000000],
         selectedBrands: [],
         currentPage: 1,
         searchQuery: ''

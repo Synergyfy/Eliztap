@@ -17,8 +17,12 @@ export default function BusinessPublicPage() {
     const { branches } = useBusinessStore();
     const { user } = useAuthStore();
 
-    // In a real app, we'd fetch business details by slug.
-    const businessName = user?.businessName || (slug as string)?.replace(/-/g, ' ') || 'VemTap Business';
+    // In a real app, we'd fetch business details by slug from a database.
+    // For now, we check if the logged-in user matches this slug.
+    const isCurrentUserBusiness = user?.businessSlug === slug;
+    const businessName = isCurrentUserBusiness
+        ? user?.businessName
+        : (slug as string)?.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') || 'VemTap Business';
 
     return (
         <div className="min-h-screen bg-[#fafbfc]">

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import Modal from '@/components/ui/Modal';
 import { notify } from '@/lib/notify';
 
@@ -386,9 +387,13 @@ export default function AdminBusinessesPage() {
                                                                             </p>
                                                                         </div>
                                                                         <div className="pt-2">
-                                                                            <button className="w-full py-2 px-4 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary-hover transition-all">
+                                                                            <Link
+                                                                                href={`/admin/analytics?businessId=${business.id}`}
+                                                                                className="w-full py-2 px-4 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary-hover transition-all flex items-center justify-center gap-2"
+                                                                            >
+                                                                                <span className="material-icons-round text-sm">leaderboard</span>
                                                                                 View Full Analytics
-                                                                            </button>
+                                                                            </Link>
                                                                         </div>
                                                                     </div>
                                                                 </div>

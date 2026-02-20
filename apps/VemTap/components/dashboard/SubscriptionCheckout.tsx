@@ -15,11 +15,33 @@ interface Props {
         price: string;
         period: string;
     };
+    billingCycle: 'monthly' | 'quarterly' | 'yearly';
 }
 
-export default function SubscriptionCheckout({ isOpen, onClose, plan }: Props) {
+export default function SubscriptionCheckout({ isOpen, onClose, plan, billingCycle }: Props) {
     const { subscribe } = useAuthStore();
     const [isProcessing, setIsProcessing] = useState(false);
+
+    const calculateBreakdown = () => {
+        const basePrice = parseInt(plan.price.replace(/[^0-9]/g, ''));
+        if (isNaN(basePrice)) return { monthly: plan.price, total: plan.price, breakdown: null };
+
+        let discount = 1;
+        let months = 1;
+        if (billingCycle === 'yearly') { discount = 0.8; months = 12; }
+        else if (billingCycle === 'quarterly') { discount = 0.9; months = 3; }
+
+        const monthly = Math.floor(basePrice * discount);
+        const total = monthly * months;
+
+        return {
+            monthly: `₦${monthly.toLocaleString()}`,
+            total: `₦${total.toLocaleString()}`,
+            breakdown: months > 1 ? `${monthly.toLocaleString()} x ${months} months` : null
+        };
+    };
+
+    const { monthly, total, breakdown } = calculateBreakdown();
 
     const handlePayment = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -52,10 +74,16 @@ export default function SubscriptionCheckout({ isOpen, onClose, plan }: Props) {
                     <div>
                         <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Selected Plan</p>
                         <h4 className="text-lg font-bold text-text-main">{plan.name}</h4>
+                        <p className="text-xs text-text-secondary font-medium mt-1 uppercase tracking-widest">{billingCycle} Billing</p>
                     </div>
                     <div className="text-right">
-                        <p className="text-2xl font-bold text-primary">{plan.price}</p>
-                        <p className="text-xs text-text-secondary font-medium">{plan.period}</p>
+                        <p className="text-2xl font-bold text-primary">{total}</p>
+                        {breakdown && (
+                            <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest mt-0.5">
+                                ({breakdown})
+                            </p>
+                        )}
+                        <p className="text-xs text-text-secondary font-medium mt-0.5">{monthly} / mo equivalent</p>
                     </div>
                 </div>
 
