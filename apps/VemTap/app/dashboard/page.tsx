@@ -18,6 +18,7 @@ import PreviewRewardModal from '@/components/dashboard/PreviewRewardModal';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { useBusinessStore } from '@/store/useBusinessStore';
 import { useAuthStore } from '@/store/useAuthStore';
+import { exportToCSV } from '@/lib/utils/export';
 
 
 export default function DashboardPage() {
@@ -99,6 +100,22 @@ export default function DashboardPage() {
     const confirmClear = () => {
         clearDashboardMutation.mutate();
         setShowClearModal(false);
+    };
+
+    const handleExportRecentVisitors = () => {
+        if (!data?.recentVisitors) return;
+
+        // Map data to clean export format
+        const exportData = data.recentVisitors.map(v => ({
+            Name: v.name,
+            Phone: v.phone,
+            Status: v.status.toUpperCase(),
+            'Last Visit': v.time,
+            Location: v.location || 'Head Office'
+        }));
+
+        exportToCSV(exportData, `recent_visitors_${new Date().toISOString().split('T')[0]}`);
+        toast.success('Recent visitors exported to CSV');
     };
 
     const stats = [
@@ -374,12 +391,21 @@ export default function DashboardPage() {
                         <h2 className="text-base font-display font-bold text-text-main mb-0.5">Recent Visitors</h2>
                         <p className="text-[10px] text-text-secondary">Latest customer check-ins</p>
                     </div>
-                    <button
-                        onClick={() => router.push('/dashboard/visitors/all')}
-                        className="px-4 py-2 text-xs font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors"
-                    >
-                        View All
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={handleExportRecentVisitors}
+                            className="p-2 text-text-secondary hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                            title="Export to CSV"
+                        >
+                            <Download size={18} />
+                        </button>
+                        <button
+                            onClick={() => router.push('/dashboard/visitors/all')}
+                            className="px-4 py-2 text-xs font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                        >
+                            View All
+                        </button>
+                    </div>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full">

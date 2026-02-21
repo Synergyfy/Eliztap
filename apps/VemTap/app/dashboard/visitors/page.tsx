@@ -13,6 +13,7 @@ import { Users, UserPlus, Repeat, Star, Search, Download, MoreVertical, Send, Gi
 import toast from 'react-hot-toast';
 import SendMessageModal from '@/components/dashboard/SendMessageModal';
 import VisitorDetailsModal from '@/components/dashboard/VisitorDetailsModal';
+import { exportToCSV } from '@/lib/utils/export';
 
 export default function VisitorsOverviewPage() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -28,21 +29,15 @@ export default function VisitorsOverviewPage() {
     const visitors = storeData?.recentVisitors || [];
 
     const handleExportCSV = () => {
-        const csvContent = [
-            ['Name', 'Phone', 'Status', 'Last Visit'],
-            ...visitors.map((v: Visitor) => [v.name, v.phone, v.status, v.time])
-        ].map(row => row.join(',')).join('\n');
+        const exportData = filteredVisitors.map(v => ({
+            Name: v.name,
+            Phone: v.phone,
+            Email: v.email || 'N/A',
+            Status: v.status.toUpperCase(),
+            'Last Visit': v.time
+        }));
 
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `visitors_report_${new Date().toISOString().split('T')[0]}.csv`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-
+        exportToCSV(exportData, `visitors_report_${new Date().toISOString().split('T')[0]}`);
         toast.success('Report exported successfully!');
     };
 
