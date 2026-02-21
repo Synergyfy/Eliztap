@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, UseGuards, Query, Request } from '@nestjs/common';
+import { BadRequestException, Controller, Post, Get, Body, Param, UseGuards, Query, Request } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody, ApiParam, ApiHeader } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
@@ -63,17 +63,21 @@ export class MessagingController {
     @Get('campaigns')
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard, RolesGuard, PermissionsGuard)
-    @ApiOperation({ summary: 'Get all messaging campaigns for a business' })
-    async getCampaigns(@Request() req: { user: User }) {
-        return this.campaignService.getCampaigns(req.user.businessId);
+    @ApiOperation({ summary: 'Get all messaging campaigns for a branch' })
+    async getCampaigns(@Query('branchId') branchId: string, @Request() req: { user: User }) {
+        const resolved = branchId || req.user?.branchId;
+        if (!resolved) throw new BadRequestException('branchId is required');
+        return this.campaignService.getCampaigns(resolved);
     }
 
     @Get('analytics')
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard, RolesGuard, PermissionsGuard)
-    @ApiOperation({ summary: 'Get messaging analytics' })
-    async getAnalytics(@Query('channel') channel: Channel, @Request() req: { user: User }) {
-        return this.analyticsService.getDashboardMetrics(req.user.businessId, channel);
+    @ApiOperation({ summary: 'Get messaging analytics by branch' })
+    async getAnalytics(@Query('channel') channel: Channel, @Query('branchId') branchId: string, @Request() req: { user: User }) {
+        const resolved = branchId || req.user?.branchId;
+        if (!resolved) throw new BadRequestException('branchId is required');
+        return this.analyticsService.getDashboardMetrics(resolved, channel);
     }
 
     @Get('inbox/:channel')

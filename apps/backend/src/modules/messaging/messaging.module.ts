@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bullmq';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Business } from '../businesses/entities/business.entity';
+import { Branch } from '../branches/entities/branch.entity';
 
 import { MessageTemplate } from './entities/message-template.entity';
 import { MessageCampaign } from './entities/message-campaign.entity';
@@ -35,6 +36,7 @@ import { MessagingController } from './controllers/messaging.controller';
             Message,
             MessageLog,
             Business,
+            Branch,
         ]),
         ContactsModule,
         BusinessesModule,

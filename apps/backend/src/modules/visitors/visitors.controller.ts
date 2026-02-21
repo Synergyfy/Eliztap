@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   Get,
   Post,
@@ -41,8 +42,12 @@ export class VisitorsController {
     private readonly messagingService: MessagingEngineService,
   ) { }
 
-  private getBusinessId(req: any): string {
-    return req.user.businessId;
+  private getBranchId(req: any, branchId?: string): string {
+    const resolved = branchId || req.user?.branchId;
+    if (!resolved) {
+      throw new BadRequestException('branchId is required (pass as query param or ensure user has branchId)');
+    }
+    return resolved;
   }
 
   // --- Stats ---
@@ -53,7 +58,7 @@ export class VisitorsController {
   @ApiOperation({ summary: 'Get overview visitor stats' })
   @ApiResponse({ type: VisitorStatsResponseDto })
   async getStats(@Req() req: any, @Query('branchId') branchId?: string): Promise<VisitorStatsResponseDto> {
-    return this.visitorsService.getStats(this.getBusinessId(req), branchId);
+    return this.visitorsService.getStats(this.getBranchId(req, branchId));
   }
 
   @Get('new/stats')
@@ -62,7 +67,7 @@ export class VisitorsController {
   @ApiOperation({ summary: 'Get new visitor stats' })
   @ApiResponse({ type: VisitorStatsResponseDto })
   async getNewStats(@Req() req: any, @Query('branchId') branchId?: string): Promise<VisitorStatsResponseDto> {
-    return this.visitorsService.getNewStats(this.getBusinessId(req), branchId);
+    return this.visitorsService.getNewStats(this.getBranchId(req, branchId));
   }
 
   @Get('returning/stats')
@@ -71,7 +76,7 @@ export class VisitorsController {
   @ApiOperation({ summary: 'Get returning visitor stats' })
   @ApiResponse({ type: VisitorStatsResponseDto })
   async getReturningStats(@Req() req: any, @Query('branchId') branchId?: string): Promise<VisitorStatsResponseDto> {
-    return this.visitorsService.getReturningStats(this.getBusinessId(req), branchId);
+    return this.visitorsService.getReturningStats(this.getBranchId(req, branchId));
   }
 
   // --- Listings ---
@@ -81,7 +86,7 @@ export class VisitorsController {
   @Permissions('visitors')
   @ApiOperation({ summary: 'Get new visitors list' })
   async getNew(@Query() query: VisitorQueryDto, @Req() req: any, @Query('branchId') branchId?: string) {
-    return this.visitorsService.findNew(query, this.getBusinessId(req), branchId);
+    return this.visitorsService.findNew(query, this.getBranchId(req, branchId));
   }
 
   @Get('returning')
@@ -89,7 +94,7 @@ export class VisitorsController {
   @Permissions('visitors')
   @ApiOperation({ summary: 'Get returning visitors list' })
   async getReturning(@Query() query: VisitorQueryDto, @Req() req: any, @Query('branchId') branchId?: string) {
-    return this.visitorsService.findReturning(query, this.getBusinessId(req), branchId);
+    return this.visitorsService.findReturning(query, this.getBranchId(req, branchId));
   }
 
   @Get()
@@ -102,7 +107,7 @@ export class VisitorsController {
     @Req() req: any,
     @Query('branchId') branchId?: string,
   ): Promise<PaginatedVisitorResponseDto> {
-    return this.visitorsService.findAll(query, this.getBusinessId(req), branchId);
+    return this.visitorsService.findAll(query, this.getBranchId(req, branchId));
   }
 
   // --- Actions (Bulk) ---
@@ -111,32 +116,32 @@ export class VisitorsController {
   @Roles(UserRole.OWNER, UserRole.MANAGER, UserRole.ADMIN, UserRole.STAFF)
   @Permissions('visitors')
   @ApiOperation({ summary: 'Export visitors to CSV' })
-  async export(@Req() req: any) {
-    return this.visitorsService.export(this.getBusinessId(req));
+  async export(@Req() req: any, @Query('branchId') branchId?: string) {
+    return this.visitorsService.export(this.getBranchId(req, branchId));
   }
 
   @Post('campaign')
   @Roles(UserRole.OWNER, UserRole.MANAGER, UserRole.STAFF)
   @Permissions('messages')
   @ApiOperation({ summary: 'Send campaign to visitors' })
-  async sendCampaign(@Req() req: any, @Body() body: any) {
-    return this.visitorsService.sendCampaign(this.getBusinessId(req), body);
+  async sendCampaign(@Req() req: any, @Body() body: any, @Query('branchId') branchId?: string) {
+    return this.visitorsService.sendCampaign(this.getBranchId(req, branchId || body.branchId), body);
   }
 
   @Post('welcome-campaign')
   @Roles(UserRole.OWNER, UserRole.MANAGER, UserRole.STAFF)
   @Permissions('messages')
   @ApiOperation({ summary: 'Send welcome campaign to new visitors' })
-  async sendWelcomeCampaign(@Req() req: any) {
-    return this.visitorsService.sendWelcomeCampaign(this.getBusinessId(req));
+  async sendWelcomeCampaign(@Req() req: any, @Query('branchId') branchId?: string) {
+    return this.visitorsService.sendWelcomeCampaign(this.getBranchId(req, branchId));
   }
 
   @Post('rewards')
   @Roles(UserRole.OWNER, UserRole.MANAGER, UserRole.STAFF)
   @Permissions('dashboard') // Rewards might fall under campaigns/loyalty/dashboard
   @ApiOperation({ summary: 'Create a reward for visitors' })
-  async createReward(@Req() req: any, @Body() body: any) {
-    return this.campaignsService.createReward(this.getBusinessId(req), body);
+  async createReward(@Req() req: any, @Body() body: any, @Query('branchId') branchId?: string) {
+    return this.campaignsService.createReward(this.getBranchId(req, branchId || body.branchId), body);
   }
 
   // --- CRUD & Individual Actions ---
@@ -146,10 +151,10 @@ export class VisitorsController {
   @Permissions('visitors')
   @ApiOperation({ summary: 'Create a new visitor' })
   @ApiResponse({ type: VisitorResponseDto })
-  async create(@Body() createVisitorDto: CreateVisitorDto, @Req() req: any) {
+  async create(@Body() createVisitorDto: CreateVisitorDto, @Req() req: any, @Query('branchId') branchId?: string) {
     return this.visitorsService.create(
       createVisitorDto,
-      this.getBusinessId(req),
+      this.getBranchId(req, branchId || createVisitorDto.branchId),
     );
   }
 
@@ -190,23 +195,24 @@ export class VisitorsController {
     @Req() req: any,
     @Param('id') id: string,
     @Body() body: { message: string, channel: string },
+    @Query('branchId') branchId?: string,
   ) {
-    return this.visitorsService.sendMessage(this.getBusinessId(req), id, body.message, body.channel as any);
+    return this.visitorsService.sendMessage(this.getBranchId(req, branchId), id, body.message, body.channel as any);
   }
 
   @Post(':id/welcome')
   @Roles(UserRole.OWNER, UserRole.MANAGER, UserRole.STAFF)
   @Permissions('messages')
   @ApiOperation({ summary: 'Send welcome message to a visitor' })
-  async sendWelcome(@Req() req: any, @Param('id') id: string) {
-    return this.visitorsService.sendWelcome(this.getBusinessId(req), id);
+  async sendWelcome(@Req() req: any, @Param('id') id: string, @Query('branchId') branchId?: string) {
+    return this.visitorsService.sendWelcome(this.getBranchId(req, branchId), id);
   }
 
   @Post(':id/reward')
   @Roles(UserRole.OWNER, UserRole.MANAGER, UserRole.STAFF)
   @Permissions('dashboard')
   @ApiOperation({ summary: 'Send reward to a visitor' })
-  async sendReward(@Req() req: any, @Param('id') id: string, @Body() body: { rewardId: string }) {
-    return this.visitorsService.sendReward(this.getBusinessId(req), id, body.rewardId);
+  async sendReward(@Req() req: any, @Param('id') id: string, @Body() body: { rewardId: string }, @Query('branchId') branchId?: string) {
+    return this.visitorsService.sendReward(this.getBranchId(req, branchId), id, body.rewardId);
   }
 }

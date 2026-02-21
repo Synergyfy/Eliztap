@@ -14,14 +14,21 @@ export class Visit extends AbstractBaseEntity {
   @Column()
   customerId: string;
 
-  @ManyToOne(() => Business, (business) => business.visits, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(() => Business, { onDelete: 'CASCADE', nullable: true })
   @JoinColumn({ name: 'businessId' })
   business: Business;
 
-  @Column()
+  @Column({ nullable: true })
   businessId: string;
+
+  @ManyToOne(() => Branch, (branch) => branch.visits, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'branchId' })
+  branch: Branch;
+
+  @Column()
+  branchId: string;
 
   @ManyToOne(() => Device, (device) => device.visits, {
     nullable: true,
@@ -38,11 +45,4 @@ export class Visit extends AbstractBaseEntity {
     default: 'new',
   })
   status: 'new' | 'returning';
-
-  @ManyToOne(() => Branch, { onDelete: 'SET NULL', nullable: true })
-  @JoinColumn({ name: 'branchId' })
-  branch: Branch;
-
-  @Column({ nullable: true })
-  branchId: string;
 }

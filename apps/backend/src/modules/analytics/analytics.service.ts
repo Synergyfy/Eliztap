@@ -13,17 +13,15 @@ export class AnalyticsService {
         private readonly userRepository: Repository<User>,
     ) { }
 
-    async getDashboardAnalytics(businessId: string, branchId?: string) {
-        const where: any = { businessId };
-        if (branchId) where.branchId = branchId;
+    async getDashboardAnalytics(branchId: string) {
+        const where = { branchId };
 
         const totalVisitsCount = await this.visitRepository.count({ where });
 
         const totalCustomersCount = await this.userRepository
             .createQueryBuilder('user')
-            .innerJoin('user.visits', 'visit', 'visit.businessId = :businessId', { businessId })
+            .innerJoin('user.visits', 'visit', 'visit.branchId = :branchId', { branchId })
             .where('user.role = :role', { role: UserRole.CUSTOMER })
-            .andWhere(branchId ? 'visit.branchId = :branchId' : '1=1', { branchId })
             .groupBy('user.id')
             .getCount();
 
@@ -64,9 +62,8 @@ export class AnalyticsService {
         };
     }
 
-    async getFootfallAnalytics(businessId: string, branchId?: string) {
-        const where: any = { businessId };
-        if (branchId) where.branchId = branchId;
+    async getFootfallAnalytics(branchId: string) {
+        const where = { branchId };
 
         const totalFootfall = await this.visitRepository.count({ where });
 
@@ -101,7 +98,7 @@ export class AnalyticsService {
         };
     }
 
-    async getPeakTimesAnalytics(businessId: string, branchId?: string) {
+    async getPeakTimesAnalytics(branchId: string) {
         return {
             weeklyData: [
                 { day: 'Monday', hours: [10, 15, 20, 25, 40, 50, 45, 30, 25, 20] },

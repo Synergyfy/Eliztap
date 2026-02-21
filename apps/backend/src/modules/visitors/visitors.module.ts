@@ -5,12 +5,13 @@ import { VisitorsController } from './visitors.controller';
 import { Visit } from './entities/visit.entity';
 import { User } from '../users/entities/user.entity';
 import { Device } from '../devices/entities/device.entity';
+import { Branch } from '../branches/entities/branch.entity';
 import { CampaignsModule } from '../campaigns/campaigns.module';
 import { MessagingModule } from '../messaging/messaging.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Visit, User, Device]),
+    TypeOrmModule.forFeature([Visit, User, Device, Branch]),
     CampaignsModule,
     MessagingModule,
   ],

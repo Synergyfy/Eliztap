@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Request, Query } from '@nestjs/common';
+import { BadRequestException, Controller, Get, UseGuards, Request, Query } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -21,7 +21,9 @@ export class AnalyticsController {
     @ApiOperation({ summary: 'Get primary analytics dashboard stats' })
     @ApiResponse({ status: 200, description: 'Analytics summary' })
     getDashboardAnalytics(@Request() req, @Query('branchId') branchId?: string) {
-        return this.analyticsService.getDashboardAnalytics(req.user.businessId, branchId);
+        const resolved = branchId || req.user?.branchId;
+        if (!resolved) throw new BadRequestException('branchId is required');
+        return this.analyticsService.getDashboardAnalytics(resolved);
     }
 
     @Get('footfall')
@@ -30,7 +32,9 @@ export class AnalyticsController {
     @ApiOperation({ summary: 'Get footfall analytics' })
     @ApiResponse({ status: 200, description: 'Footfall stats' })
     getFootfallAnalytics(@Request() req, @Query('branchId') branchId?: string) {
-        return this.analyticsService.getFootfallAnalytics(req.user.businessId, branchId);
+        const resolved = branchId || req.user?.branchId;
+        if (!resolved) throw new BadRequestException('branchId is required');
+        return this.analyticsService.getFootfallAnalytics(resolved);
     }
 
     @Get('peak-times')
@@ -39,7 +43,9 @@ export class AnalyticsController {
     @ApiOperation({ summary: 'Get peak times analytics' })
     @ApiResponse({ status: 200, description: 'Peak times stats' })
     getPeakTimesAnalytics(@Request() req, @Query('branchId') branchId?: string) {
-        return this.analyticsService.getPeakTimesAnalytics(req.user.businessId, branchId);
+        const resolved = branchId || req.user?.branchId;
+        if (!resolved) throw new BadRequestException('branchId is required');
+        return this.analyticsService.getPeakTimesAnalytics(resolved);
     }
 
     // --- Admin Endpoints ---

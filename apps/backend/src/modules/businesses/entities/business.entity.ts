@@ -2,7 +2,6 @@ import { Entity, Column, ManyToOne, OneToMany, JoinColumn, OneToOne } from 'type
 import { AbstractBaseEntity } from '../../../common/entities/base.entity';
 import { User } from '../../users/entities/user.entity';
 import { Device } from '../../devices/entities/device.entity';
-import { Visit } from '../../visitors/entities/visit.entity';
 import { Branch } from '../../branches/entities/branch.entity';
 
 export enum BusinessType {
@@ -109,9 +108,6 @@ export class Business extends AbstractBaseEntity {
 
   @OneToMany(() => Device, (device) => device.business)
   devices: Device[];
-
-  @OneToMany(() => Visit, (visit) => visit.business)
-  visits: Visit[];
 
   @OneToMany(() => Branch, (branch) => branch.business)
   branches: Branch[];
