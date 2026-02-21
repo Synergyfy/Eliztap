@@ -163,14 +163,26 @@ export default function AdminSubscriptionsPage() {
                                     </div>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Manual Expiry / Renewal Date</label>
-                                    <input
-                                        type="date"
-                                        value={selectedSub?.renewal}
-                                        onChange={(e) => setSelectedSub({ ...selectedSub, renewal: e.target.value })}
-                                        className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl px-4 text-sm font-bold focus:bg-white focus:ring-4 focus:ring-primary/10 outline-none transition-all cursor-pointer"
-                                    />
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Manual Price Override (₦)</label>
+                                        <input
+                                            type="text"
+                                            value={selectedSub?.amount}
+                                            onChange={(e) => setSelectedSub({ ...selectedSub, amount: e.target.value })}
+                                            className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl px-4 text-sm font-bold focus:bg-white focus:ring-4 focus:ring-primary/10 outline-none transition-all"
+                                            placeholder="e.g. ₦30,000"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Manual Expiry / Renewal Date</label>
+                                        <input
+                                            type="date"
+                                            value={selectedSub?.renewal}
+                                            onChange={(e) => setSelectedSub({ ...selectedSub, renewal: e.target.value })}
+                                            className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl px-4 text-sm font-bold focus:bg-white focus:ring-4 focus:ring-primary/10 outline-none transition-all cursor-pointer"
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex gap-3">
