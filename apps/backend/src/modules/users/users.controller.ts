@@ -13,7 +13,13 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { Permissions } from '../../common/decorators/permissions.decorator';
 import { UserRole } from './entities/user.entity';
+import { BusinessesService } from '../businesses/businesses.service';
+import { BranchesService } from '../branches/branches.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { PermissionsGuard } from '../../common/guards/permissions.guard';
 import {
   ApiTags,
   ApiOperation,
@@ -27,17 +33,23 @@ import * as bcrypt from 'bcrypt';
 
 @ApiTags('users')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, RolesGuard, PermissionsGuard)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly businessesService: BusinessesService,
+    private readonly branchesService: BranchesService,
+  ) { }
 
   @Get('staff')
   @Roles(UserRole.OWNER, UserRole.MANAGER)
+  @Permissions('staff')
   @ApiOperation({
     summary: 'Get all staff members for the business (including managers)',
   })
-  async getStaff(@Request() req) {
-    return this.usersService.findByBusiness(req.user.businessId);
+  async getStaff(@Request() req, @Query('branchId') branchId?: string) {
+    return this.usersService.findByBusiness(req.user.businessId, branchId);
   }
 
   @Post('staff/invite')
@@ -63,11 +75,24 @@ export class UsersController {
       throw new BadRequestException('User with this email already exists');
     }
 
+    // Verify the business is owned by the current user (owner)
+    const business = await this.businessesService.findById(inviteDto.businessId);
+    if (!business || business.ownerId !== req.user.id) {
+      throw new BadRequestException('Business not found or not owned by you');
+    }
+
+    // Verify the branch belongs to the business
+    const branch = await this.branchesService.findOne(req.user.id, inviteDto.branchId);
+    if (!branch) {
+      throw new BadRequestException('Branch not found or does not belong to your business');
+    }
+
     // In a real app, we'd send an invite email. For this MVP, we create them with a default password.
     const hashedPassword = await bcrypt.hash('staff123', 10);
     return this.usersService.create({
       ...inviteDto,
-      businessId: req.user.businessId,
+      businessId: inviteDto.businessId,
+      branchId: inviteDto.branchId,
       password: hashedPassword,
     });
   }
